@@ -12,5 +12,9 @@ LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    Morpho,
+    imager,
+    tripack,
+    sp
 VignetteBuilder: knitr

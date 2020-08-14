@@ -19,7 +19,7 @@ library(tripack)
 library(sp)
 library(imager)
 library(Morpho)
-library(Jovid) #I think I've eliminated the use of this package
+# library(Jovid) #I think I've eliminated the use of this package
 library(Colormesh)
 
 load("../data/guppies.Rdata")
