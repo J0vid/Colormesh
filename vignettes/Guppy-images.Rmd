@@ -1,0 +1,75 @@
+---
+title: "Guppy-images"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Guppy-images}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tripack)
+library(sp)
+library(imager)
+library(Morpho)
+library(Jovid) #I think I've eliminated the use of this package
+library(Colormesh)
+
+load("../data/guppies.Rdata")
+
+#get directory for example images
+imagedir <- "../inst/extdata/"
+
+```
+
+```{r convert TPS data to array}
+
+raw.gup <-  Colormesh::tps2array(gup.coord)
+raw.gup <- flip.lms(raw.gup, imagedir, gup.factors$side)
+
+```
+
+```{r plot starting landmarks}
+
+gup.map= c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
+
+plot(raw.gup[,,1])
+lines(raw.gup[gup.map,,1])
+
+```
+
+```{r image unwarping and color sampling}
+
+gup.colors <- tps.unwarp(imagedir, raw.gup, write.images = F, color.sampling = T, point.map = gup.map, calib.file = calibfile)
+
+plot(gup.colors, individual = 1, visualization_type = "sampled")
+
+```
+
+```{r calculating and plotting mean colors}
+
+arima_high <- mean(gup.colors, covariate_data = gup.factors, group_labels = c("arima", "high"))
+
+plot(arima_high)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
