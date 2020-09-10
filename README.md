@@ -18,7 +18,11 @@ vignette("Guppy-images”)
 ## Using Colormesh
 
 This package requires at least 2 things to process your data:
-1. A landmark set. We provide functions for reading in tpsDig files (```r read.tps()```), as well as converting them to an array (```r tps2array()```). Other formats can be read from geomorph or Morpho.
+1. A landmark set. We provide functions for reading in tpsDig files (
+```r
+read.tps()
+```
+), as well as converting them to an array (```r tps2array()```). Other formats can be read from geomorph or Morpho.
 2. A corresponding set of images. Images are loaded by looking at the names of your landmark data, so when you make an array be sure that its dimnames match the image names. With those two things, you can generate a set of warped images to the landmark consensus shape using ```r tps.unwarp()```. 
 
 ## tps.unwarp()
