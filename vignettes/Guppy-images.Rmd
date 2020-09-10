@@ -47,7 +47,7 @@ lines(raw.gup[gup.map,,1])
 
 ```{r image unwarping and color sampling}
 
-gup.colors <- tps.unwarp(imagedir, raw.gup, write.images = F, color.sampling = T, point.map = gup.map, calib.file = calibfile)
+gup.colors <- tps.unwarp(imagedir, raw.gup, write.images = T, write.dir = "~/Downloads/guppy_warps/", color.sampling = T, point.map = gup.map, calib.file = calibfile)
 
 plot(gup.colors, individual = 1, visualization_type = "sampled")
 

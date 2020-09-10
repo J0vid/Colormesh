@@ -13,6 +13,10 @@
 #' @export
 tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, color.sampling = F, num.delaunay.passes = 2, point.map, px.radius = 2, calib.file = NULL){
 
+  if(write.images & is.null(write.dir)) stop("Please provide a folder to save images to by using the write.dir parameter. Alternatively, don't save images by making write.images = FALSE.")
+
+  if(imagedir == write.dir) stop("Please write the warped images to a different path, so your original data don't get overwritten!")
+
   suppressMessages(mean.lm <- procSym(landmarks, scale = F, CSinit = F)$mshape)
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
@@ -35,7 +39,7 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
     orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
     tar.lms <- cbind(mean.lm[,1] + img.dim[1]/2, mean.lm[,2] + img.dim[2]/2)
 
-    image_defo <- function(x, y){
+    image_defo <- function(x, y){ #I'm aware that it's terrible practice to use variables out of scope
       xs <- c(0:(img.dim[1] - 1))
       ys <- c(0:(img.dim[2] - 1))
       img.long <- as.matrix(expand.grid(xs, ys))
@@ -47,8 +51,12 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
     # points(orig.lms , col = 2)
     # points(tar.lms, col = 3)
 
-    #need prog bars or something that indicates progress
+
     tmp.warp <- imwarp(tmp.image, map = image_defo, direction = "reverse")
+    image.name <- substr(dimnames(landmarks)[[3]][i], 1, nchar(as.character(dimnames(landmarks)[[3]][i])) - 4)
+    #should I create a directory in the current working directory if write.dir is not provided? dir.create("warped_images")
+    if(write.images) imager::save.image(tmp.warp, file = paste0(write.dir, image.name,".png"))
+
 
     if(color.sampling){
       translated.interior <-  cbind(delaunay.template$interior[,1] + img.dim[1]/2, delaunay.template$interior[,2] + img.dim[2]/2)
@@ -65,9 +73,6 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
     dimnames(sampled.array)[[3]] <- dimnames(landmarks)[[3]]
     } else {delaunay.template <- NULL}
 
-    image.name <- substr(dimnames(landmarks)[[3]][i], 1, nchar(as.character(dimnames(landmarks)[[3]][i])) - 4)
-    if(write.images) save.image(tmp.warp, file = paste0(write.dir, image.name,".png"))
-
     if(is.null(calib.file) == F){
       #get calibration data while we're at it
       for(j in 1:nrow(calibration.array)){
@@ -83,7 +88,7 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
       estimated.time <- (iteration.time * length(image.files)) / 60
     }
 
-    print(cat(paste0("Processed ", image.name, ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes")))
+    cat(paste0("Processed ", image.name, ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes"))
 
   } #end i
 
