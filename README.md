@@ -29,7 +29,7 @@ This package requires at least 2 things to process your data:
 
 Image warping is done for each image to the average shape. Here's what it looks like:
 
-![Registration example](images/registration example.png)
+![Registration example](images/registration_example.png)
 
 ###Color sampling
 
