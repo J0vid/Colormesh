@@ -1,5 +1,5 @@
 # Colormesh
-An R package for analyzing color patterns in images
+An R package for analyzing color patterns in images - this is jenn trying to edit
 
 ## Installation
 
