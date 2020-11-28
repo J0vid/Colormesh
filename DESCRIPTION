@@ -12,7 +12,8 @@ LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown,
+    rmarkdown
+Imports:
     Morpho,
     imager,
     tripack,

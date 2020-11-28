@@ -13,6 +13,9 @@
 #' @export
 tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, color.sampling = F, num.delaunay.passes = 2, point.map, px.radius = 2, calib.file = NULL){
 
+  require(sp)
+  require(tripack)
+
   if(write.images & is.null(write.dir)) stop("Please provide a folder to save images to by using the write.dir parameter. Alternatively, don't save images by making write.images = FALSE.")
 
   if(imagedir == write.dir) stop("Please write the warped images to a different path, so your original data don't get overwritten!")

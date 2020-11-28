@@ -6,6 +6,7 @@
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
 #' @export
 tri.surf <- function(tri.object, point.map, num.passes){
+
   require(tripack)
   require(sp)
 
