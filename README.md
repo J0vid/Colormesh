@@ -106,16 +106,13 @@ specimen.sampling.template = tri.surf(consensus_LM_coords[perimeter.map,], 2)
 
 ################## DAVID, THIS IS WHERE THE NEW FUNCTION WOULD GO ##########################
 
-
-
 Using the sampling template generated with the tri.surf function above, the user now will define the size of the sampling circle in pixels. The pixels identified by the tri.surf function are used as the focus (center) of the circle having a radius defined by the user. This provides the user with control over the level of pixel averaging. If sampling circles overlap and therefore a pixel is re-sampled, the user will be notified. The output of the davids.measure.function below is calculated by sampling averaging each color channel for the pixels contained within the sampling circle. 
-
 
 ```{r}
 
 ########################### NEW FUNCTION HERE #################################
 ##
-color.sample = <what ever function parameters needed, will need consensus_image_file_location, unwarped_image_name (which is column 2 from the csv, specimen_sampling_template to get the coords of the pixels to sample, and sampling.circle(2) to allow the user to specify sample circle size
+uncalibrated.color.sample = <what ever function parameters needed, will need consensus_image_file_location, unwarped_image_name (which is column 2 from the csv, specimen_sampling_template to get the coords of the pixels to sample, and sampling.circle(2) to allow the user to specify sample circle size
 
 
 ################## The output should be a matrix with the number of rows equal to the number of specimens. Columns would equal the RED value sampled from each of the points (defined by the number of triangulations, cbind to the Green, cbind to the Blue.
@@ -125,13 +122,29 @@ color.sample = <what ever function parameters needed, will need consensus_image_
 
 ### Color calibration
 
-Color information across images can be pretty noisy due to inconsistent lighting, different camera settings, movement of the object, etc. We highly recommend adjusting for those differences by including a color standard in each image. We can use the differences in color standard values between images to try and mitigate variation due to noise and better measure the traits you're interested in. I wrote a vignette just for this step because it's crucial and our method is a bit rigid at the moment (see ```vignette("Calibrate-images")```). I'm open to any suggestions for streamlining this part of the data processing.  
+Color information across images can be pretty noisy due to inconsistent lighting, different camera settings, movement of the object, etc. We highly recommend adjusting for those differences by including a color standard in each image. Using the differences in color standard values between images to mitigate variation due to noise, landmarks placed on the color standard are used to sample known RGB values and adjust the sampled color of your specimen by the average deviation in each color channel. (see ```vignette("Calibrate-images")```). 
+
+####################################### THIS WILL BE A NEW FUNCTION BY DAVID THAT WILL TAKE CARE OF THE UGLY R CODE #######################################
+####################################### DAVID SEE COMMENTS BELOW
+######### Above, the user already define the variables: known.RGB and calib.coords
+######### THIS INCORPORATES A SAMPLING CIRCLE FUNCTION, SET DEFAULT TO 2 PIX, BUT HAVE OPTION FOR USER TO CHANGE THE SAMPLING CIRCLE RADIUS
+
+```{r}
+
+########################### NEW FUNCTION HERE #################################
+########################### DAVID, CAN A CHECK BE PERFORMED HERE THAT THE DEVIATION MEASURED IN THE CALIBRATION IMAGE (COLUMN 1 of the factors.csv file) IS BEING APPLIED TO THE CORRECT VECTOR OF COLOR SAMPLED  FROM THE UNWARPED IMAGE (COLUMN 2 OF THE FACTORS.CSV)? 
+
+corrected.color.sample = <what ever the new function is> (will need uncalibrated.color.sample, known.RGB, factors.csv?, calibration_sampling_circle_size)
 
 
+################## The output should be a new matrix, same dimensions as the uncalibrated.color.sample matrix. However, it will have the correction applied. As a check, I compare these to make sure some adjustment has happened.
 
 
-Color information across images can be pretty noisy due to inconsistent lighting, different camera settings, movement of the object, etc. We highly recommend adjusting for those differences by including a color standard in each image. Using the differences in color standard values between images to mitigate variation due to noise, landmarks placed on the color standard are used to sample known RGB values and adjust the sampled color of your specimen by the average deviation in each color channel. (see vignette("Calibrate-images")). 
+```
+### Visualizing the color sampled and the correction to the color following the calibration process.
 
+############################## DAVID, SEE COMMENTS BELOW
+############### Have the option to show the plot even if someone didn't do color calibration. I can think of some instances where images will not have a color standard included. 
+############### Create a before and after plotting function to show original image (based on original measurements collected from DT collection of data, vs the image plot showing the values after the calibration correction was applied. So there is a side by side comparison)
 
-
-###### Set something up for the bibtex to that if someone uses it, it will provide how to cite the package
+###### DAVID, SHOULD PROBABLY Set something up for the bibtex so that if someone uses it, it will provide how to cite the package
