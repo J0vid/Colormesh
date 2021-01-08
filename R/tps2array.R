@@ -19,7 +19,7 @@ tps2array <- function (tpsfile)
     coord.array[, , ind] = as.matrix(tpsfile[tpsfile$ID == unique(tpsfile$ID)[ind],
                                              1:2])
   }
-  dimnames(coord.array)[[3]] <- arrayname
+  # dimnames(coord.array)[[3]] <- (arrayname)
 
   return(coord.array)
 }
