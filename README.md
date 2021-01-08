@@ -6,9 +6,7 @@ An R package for extraction of color data from digital images.
 We strongly recommend you build the included vignette when installing the package. It provides a quick workflow with 10 images of guppies that originated from two populations to use as examples. Copy and paste the code below to install the package with the vignette:
 
 ```r
-library(devtools) ############### DAVID, DOES IT MAKE SENSE TO ADD THIS?? #############
 devtools::install_github("j0vid/Colormesh", build_vignettes = T)
-
 ```
 
 The following command allows you to view the vignette:
