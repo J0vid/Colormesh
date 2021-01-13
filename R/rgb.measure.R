@@ -1,4 +1,4 @@
-#' Non-linear image registration using TPS deformation.
+#' Color sampling from a set of pre-warped images
 #'
 #' @param imagedir directory of images to measure. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.

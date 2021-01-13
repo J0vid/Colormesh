@@ -49,11 +49,13 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
 #' @param ... Additional plotting parameters to be passed to plot.default
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
 #' @export
-plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "sampled"){
-  if(visualization_type == "sampled"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1)
+plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "calibrated"){
+  if(visualization_type == "diagnostic"){
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, asp = 1)
+    points(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1)
   } else if(visualization_type == "calibrated"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated.color[,,individual]), pch = 19, asp = 1)
-  }}
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, asp = 1)
+  }
+  }
 
 
