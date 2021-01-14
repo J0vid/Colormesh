@@ -32,7 +32,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
 
-    # cons[,1], -cons[,2] + img.dim[2]
+
     #match up delaunay points to image by flipping Y axis on image dimensions
       translated.interior <-  cbind(delaunay.template$interior[,1], -delaunay.template$interior[,2] + img.dim[2])
       #add buffer to image so we don't ask for pixels that don't exist
@@ -53,7 +53,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
       estimated.time <- (iteration.time * length(image.files)) / 60
     }
 
-    cat(paste0("Processed ", image.names[i], ": ", round((i/length(image.names)) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes"))
+    cat(paste0("Processed ", image.names[i], ": ", round((i/length(image.names)) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), " minutes \n"))
 
   } #end i
 #mesh.colors needs to also return a list of pairwise sample points that had overlapping pixels####

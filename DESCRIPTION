@@ -17,5 +17,6 @@ Imports:
     Morpho,
     imager,
     tripack,
-    sp
+    sp,
+    fields
 VignetteBuilder: knitr

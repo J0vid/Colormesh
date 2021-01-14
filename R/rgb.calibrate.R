@@ -23,11 +23,16 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.r
     tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
     img.dim <- dim(tmp.image)
 
+    buffered.image <- array(0, dim = c(dim(tmp.image)[1],dim(tmp.image)[2], 3))
+
     for(j in 1:nrow(calibration.array)){
       #select the landmarks for the corresponding image from calib.file
-      calibration.array[j,1,i] <-  mean(diag(tmp.image[(calib.file[grepl(image.names[i], calib.file$IMAGE), ][j,1] + circle.coords[,1] ), ((calib.file[grepl(image.names[i], calib.file$IMAGE), ][j,2] + circle.coords[,2])), 1]))
-      calibration.array[j,2,i] <-  mean(diag(tmp.image[(calib.file[grepl(image.names[i], calib.file$IMAGE), ][j,1] + circle.coords[,1] ), ((calib.file[grepl(image.names[i], calib.file$IMAGE), ][j,2] + circle.coords[,2])), 2]))
-      calibration.array[j,3,i] <-  mean(diag(tmp.image[(calib.file[grepl(image.names[i], calib.file$IMAGE), ][j,1] + circle.coords[,1] ), ((calib.file[grepl(image.names[i], calib.file$IMAGE), ][j,2] + circle.coords[,2])), 3]))
+      tmp.x <- calib.file[grepl(image.names[i], calib.file$IMAGE),][j,1] + circle.coords[,1]
+      tmp.y <- calib.file[grepl(image.names[i], calib.file$IMAGE),][j,2] + circle.coords[,2]
+
+      calibration.array[j,1,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 1]))
+      calibration.array[j,2,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 2]))
+      calibration.array[j,3,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 3]))
     }
 
     if(i == 1){
@@ -36,7 +41,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.r
       estimated.time <- (iteration.time * length(image.files)) / 60
     }
 
-    cat(paste0("Processed ", image.names[i], ": ", round((i/length(image.names)) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes"))
+    cat(paste0("Processed ", image.names[i], ": ", round((i/length(image.names)) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), " minutes \n"))
 
 
   } #end i
@@ -52,7 +57,9 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.r
     calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[3,3])
   }
   dimnames(calibrated.array)[[3]] <- image.names
-
+  #limit adjustments to viable image ranges
+  calibrated.array[calibrated.array < 0] <- 0
+  calibrated.array[calibrated.array > 1] <- 1
 
   #mesh.colors needs to also return a list of pairwise sample points that had overlapping pixels#### This is handled as a separate function currently...
   calibrated.mesh.colors <- list(sampled.color = sampled.array$sampled.color, delaunay.map = delaunay.map, calibrated = calibrated.array)
