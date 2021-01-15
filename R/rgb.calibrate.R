@@ -56,6 +56,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.r
     calibrated.array[,2,j] <- sampled.array$sampled.color[,2,j] - mean(col.change[2,2])
     calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[3,3])
   }
+
   dimnames(calibrated.array)[[3]] <- image.names
   #limit adjustments to viable image ranges
   calibrated.array[calibrated.array < 0] <- 0

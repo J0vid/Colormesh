@@ -13,6 +13,8 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif|*.png")
+  if(length(image.files) > 0) print("The provided image format is in sRGB space. We recommend using the linear space data provided in $linearized.color for analysis")
+
   start.time <- as.numeric(Sys.time())
 
 
@@ -56,8 +58,11 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
     cat(paste0("Processed ", image.names[i], ": ", round((i/length(image.names)) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), " minutes \n"))
 
   } #end i
-#mesh.colors needs to also return a list of pairwise sample points that had overlapping pixels####
-  mesh.colors <- list(sampled.color = sampled.array, delaunay.map = delaunay.map)
+
+    #linearize sampling array
+    lcolors <- linearize.colors(sampled.array)
+
+  mesh.colors <- list(sampled.color = sampled.array, delaunay.map = delaunay.map, linearized.color = lcolors)
 
   class(mesh.colors) <- "mesh.colors"
   return(mesh.colors)

@@ -39,7 +39,10 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
   plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1)
   } else if(visualization_type == "calibrated"){
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated.color[,,individual]), pch = 19, asp = 1)
-  }}
+  } else if(visualization_type == "linearized"){
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$linearized.color[,,individual]), pch = 19, asp = 1)
+  }
+  }
 
 #' plotting individual specimens before AND after color sampling | select individual or 3 random side by side individuals
 #'

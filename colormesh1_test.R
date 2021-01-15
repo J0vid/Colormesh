@@ -1,19 +1,15 @@
 #read in RAW images
 
-library(hexView)
-raw_image <- readRaw("~/Downloads/IMG_7632.CR2")
-str(raw_image)
-
-image_matrix <- matrix(raw_image$fileRaw, nrow = 4368, ncol = 2912, byrow = T)
-
-
-
-
+# library(hexView)
+# raw_image <- readRaw("~/Downloads/IMG_7632.CR2")
+# str(raw_image)
+#
+# image_matrix <- matrix(raw_image$fileRaw, nrow = 4368, ncol = 2912, byrow = T)
 
 
 #colormesh 1.0 test
 library(imager)
-library(Colormesh)
+
 specimen_factors <- read.csv("~/R_packages/Colormesh/inst/extdata/specimen_factors.csv", header = F)
 calib.file <- read.tps("~/R_packages/Colormesh/inst/extdata/calib_LM_coords.TPS")
 cons <- read.tps("~/R_packages/Colormesh/inst/extdata/consensus_LM_coords.TPS")
@@ -27,11 +23,14 @@ point.overlap(delaunay.map = delaunay.map, px.radius = 2)
 test.image <- load.image("~/R_packages/Colormesh/inst/extdata/GPHP_unw_001.jpg")
 dev.off()
 plot(test.image)
+points(delaunay.map$interior[,1], delaunay.map$interior[,2], col = 2)
+
 points(delaunay.map$interior[,1], -delaunay.map$interior[,2] + dim(test.image)[2], col = 2)
 
 rgb.test <- rgb.measure(imagedir = "~/R_packages/Colormesh/inst/extdata/", image.names = specimen_factors$V2, delaunay.map = delaunay.map)
 
 plot(rgb.test, individual = 5)
+plot(rgb.test, individual = 5, visualization_type = "linearized")
 
 #Calibrate
 # debug(rgb.calibrate)
@@ -39,6 +38,15 @@ rgb.cal <- rgb.calibrate(rgb.test, imagedir =  "~/R_packages/Colormesh/inst/extd
 
 plot(rgb.cal, individual = 10, visualization_type = "diagnostic")
 
+
+
+#things to add:
+
+# 1) linearization in both sampling and calibration steps as a logical toggle
+# 2) if a tif | png | jpeg , print a warning that we recommend linearization. another option is to output both non-linear sampled and linearized sample
+# 3) remove overlapping delaunay points function
+# 4) flip delaunay function (documentation needs to be very clear! plot your image, make sure it lines up )
+# 5) tell people to load an example image so that we get dimensions to work with throughout.
 
 
 
