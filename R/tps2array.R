@@ -8,7 +8,7 @@ tps2array <- function (tpsfile)
   #this function assumes unique image names!
   # arrayname <- substr(unique(tpsfile$IMAGE), 1, nchar(as.character(unique(tpsfile$IMAGE))) - 4)
   arrayname <- factor(unique(tpsfile$IMAGE))
-  Nlandmarks <- sum(as.numeric(tpsfile$ID) == 1)
+  Nlandmarks <- sum(tpsfile$ID == unique(tpsfile$ID)[1])
   # ID.nums <- rep(0, length(tpsfile$ID))
   coord.array <- array(dim = c(Nlandmarks, 2, length(arrayname)))
   # for (i in 0:(length(tpsfile$ID)/Nlandmarks)) {
