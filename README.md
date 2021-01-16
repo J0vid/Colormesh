@@ -97,7 +97,7 @@ The tri.surf function (within the Colormesh package) identifies the X,Y coordina
 
 ## This will result in a matrix of landmark coordinates for the sampling locations on the specimen. This is the X,Y coordinates of the pixel located at the centroid of each triangle that was created after performing the user-specified number of rounds of triangulation. In the example below, 2 rounds of Delaunay triangulation were performed.
 
-specimen.sampling.template = tri.surf(consensus_LM_coords[perimeter.map,], 2)
+specimen.sampling.template = tri.surf(consensus.coords[perimeter.map,], 2)
 
 
 ```
