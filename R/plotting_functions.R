@@ -36,11 +36,11 @@ plot.tri.surf.points <- function(x, style = "points",...){
 #' @export
 plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "sampled"){
   if(visualization_type == "sampled"){
-  plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1)
+  plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
   } else if(visualization_type == "calibrated"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated.color[,,individual]), pch = 19, asp = 1)
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated.color[,,individual]), pch = 19)
   } else if(visualization_type == "linearized"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$linearized.color[,,individual]), pch = 19, asp = 1)
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$linearized.color[,,individual]), pch = 19)
   }
   }
 

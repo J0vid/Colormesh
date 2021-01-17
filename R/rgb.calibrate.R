@@ -4,13 +4,14 @@
 #' @param imagedir directory of images to measure for calibration. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param px.radius The size of the circular neighborhood (in pixels) to sample color around each triangulated point.
+#' @param flip.y.values should the calbration points be flipped to match the images?
 #' @return The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay. Finally, a calibrated array of color values will be returned under $calibrated
 #' @export
 rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.radius = 2, flip.y.values = F){
 
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif|*.png")
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG")
   calibration.array <- array(NA, dim = c(sum(as.numeric(calib.file$ID) == 1), 3, length(image.names)))
   calibrated.array <- sampled.array$sampled.color
 
