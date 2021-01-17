@@ -37,7 +37,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
 
 
     #match up delaunay points to image by flipping Y axis on image dimensions
-      translated.interior <-  cbind(delaunay.template$interior[,1], -delaunay.template$interior[,2] + img.dim[2])
+      translated.interior <-  cbind(delaunay.template$interior[,1], delaunay.template$interior[,2])
       #add buffer to image so we don't ask for pixels that don't exist
       buffered.image = array(0, dim = c(dim(tmp.image)[1]+ 2*px.radius,dim(tmp.image)[2]+ 2*px.radius, 3))
       buffered.image[(px.radius):(dim(tmp.image)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.image)[2]+(px.radius)),] <- tmp.image

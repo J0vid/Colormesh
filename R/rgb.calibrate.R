@@ -6,7 +6,7 @@
 #' @param px.radius The size of the circular neighborhood (in pixels) to sample color around each triangulated point.
 #' @return The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay. Finally, a calibrated array of color values will be returned under $calibrated
 #' @export
-rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.radius = 2){
+rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.radius = 2, flip.y.values = F){
 
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
@@ -18,17 +18,24 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, px.r
 
   circle.coords <- sampling.circle(px.radius)
 
+
+
   for(i in 1:length(image.names)){
 
     tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
     img.dim <- dim(tmp.image)
+    if(flip.y.values) calib.file[,2] <- -calib.file[,2] + img.dim[2]
 
     buffered.image <- array(0, dim = c(dim(tmp.image)[1],dim(tmp.image)[2], 3))
 
     for(j in 1:nrow(calibration.array)){
       #select the landmarks for the corresponding image from calib.file
+      #tmp.x & y currentlyrely on read.tps info. make sure it works with new tps2array
+
       tmp.x <- calib.file[grepl(image.names[i], calib.file$IMAGE),][j,1] + circle.coords[,1]
       tmp.y <- calib.file[grepl(image.names[i], calib.file$IMAGE),][j,2] + circle.coords[,2]
+
+
 
       calibration.array[j,1,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 1]))
       calibration.array[j,2,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 2]))
