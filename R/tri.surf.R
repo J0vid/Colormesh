@@ -46,20 +46,17 @@ tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, fli
   #initial point flip ####need to flip gen.tri as well?
   tri.interior[,2] <- -tri.interior[,2] + dim(corresponding.image)[2]
   tri.object.prime[,2] <- -tri.object.prime[,2] + dim(corresponding.image)[2]
-<<<<<<< HEAD
+
   delaunay.map$centroids[,2] <- -tri.cent.plot[,2] + dim(corresponding.image)[2]
-=======
+
   delaunay.map$centroids[,2] <- -tri.cent.plot[,2] + image.dims[2]
->>>>>>> b56d8db81f4be365e9dc499a43a5a4854a267401
+
 
   if(flip.delaunay){
     tri.interior[,2] <- -tri.interior[,2] + dim(corresponding.image)[2]
     tri.object.prime[,2] <- -tri.object.prime[,2] + dim(corresponding.image)[2]
-<<<<<<< HEAD
     delaunay.map$centroids[,2] <- -tri.cent.plot[,2] + dim(corresponding.image)[2]
-=======
     delaunay.map$centroids[,2] <- -tri.cent.plot[,2] + image.dims[2]
->>>>>>> b56d8db81f4be365e9dc499a43a5a4854a267401
   }
 
   plot(corresponding.image)
