@@ -3,9 +3,11 @@
 #' @param tri.object A 2D matrix of landmarks to initialize delaunay triangulation
 #' @param point.map A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation
 #' @param num.passes How many rounds of delaunay triangulation to perform. In each pass, the centroids of the triangles will be calculated and be used as points in the next round of triangulation.
+#' @param corresponding.images Supply a corresponding image to the mesh to make sure that the points line up with the image correctly
+#' @param flip.delaunay Logical value for fliping the Y-axis of the delaunay points. Set delaunay.flip to true if your points appear upside down on the image.
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
 #' @export
-tri.surf <- function(tri.object, point.map, num.passes){
+tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, flip.delaunay = F){
 
   require(tripack)
   require(sp)
@@ -40,6 +42,20 @@ tri.surf <- function(tri.object, point.map, num.passes){
   }
 
   tri.interior <- tri.object[-c(1:nrow(tri.object.prime)),]
+
+  #initial point flip ####need to flip gen.tri as well?
+  tri.interior[,2] <- -tri.interior[,2] + dim(corresponding.image)[2]
+  tri.object.prime[,2] <- -tri.object.prime[,2] + dim(corresponding.image)[2]
+  delaunay.map$centroids[,2] <- -tri.cent.plot[,2] + image.dims[2]
+
+  if(flip.delaunay){
+    tri.interior[,2] <- -tri.interior[,2] + dim(corresponding.image)[2]
+    tri.object.prime[,2] <- -tri.object.prime[,2] + dim(corresponding.image)[2]
+    delaunay.map$centroids[,2] <- -tri.cent.plot[,2] + image.dims[2]
+  }
+
+  plot(corresponding.image)
+  points(tri.interior, col = 2)
 
   tri.surf.object <- list(interior = tri.interior, perimeter = tri.object.prime, centroids = tri.cent.plot, final.mesh = gen.tri, point.map = point.map)
   class(tri.surf.object) <- "tri.surf.points"

@@ -10,9 +10,10 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
 
   require(sp)
   require(tripack)
+  require(imager)
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif|*.png")
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png")
   if(length(image.files) > 0) print("The provided image format is in sRGB space. We recommend using the linear space data provided in $linearized.color for analysis")
 
   start.time <- as.numeric(Sys.time())

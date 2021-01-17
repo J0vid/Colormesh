@@ -7,14 +7,14 @@
 #' @export
 plot.tri.surf.points <- function(x, style = "points",...){
   if(style == "points"){
-    plot(x$perimeter, ylim = rev(range(x$perimeter[,2])), ...)
+    plot(x$perimeter, ylim = rev(range(x$perimeter[,2])), asp = 1, ...)
     points(x$interior, ...)
   }
 
   if(style == "triangulation"){
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
-    plot(x$perimeter, typ = "n", ylab = "", xlab = "", axes = F, ylim = rev(range(x$perimeter[,2])), ...)
+    plot(x$perimeter, typ = "n", ylab = "", xlab = "", asp = 1, axes = F, ylim = rev(range(x$perimeter[,2])), ...)
     points(x$centroids[are.you.in == 1,], col = 2, pch = 19, cex = .25, ...)
 
     for(j in c(1:nrow(triangles(x$final.mesh)))[are.you.in==1]){
