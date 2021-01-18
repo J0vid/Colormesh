@@ -1,5 +1,18 @@
+#' #' plot Colormesh data
+#' #'
+#' #' @title plot Colormesh data
+#' #' @param x object of class tri.surf.points or mesh.colors
+#' #' @param \dots for plot.tri.surf.points and plot.mesh.colors: additional arguments passed to
+#' #' \code{\link{par}}.
+#' #' @author J. David Aponte
+#' #' @seealso \code{\link{plot.tri.surf.points}}, \code{\link{plot.mesh.colors}}
+#' #'
+#' #' @export
+#' plot <- function(x,...) UseMethod("plot")
+
 #' plotting method for objects of class "tri.surf.points"
 #'
+#' @method plot
 #' @param x an object of class "tri.surf.points"
 #' @param style the type of plot to generate. There are currently 2 options, "points" and "triangulation". "points" is the default and just plots the interior and perimeter points. "triangulation" plots the delaunay triangulation wireframe with centroids highlighted.
 #' @param ... Additional plotting parameters to be passed to plot.default
@@ -28,6 +41,7 @@ plot.tri.surf.points <- function(x, style = "points",...){
 
 #' plotting individual specimens after color sampling
 #'
+#' @method plot
 #' @param x an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay
 #' @param individual which individual from your landmark dataframe you'd like to plot
 #' @param visualization_type plot raw "sampled" color or "calibrated" color? Sampled is the default.
@@ -46,6 +60,7 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
 
 #' plotting individual specimens before AND after color sampling | select individual or 3 random side by side individuals
 #'
+#' @method plot
 #' @param x an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay
 #' @param individual which individual from your landmark dataframe you'd like to plot
 #' @param visualization_type plot raw "sampled" color or "calibrated" color? Sampled is the default.
@@ -55,10 +70,10 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
 plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "calibrated"){
   if(visualization_type == "diagnostic"){
     par(mfrow = c(2,1))
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, asp = 1)
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1)
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
   } else if(visualization_type == "calibrated"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, asp = 1)
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
   }
   }
 

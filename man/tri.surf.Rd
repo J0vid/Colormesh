@@ -4,7 +4,13 @@
 \alias{tri.surf}
 \title{Flips landmarks to the same orientation if you have a mixture of left and right facing data}
 \usage{
-tri.surf(tri.object, point.map, num.passes)
+tri.surf(
+  tri.object,
+  point.map,
+  num.passes,
+  corresponding.image,
+  flip.delaunay = F
+)
 }
 \arguments{
 \item{tri.object}{A 2D matrix of landmarks to initialize delaunay triangulation}
@@ -12,6 +18,10 @@ tri.surf(tri.object, point.map, num.passes)
 \item{point.map}{A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation}
 
 \item{num.passes}{How many rounds of delaunay triangulation to perform. In each pass, the centroids of the triangles will be calculated and be used as points in the next round of triangulation.}
+
+\item{flip.delaunay}{Logical value for fliping the Y-axis of the delaunay points. Set delaunay.flip to true if your points appear upside down on the image.}
+
+\item{corresponding.images}{Supply a corresponding image to the mesh to make sure that the points line up with the image correctly}
 }
 \value{
 A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
