@@ -11,6 +11,7 @@
 rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, color.standard.values = NULL, px.radius = 2, flip.y.values = F){
 
 #check that if color standard is suppplied, it is actually a matrix
+  #linearize needs to be a toggle
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
@@ -92,10 +93,10 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
       calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[,3])
 
       #substract away RGB deviation for each color linearized
-      lcol.change <- lcalib[,,j] - linearize.colors(color.standard.values)
-      calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcol.change[,1])
-      calibrated.linearized.array[,2,j] <- sampled.array$linearized.color[,2,j] - mean(lcol.change[,2])
-      calibrated.linearized.array[,3,j] <- sampled.array$linearized.color[,3,j] - mean(lcol.change[,3])
+      # lcol.change <- lcalib[,,j] - linearize.colors(color.standard.values)
+      # calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcol.change[,1])
+      # calibrated.linearized.array[,2,j] <- sampled.array$linearized.color[,2,j] - mean(lcol.change[,2])
+      # calibrated.linearized.array[,3,j] <- sampled.array$linearized.color[,3,j] - mean(lcol.change[,3])
     }
 
   }

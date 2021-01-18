@@ -4,9 +4,10 @@
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param delaunay.map delaunay triangulation object
 #' @param px.radius The size of the circular neighborhood (in pixels) to sample color around each triangulated point.
+#' @param linearize.color.space should the sampled color data be transformed into linear color space
 #' @return If write.images is true, warped images will be saved to the write.dir directory. If color sampling is true, the function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
 #' @export
-rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
+rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linerize.color.space = F){
 
   require(sp)
   require(tripack)
@@ -14,7 +15,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2){
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
-  if(length(image.files) > 0) print("The provided image format is in sRGB space. We recommend using the linear space data provided in $linearized.color for analysis")
+  if(length(image.files) > 0) print("The provided image format is assumed to be in sRGB colorspace. If you would like to linearize these values and apply the standard linear transform (based on international standard IEC 61966-2-1:1999), set linearize.color.space to T.")
 
   start.time <- as.numeric(Sys.time())
 
