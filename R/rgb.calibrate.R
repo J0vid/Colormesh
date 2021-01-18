@@ -12,7 +12,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG")
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
   calibration.array <- array(NA, dim = c(sum(as.numeric(calib.file$ID) == 1), 3, length(image.names)))
   calibrated.array <- sampled.array$sampled.color
   calibrated.linearized.array <- sampled.array$linearized.color
@@ -30,6 +30,10 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
     if(flip.y.values & i == 1) calib.file[,2] <- -calib.file[,2] + img.dim[2]
 
     buffered.image <- array(0, dim = c(dim(tmp.image)[1],dim(tmp.image)[2], 3))
+    buffered.image[,,1] <- as.matrix(tmp.image[,,1])
+    buffered.image[,,2] <- as.matrix(tmp.image[,,2])
+    buffered.image[,,3] <- as.matrix(tmp.image[,,3])
+
 
     for(j in 1:nrow(calibration.array)){
       #select the landmarks for the corresponding image from calib.file
@@ -63,14 +67,15 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   for(j in 1:3){ #dim(col.change)[3]){
     col.change <- calibration.array[,,j] - calib.means
     #substract away RGB deviation for each color
-    calibrated.array[,1,j] <- sampled.array$sampled.color[,1,j] - mean(col.change[1,1])
-    calibrated.array[,2,j] <- sampled.array$sampled.color[,2,j] - mean(col.change[2,2])
-    calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[3,3])
+    calibrated.array[,1,j] <- sampled.array$sampled.color[,1,j] - mean(col.change[,1])
+    calibrated.array[,2,j] <- sampled.array$sampled.color[,2,j] - mean(col.change[,2])
+    calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[,3])
 
     #substract away RGB deviation for each color
-    calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcalib.means[1,1])
-    calibrated.linearized.array[,2,j] <- sampled.array$linearized.color[,2,j] - mean(lcalib.means[2,2])
-    calibrated.linearized.array[,3,j] <- sampled.array$linearized.color[,3,j] - mean(lcalib.means[3,3])
+    lcol.change <- lcalib[,,j] - lcalib.means
+    calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcol.change[,1])
+    calibrated.linearized.array[,2,j] <- sampled.array$linearized.color[,2,j] - mean(lcol.change[,2])
+    calibrated.linearized.array[,3,j] <- sampled.array$linearized.color[,3,j] - mean(lcol.change[,3])
   }
 
   #adjust to know color standard values instead of image brightness
@@ -79,16 +84,17 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
 
     for(j in 1:3){ #dim(col.change)[3]){
-      col.change <- calibration.array[,,j] - calib.means
+      col.change <- calibration.array[,,j] - color.standard.values
       #substract away RGB deviation for each color
-      calibrated.array[,1,j] <- sampled.array$sampled.color[,1,j] - mean(color.standard.values[,1])
-      calibrated.array[,2,j] <- sampled.array$sampled.color[,2,j] - mean(color.standard.values[,2])
-      calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(color.standard.values[,3])
+      calibrated.array[,1,j] <- sampled.array$sampled.color[,1,j] - mean(col.change[,1])
+      calibrated.array[,2,j] <- sampled.array$sampled.color[,2,j] - mean(col.change[,2])
+      calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[,3])
 
-      #substract away RGB deviation for each color
-      calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcalib.means[1,1])
-      calibrated.linearized.array[,2,j] <- sampled.array$linearized.color[,2,j] - mean(lcalib.means[2,2])
-      calibrated.linearized.array[,3,j] <- sampled.array$linearized.color[,3,j] - mean(lcalib.means[3,3])
+      #substract away RGB deviation for each color linearized
+      lcol.change <- lcalib[,,j] - linearize.colors(color.standard.values)
+      calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcol.change[,1])
+      calibrated.linearized.array[,2,j] <- sampled.array$linearized.color[,2,j] - mean(lcol.change[,2])
+      calibrated.linearized.array[,3,j] <- sampled.array$linearized.color[,3,j] - mean(lcol.change[,3])
     }
 
   }
