@@ -110,7 +110,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   calibrated.linearized.array[calibrated.linearized.array > 1] <- 1
 
   #mesh.colors needs to also return a list of pairwise sample points that had overlapping pixels#### This is handled as a separate function currently...
-  calibrated.mesh.colors <- list(sampled.color = sampled.array$sampled.color, calibrated = calibrated.array, linearized.color = sampled.array$linearized.color, calibrated.linear = calibrated.linearized.array, delaunay.map = delaunay.map)
+  calibrated.mesh.colors <- list(sampled.color = sampled.array$sampled.color, calibrated = calibrated.array, linearized.color = sampled.array$linearized.color, calibrated.linear = calibrated.linearized.array, delaunay.map = sampled.array$delaunay.map)
 
   class(calibrated.mesh.colors) <- "calibrated.mesh.colors"
   return(calibrated.mesh.colors)
