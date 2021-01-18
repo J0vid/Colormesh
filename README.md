@@ -22,26 +22,27 @@ vignette("Guppy-images”)
 
 To prepare images for RGB color data sampling using Delaunay Triangulation, prepare the following folders and files:
 
-  1. A .csv file containing factors to uniquely identify specimen images with column names omitted. This csv file will be used as a check to ensure the calibration correction is applied to the appropriate image, therefore the file type extension will be ignored if it is included. The first column must contain a unique image name of each original (prior to unwarping to the consensus shape) image. The second column should contain the unique image name of the "unwarped" (to the consensus shape) version of the image. The .csv file must contain at least these two columns and appear in the order described here. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included. They may be in any order as they will not be called during the color data extraction process.
+  1. A .csv file containing factors that uniquely identify specimen images. This .csv file should omit the row and column header. This csv file will be used as a check to ensure the calibration correction is applied to the appropriate image. The first column MUST be the image name of the original images (prior to unwarping to the consensus shape) used to place landmarks on the color standard; the names of these original images MUST be unique. The second column should contain the unique image name of the "unwarped" (to the consensus shape) version of the specimen image. The .csv file must contain at least these two columns and appear in the order described here. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after these two columns.
   
-  2. A folder containing the specimen images that were unwarped to the consensus shape AND the TPS file containing the coordinates of the landmarks for this consensus shape. The image file names must match the image names contained in the first column of the .csv file (described in #1 above). At this time, the landmark coordinates must be saved as a TPS file type. Note: This TPS file will have the X,Y coordinates of the landmarks for one specimen since unwarping to the consensus shape results in all specimens having the same landmark coordinates.  ################# NEED TO TEST THAT ORDER IN CSV FILE CAN BE DIFFERENT THAN ORDER OF IMAGES IN FILE ############################
+  2. A folder containing the specimen images that were unwarped to the consensus shape AND the TPS file containing the coordinates of the landmarks for this consensus shape. The image names must match the image names contained in the first column of the .csv file (described in #1 above). At this time, the landmark coordinates must be saved as a TPS file type. Note: This TPS file will have the X,Y coordinates of the landmarks for one specimen since unwarping to the consensus shape results in all specimens having the same landmark coordinates.  ################# NEED TO TEST THAT ORDER IN CSV FILE CAN BE DIFFERENT THAN ORDER OF IMAGES IN FILE ############################
   
-  3. For color calibration, create a separate file filder containing the original specimen images (containing color standard) and the TPS file containing the coordinates of landmarks that were placed on the color standard. 
+  3. For color calibration, create 2nd file folder containing the original specimen images (containing color standard) and the TPS file containing the coordinates of landmarks that were placed on the color standard. 
   
-  4. A .csv file containing the known RGB values of the colors on the color standard in the order in which they were landmarked (omit column names). The number of columns must equal the number of landmarks placed on the color standard (i.e., the number of colors), the first row must contain the R (red) value for each color standard, the second row contains all the G (green) values, and the 3rd row the B (blue) values. These values should be on the scale of 0 to 1. Often, known values of each color channel are out of 255. For example, napthal crimson has a known RGB value of: 173/43/50. These are the red, green, and blue values, respectively, out of 255. To convert these values to the appropriate scale, divdide each value by 255: R: 173/255 = 0.6784; G: 43/255 = 0.1686; B: 50/255 = 0.1961. (See the first column of our example, known_RGB.csv).
+  4. A .csv file containing the known RGB values of the colors on the color standard in the order in which they were landmarked (omit row and column names). The number of columns must equal the number of landmarks placed on the color standard (i.e., the number of colors), the first row must contain the R (red) value for each color standard, the second row contains all the G (green) values, and the 3rd row the B (blue) values. These values should be on the scale of 0 to 1. Often, known values of each color channel are out of 255. For example, napthal crimson has a known RGB value of: 173/43/50; these are the red, green, and blue values, respectively, out of 255. To convert these values to the appropriate scale, divdide each value by 255: R: 173/255 = 0.6784; G: 43/255 = 0.1686; B: 50/255 = 0.1961. (See the first column of our example, known_RGB.csv).
 
 
 ```r
 ## Defining the variable described above.
 
-## Using the read.csv function (base R), read in the csv file containing the indentification information of your specimens.
+## Using the read.csv function (base R), read in the csv file containing the indentification information of your specimens. In the example below, we named the csv file "specimen.factors".
+
 ## Be sure the unique names of original images are in first column and the second column contains the unique names of the unwarped images that correspond to those in the first column. 
 
 specimen.factors = read.csv("C:/Users/jennv/Desktop/CM_test/specimen_factors.csv", header = F) 
 
 
 
-## Using the read.tps function (Colormesh package), read in the TPS file containing the landmark coordinates for the consensus shape
+## Using the <whats.this.function.name> (Colormesh package), the TPS file is read in and turned into an array for use in the pipeline that follows. 
 
 consensus.coords = read.tps(data= "C:/Users/jennv/Desktop/CM_test/consensus_LM_coords.TPS")
 
