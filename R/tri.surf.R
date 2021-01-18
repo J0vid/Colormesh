@@ -57,9 +57,9 @@ tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, fli
     tri.cent.plot[,2] <- -tri.cent.plot[,2] + dim(corresponding.image)[2]
   }
 
-  plot(corresponding.image)
-  points(tri.interior, col = 2)
-  lines(tri.object.prime[point.map,], lwd = 1.5, col = "yellow")
+  # plot(corresponding.image)
+  # points(tri.interior, col = 2)
+  # lines(tri.object.prime[point.map,], lwd = 1.5, col = "yellow")
 
   tri.surf.object <- list(interior = tri.interior, perimeter = tri.object.prime, centroids = tri.cent.plot, final.mesh = gen.tri, point.map = point.map)
   class(tri.surf.object) <- c("tri.surf.points")

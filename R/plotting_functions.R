@@ -1,14 +1,14 @@
-#' #' plot Colormesh data
-#' #'
-#' #' @title plot Colormesh data
-#' #' @param x object of class tri.surf.points or mesh.colors
-#' #' @param \dots for plot.tri.surf.points and plot.mesh.colors: additional arguments passed to
-#' #' \code{\link{par}}.
-#' #' @author J. David Aponte
-#' #' @seealso \code{\link{plot.tri.surf.points}}, \code{\link{plot.mesh.colors}}
-#' #'
-#' #' @export
-#' plot <- function(x,...) UseMethod("plot")
+#' plot Colormesh data
+#'
+#' @title plot Colormesh data
+#' @param x object of class tri.surf.points or mesh.colors
+#' @param \dots for plot.tri.surf.points and plot.mesh.colors: additional arguments passed to
+#' \code{\link{par}}.
+#' @author J. David Aponte
+#' @seealso \code{\link{plot.tri.surf.points}}, \code{\link{plot.mesh.colors}}
+#'
+#' @export
+plot <- function(x,...) UseMethod("plot")
 
 #' plotting method for objects of class "tri.surf.points"
 #'

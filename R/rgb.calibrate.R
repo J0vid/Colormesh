@@ -10,6 +10,7 @@
 #' @export
 rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, color.standard.values = NULL, px.radius = 2, flip.y.values = F){
 
+#check that if color standard is suppplied, it is actually a matrix
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
