@@ -1,8 +1,6 @@
 #' plotting method for objects of class "tri.surf.points"
 #'
-#' @method plot
 #' @param x an object of class "tri.surf.points"
-#' @param base
 #' @param style the type of plot to generate. There are currently 2 options, "points" and "triangulation". "points" is the default and just plots the interior and perimeter points. "triangulation" plots the delaunay triangulation wireframe with centroids highlighted.
 #' @param ... Additional plotting parameters to be passed to plot.default
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
@@ -31,7 +29,6 @@ plot.tri.surf.points <- function(x, style = "points",...){
 
 #' plotting individual specimens after color sampling
 #'
-#' @method plot
 #' @param x an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay
 #' @param individual which individual from your landmark dataframe you'd like to plot
 #' @param visualization_type plot raw "sampled" color or "calibrated" color? Sampled is the default.
@@ -52,13 +49,12 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
 
 #' plotting individual specimens before AND after color sampling | select individual or 3 random side by side individuals
 #'
-#' @method plot
 #' @param x an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay
 #' @param individual which individual from your landmark dataframe you'd like to plot
 #' @param visualization_type plot raw "sampled" color or "calibrated" color? Sampled is the default.
 #' @param ... Additional plotting parameters to be passed to plot.default
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
-#' @method plot calibrated mesh colors
+#' @method plot calibrated.mesh.colors
 #' @export
 plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "calibrated"){
   if(visualization_type == "diagnostic"){

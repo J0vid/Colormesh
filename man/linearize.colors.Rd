@@ -7,7 +7,7 @@
 linearize.colors(rgb.object)
 }
 \arguments{
-\item{rgb.object}{A .TPS file}
+\item{rgb.object}{An array}
 }
 \value{
 An array of sampled colors in linearized space
