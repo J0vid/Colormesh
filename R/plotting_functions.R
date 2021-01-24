@@ -2,9 +2,11 @@
 #'
 #' @method plot
 #' @param x an object of class "tri.surf.points"
+#' @param base
 #' @param style the type of plot to generate. There are currently 2 options, "points" and "triangulation". "points" is the default and just plots the interior and perimeter points. "triangulation" plots the delaunay triangulation wireframe with centroids highlighted.
 #' @param ... Additional plotting parameters to be passed to plot.default
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
+#' @method plot tri.surf.points
 #' @export
 plot.tri.surf.points <- function(x, style = "points",...){
   if(style == "points"){
@@ -35,7 +37,9 @@ plot.tri.surf.points <- function(x, style = "points",...){
 #' @param visualization_type plot raw "sampled" color or "calibrated" color? Sampled is the default.
 #' @param ... Additional plotting parameters to be passed to plot.default
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
+#' @method plot mesh.colors
 #' @export
+
 plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "sampled"){
   if(visualization_type == "sampled"){
   plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
@@ -54,6 +58,7 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
 #' @param visualization_type plot raw "sampled" color or "calibrated" color? Sampled is the default.
 #' @param ... Additional plotting parameters to be passed to plot.default
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
+#' @method plot calibrated mesh colors
 #' @export
 plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "calibrated"){
   if(visualization_type == "diagnostic"){
