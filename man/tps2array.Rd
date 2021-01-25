@@ -2,16 +2,16 @@
 % Please edit documentation in R/tps2array.R
 \name{tps2array}
 \alias{tps2array}
-\title{convert TPS data to landmark array}
+\title{read TPS files and convert data to an array}
 \usage{
-tps2array(tpsfile)
+tps2array(data)
 }
 \arguments{
-\item{tpsfile}{A read.tps() object}
+\item{data}{A .TPS file}
 }
 \value{
-An array of landmark info with dimensions N_landmarks x 2 x N_observations
+A matrix of the landmarks for each observation
 }
 \description{
-convert TPS data to landmark array
+read TPS files and convert data to an array
 }

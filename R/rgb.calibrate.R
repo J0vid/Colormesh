@@ -15,7 +15,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
-  calibration.array <- array(NA, dim = c(sum(as.numeric(calib.file$ID) == 1), 3, length(image.names)))
+  calibration.array <- array(NA, dim = c(nrow(calib.file), 3, length(image.names)))
   calibrated.array <- sampled.array$sampled.color
   calibrated.linearized.array <- sampled.array$linearized.color
 
@@ -29,7 +29,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
     tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
     img.dim <- dim(tmp.image)
 
-    if(flip.y.values & i == 1) calib.file[,2] <- -calib.file[,2] + img.dim[2]
+    if(flip.y.values & i == 1) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
 
     buffered.image <- array(0, dim = c(dim(tmp.image)[1],dim(tmp.image)[2], 3))
     buffered.image[,,1] <- as.matrix(tmp.image[,,1])
@@ -41,8 +41,8 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
       #select the landmarks for the corresponding image from calib.file
       #tmp.x & y currentlyrely on read.tps info. make sure it works with new tps2array
 
-      tmp.x <- calib.file[grepl(image.names[i], calib.file$IMAGE),][j,1] + circle.coords[,1]
-      tmp.y <- calib.file[grepl(image.names[i], calib.file$IMAGE),][j,2] + circle.coords[,2]
+      tmp.x <- calib.file[,,grepl(image.names[i], dimnames(calib.file)[[3]])][j,1] + circle.coords[,1]
+      tmp.y <- calib.file[,,grepl(image.names[i], dimnames(calib.file)[[3]])][j,2] + circle.coords[,2]
 
       calibration.array[j,1,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 1]))
       calibration.array[j,2,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 2]))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.tps.R
 \name{read.tps}
 \alias{read.tps}
-\title{read TPS files}
+\title{read TPS files and convert data to an array}
 \usage{
 read.tps(data)
 }
@@ -13,5 +13,5 @@ read.tps(data)
 A matrix of the landmarks for each observation
 }
 \description{
-read TPS files
+read TPS files and convert data to an array
 }

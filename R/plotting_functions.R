@@ -37,13 +37,15 @@ plot.tri.surf.points <- function(x, style = "points",...){
 #' @method plot mesh.colors
 #' @export
 
-plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "sampled"){
+plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "sampled", ...){
   if(visualization_type == "sampled"){
-  plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
-  } else if(visualization_type == "calibrated"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated.color[,,individual]), pch = 19)
-  } else if(visualization_type == "linearized"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$linearized.color[,,individual]), pch = 19)
+  plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, xlab = "", ylab = "")
+  } else if(visualization_type == "comparison"){
+    image.files <- list.files(mesh.colors.object$imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
+    tmp.image <- load.image(paste0(mesh.colors.object$imagedir, image.files[grepl(mesh.colors.object$image.names[individual], image.files)]))
+    # implot(tmp.image, points(mesh.colors.object$delaunay$interior[,1], mesh.colors.object$delaunay$interior[,2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19))
+    plot(tmp.image)
+    points(mesh.colors.object$delaunay$interior[,1], mesh.colors.object$delaunay$interior[,2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
   }
   }
 
@@ -56,13 +58,13 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
 #' @method plot calibrated.mesh.colors
 #' @export
-plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "calibrated"){
+plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "calibrated", ...){
   if(visualization_type == "diagnostic"){
     par(mfrow = c(2,1))
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, main = "Calibrated", xlab = "", ylab = "")
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, main = "Raw sampled", xlab = "", ylab = "")
   } else if(visualization_type == "calibrated"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, xlab = "", ylab = "")
   }
   }
 

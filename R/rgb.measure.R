@@ -7,7 +7,7 @@
 #' @param linearize.color.space should the sampled color data be transformed into linear color space
 #' @return If write.images is true, warped images will be saved to the write.dir directory. If color sampling is true, the function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
 #' @export
-rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linerize.color.space = F){
+rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linearize.color.space = F){
 
   require(sp)
   require(tripack)
@@ -62,9 +62,9 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
   } #end i
 
     #linearize sampling array
-    lcolors <- linearize.colors(sampled.array)
+    if(linearize.color.space) sampled.array <- linearize.colors(sampled.array)
 
-  mesh.colors <- list(sampled.color = sampled.array, delaunay.map = delaunay.map, linearized.color = lcolors)
+  mesh.colors <- list(sampled.color = sampled.array, delaunay.map = delaunay.map, linearized = if(linearize.color.space){T}else{F}, imagedir = imagedir, image.names = image.names)
 
   class(mesh.colors) <- "mesh.colors"
   return(mesh.colors)

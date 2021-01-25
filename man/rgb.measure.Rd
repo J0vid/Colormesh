@@ -9,7 +9,7 @@ rgb.measure(
   image.names,
   delaunay.map,
   px.radius = 2,
-  linerize.color.space = F
+  linearize.color.space = F
 )
 }
 \arguments{
