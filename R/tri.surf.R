@@ -1,5 +1,6 @@
 #' Flips landmarks to the same orientation if you have a mixture of left and right facing data
 #'
+#' @import imager
 #' @param tri.object A 2D matrix of landmarks to initialize delaunay triangulation
 #' @param point.map A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation
 #' @param num.passes How many rounds of delaunay triangulation to perform. In each pass, the centroids of the triangles will be calculated and be used as points in the next round of triangulation.
@@ -11,6 +12,7 @@ tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, fli
 
   require(tripack)
   require(sp)
+  require(imager)
 
   #remove initial duplicates
   if(sum(duplicated(tri.object)) > 0) warning("Initial landmark set has duplicate coordinates; they've been removed")
