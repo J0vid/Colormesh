@@ -44,8 +44,9 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
     image.files <- list.files(mesh.colors.object$imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
     tmp.image <- load.image(paste0(mesh.colors.object$imagedir, image.files[grepl(mesh.colors.object$image.names[individual], image.files)]))
     # implot(tmp.image, points(mesh.colors.object$delaunay$interior[,1], mesh.colors.object$delaunay$interior[,2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19))
-    plot(tmp.image)
-    points(mesh.colors.object$delaunay$interior[,1], mesh.colors.object$delaunay$interior[,2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
+    par(mfrow = c(2,1))
+    plot(tmp.image, axes = F)
+    plot(mesh.colors.object$delaunay$interior[,1], -mesh.colors.object$delaunay$interior[,2] + dim(tmp.image)[2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, xlab = "", ylab = "", asp = 1, axes = F)
   }
   }
 

@@ -14,6 +14,12 @@ tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, fli
   require(sp)
   require(imager)
 
+  if(length(dim(tri.object)) > 2 & dim(tri.object)[3] == 1) tri.object <- tri.object[,,1]
+  if(length(dim(tri.object)) > 2 & dim(tri.object)[3] > 1){
+    warning("Did you mean to supply an array to this function? By default we will use the first slice.")
+    tri.object <- tri.object[,,1]
+  }
+
   #remove initial duplicates
   if(sum(duplicated(tri.object)) > 0) warning("Initial landmark set has duplicate coordinates; they've been removed")
 
