@@ -18,11 +18,11 @@ vignette("Guppy-images”)
 
 ```
 
-### Using Colormesh
+### Using Colormesh (V1.0)
 
 At this time, Colormesh requires that image processing using geometric morphometrics software take place prior to use. The guppy examples provided in the vignette were processed using the TPS Series software by James Rohlf, availble for free at the Stonybrook Morphometrics website (http://www.sbmorphometrics.org/). The TPS software was used for landmark placement and unwarping of images to a consensus shape. The rersulting files described below include TPS files, which contain landmark x,y coordinates, and the resulting unwarped images of each specimen to be sampled by Colormesh. 
 
-### Required files for Colormesh(V1.0)
+### Required files for Colormesh (V1.0)
 To prepare images for RGB color data sampling using Delaunay Triangulation, prepare the following folders and files:
 
   1. A .csv file containing factors that uniquely identify specimen images. This .csv file should omit the row names and column headers. This .csv file will be used as a check to ensure the calibration correction is applied to the appropriate image. The first column MUST be the image name of the original images (prior to unwarping to the consensus shape) used to place landmarks on the color standard; the names of these original images MUST be unique. The second column MUST contain the unique image name of the "unwarped" (to the consensus shape) version of the specimen image. This .csv file must contain at least these two columns and appear in the order described here. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after these two columns.
@@ -34,21 +34,21 @@ To prepare images for RGB color data sampling using Delaunay Triangulation, prep
   4. A file containing: the unwarped (to a consensus shape) images of each specimen AND the TPS file containing the coordinates of the landmarks for this consensus shape. The image names must match the name that appear in the 2nd column of the .csv file (#1 above). These images are produced by image processing in a geometric morphometrics program (ex. tpsSuper). Since all images were unwarped to this consensus shape, this TPS will only contain the number of coordinates equal to the number of landmarks placed around your specimen.
 
 
-
+### Reading in .csv files
 Code below loads in the two csv files needed to use the Colormesh package to extract color data: 
 
-## 1. Using base R, read in the .csv containing the specimen image names and identification information. The first column MUST be 
-##    the unique image names of the original images that contain the color standard. The second column MUST contain 
-##    the unique image names of the images that were unwarped to the consensus shape. The remaining columns can 
-##    contain any other information you may need to identify your specimens.
-##
-## 2. Using base R, read in the .csv containing the known RGB values for each of the colors on your color standard. The color channel 
-##    values should be on the scale of 0 to 1; if the are out of 255, simply divide by 255. The columns
-##    of this csv should be the different colors found on your color standard. Each row should provide the known
-##    color values the three (RGB) color channels. For example, if you have 5 colors in your color standard, you
-##    will have 5 columns. The first row of the csv should contain the known RED value for each of the five colors.
-##    The second row should contain the GREEN color channel values for each of the five colors on the standard. 
-##    The third row should have the BLUE color channel values for each of the five known colors on the standard. 
+ 1. Using base R, read in the .csv containing the specimen image names and identification information. The first column MUST be 
+    the unique image names of the original images that contain the color standard. The second column MUST contain 
+    the unique image names of the images that were unwarped to the consensus shape. The remaining columns can 
+    contain any other information you may need to identify your specimens.
+
+ 2. Using base R, read in the .csv containing the known RGB values for each of the colors on your color standard. The color channel 
+    values should be on the scale of 0 to 1; if the are out of 255, simply divide by 255. The columns
+    of this csv should be the different colors found on your color standard. Each row should provide the known
+    color values the three (RGB) color channels. For example, if you have 5 colors in your color standard, you
+    will have 5 columns. The first row of the csv should contain the known RED value for each of the five colors.
+    The second row should contain the GREEN color channel values for each of the five colors on the standard. 
+    The third row should have the BLUE color channel values for each of the five known colors on the standard. 
 
 
 ```r
@@ -57,9 +57,10 @@ specimen.factors = read.csv("C:/Users/jennv/Desktop/Colormesh_Test_2/specimen_fa
 known.rgb = read.csv("C:/Users/jennv/Desktop/Colormesh_Test_2/known_RGB.csv", header = F) 
 
 ```
+### Reading in .TPS files
 
-## The function "tps2array" will read in the .TPS file which contains landmark coordinates and converts the information 
-##   into an array to be used in later functions.
+The function "tps2array" will read in the .TPS file which contains landmark coordinates and converts the information 
+   into an array to be used in later functions.
 
 ```r
 
@@ -76,16 +77,35 @@ calib.array = tps2array("C:/Users/jennv/Desktop/Colormesh_Test_2/calib_images/ca
 ```
 
 
+### Determining sampling density
 
-### Color sampling
+Colormesh uses Delaunay triangulation to determine locations to samples color. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape as the vertices of the triangles. The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation specified by the user; more rounds provides a greater density of sampling points. This is accomplished by using the centroids of the triangles created from the first round of Delaunay triangulation as the vertices for subsequent rounds of triangulation. 
 
-Colormesh samples color by generating a mesh overlay using Delaunay triangulation. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape (from the consensus_LM_coords.TPS file). The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation (more rounds provides a greater density of sampling points). This function uses the centroids of the triangles created from the first round of Delaunay triangulation as new points for subsequent rounds of triangulation. 
-
-Here's what it looks like:
+Here's what an example of two, three, and four rounds of triangulation looks like:
 
 ![Triangulation example](images/DT.png)
 
-####################### DAVID, IN THE CALL FOR THE IMAGE OUTLINE ABOVE, DO WE HAVE THE OUTLINE POINTING THE SAME DIRECTION AS THE FISH IN THE IMAGES (SNOUT TO THE RIGHT), ALSO IS THE ASPECT RATIO CORRECT? ########
+
+### Generating the sampling template
+
+Colormesh needs to know what order to read the landmarks in so that a perimeter is drawn around the specimen in a "connect-the-dots" manner.
+
+```{r}
+
+perimeter.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
+
+```
+
+## Generating and checking alignment of the sampling template
+
+## IMPORTANT: Test that your sampling mesh properly overlays on your image you want to sample. 
+## Image readers place the 0,0 x,y-coordinate in the upper left corner. In contrast, the coordinates in the TPS
+## file place 0,0 in the bottom left corner. Colormesh assumes this to be true. To check this, the code below
+## is used to read in a test image and then plot the Delaunay triangulation wire-frame on top of the image to
+## ensure that you're properly sampling the image. This code will generate a plot for you to visualize your
+## proposed sampling locations.
+
+
 
 ### Identifying sampling location using Delaunay triangulation
 To initiate the first round of Delaunay triangulation, you will need a point map. A point map is a vector that specifies the order of your landmarks.
