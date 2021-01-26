@@ -18,11 +18,11 @@ vignette("Guppy-images”)
 
 ```
 
-## Using Colormesh
+### Using Colormesh
 
 At this time, Colormesh requires that image processing using geometric morphometrics software take place prior to use. The guppy examples provided in the vignette were processed using the TPS Series software by James Rohlf, availble for free at the Stonybrook Morphometrics website (http://www.sbmorphometrics.org/). The TPS software was used for landmark placement and unwarping of images to a consensus shape. The rersulting files described below include TPS files, which contain landmark x,y coordinates, and the resulting unwarped images of each specimen to be sampled by Colormesh. 
 
-
+### Required files for Colormesh(V1.0)
 To prepare images for RGB color data sampling using Delaunay Triangulation, prepare the following folders and files:
 
   1. A .csv file containing factors that uniquely identify specimen images. This .csv file should omit the row names and column headers. This .csv file will be used as a check to ensure the calibration correction is applied to the appropriate image. The first column MUST be the image name of the original images (prior to unwarping to the consensus shape) used to place landmarks on the color standard; the names of these original images MUST be unique. The second column MUST contain the unique image name of the "unwarped" (to the consensus shape) version of the specimen image. This .csv file must contain at least these two columns and appear in the order described here. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after these two columns.
@@ -35,40 +35,47 @@ To prepare images for RGB color data sampling using Delaunay Triangulation, prep
 
 
 
+Code below loads in the two csv files needed to use the Colormesh package to extract color data: 
+
+## 1. Using base R, read in the .csv containing the specimen image names and identification information. The first column MUST be 
+##    the unique image names of the original images that contain the color standard. The second column MUST contain 
+##    the unique image names of the images that were unwarped to the consensus shape. The remaining columns can 
+##    contain any other information you may need to identify your specimens.
+##
+## 2. Using base R, read in the .csv containing the known RGB values for each of the colors on your color standard. The color channel 
+##    values should be on the scale of 0 to 1; if the are out of 255, simply divide by 255. The columns
+##    of this csv should be the different colors found on your color standard. Each row should provide the known
+##    color values the three (RGB) color channels. For example, if you have 5 colors in your color standard, you
+##    will have 5 columns. The first row of the csv should contain the known RED value for each of the five colors.
+##    The second row should contain the GREEN color channel values for each of the five colors on the standard. 
+##    The third row should have the BLUE color channel values for each of the five known colors on the standard. 
+
+
 ```r
-## Defining the variable described above.
+specimen.factors = read.csv("C:/Users/jennv/Desktop/Colormesh_Test_2/specimen_factors.csv", header = F) 
 
-## Using the read.csv function (base R), read in the csv file containing the indentification information of your specimens. In the example below, we named the csv file "specimen.factors".
-
-## Be sure the unique names of original images are in first column and the second column contains the unique names of the unwarped images that correspond to those in the first column. 
-
-specimen.factors = read.csv("C:/Users/jennv/Desktop/CM_test/specimen_factors.csv", header = F) 
-
-
-
-## Using the <whats.this.function.name> (Colormesh package), the TPS file is read in and turned into an array for use in the pipeline that follows. 
-
-consensus.coords = read.tps(data= "C:/Users/jennv/Desktop/CM_test/consensus_LM_coords.TPS")
-
-
-## Using the read.csv function (base R), read in the csv file containing the known RGB values of the colors contained in the color standard
-
-known.rgb = read.csv("C:/Users/jennv/Desktop/CM_test/known_RGB.csv", header = F) 
-
-
-
-
-## Using the read.tps function (Colormesh package), read in the TPS file containing the landmark coordinates for the consensus shape
-
-calib.coords = read.tps(data= "C:/Users/jennv/Desktop/CM_test/calib_LM_coords.TPS")
-
-
-#############################################################################################################################################################################
-################################ DAVID, DOES THE READ.TPS FUNCTION NOW QUERY THE IMAGE DIMENSIONS AND SUBTRACT THE Y-VALUE TO MAKE THE Y-AXIS CORRECTION WITHIN THE FUNCTION?
-#####################################################################
+known.rgb = read.csv("C:/Users/jennv/Desktop/Colormesh_Test_2/known_RGB.csv", header = F) 
 
 ```
-################################### DAVID, HOW TO WE MAKE THESE FILES AVAILABLE FOR PEOPLE TO DOWNLOAD SO THEY CAN WORK THROUGH THE EXAMPLE? #########################
+
+## The function "tps2array" will read in the .TPS file which contains landmark coordinates and converts the information 
+##   into an array to be used in later functions.
+
+```r
+
+## The code below reads in the coordinates of the consensus specimen shape
+
+consensus.array = tps2array(data= "C:/Users/jennv/Desktop/Colormesh_Test_2/consensus_LM_coords.TPS")
+
+
+## The code below reads in the TPS file containing the coordinates for landmarks placed on the color
+## standard contained withing the original images. 
+
+calib.array = tps2array("C:/Users/jennv/Desktop/Colormesh_Test_2/calib_images/calib_LM_coords.TPS")
+
+```
+
+
 
 ### Color sampling
 
