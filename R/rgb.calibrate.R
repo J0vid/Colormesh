@@ -11,13 +11,13 @@
 rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, color.standard.values = NULL, px.radius = 2, flip.y.values = T){
 
 #check that if color standard is suppplied, it is actually a matrix
-  #linearize needs to be a toggle
+  if(is.null(color.standard.values) == F & missing(color.standard.values)) stop("color.standard.values is not provided. Please make sure to define your color standard.")
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
   calibration.array <- array(NA, dim = c(nrow(calib.file), 3, length(image.names)))
   calibrated.array <- sampled.array$sampled.color
-  calibrated.linearized.array <- sampled.array$linearized.color
+  calibrated.perimeter <- sampled.array$sampled.perimeter
 
   start.time <- as.numeric(Sys.time())
 
@@ -69,7 +69,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   # lcalib.means <- array.mean(lcalib)
   col.change <- calib.means
 
-  for(j in 1:3){ #dim(col.change)[3]){
+  for(j in 1:dim(calibrated.array)[3]){
     col.change <- calibration.array[,,j] - calib.means
 
     #substract away RGB deviation for each color
@@ -77,6 +77,9 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
     calibrated.array[,2,j] <- sampled.array$sampled.color[,2,j] - mean(col.change[,2])
     calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[,3])
 
+    calibrated.perimeter[,1,j] <- sampled.array$sampled.perimeter[,1,j] - mean(col.change[,1])
+    calibrated.perimeter[,2,j] <- sampled.array$sampled.perimeter[,2,j] - mean(col.change[,2])
+    calibrated.perimeter[,3,j] <- sampled.array$sampled.perimeter[,3,j] - mean(col.change[,3])
     #substract away RGB deviation for each color
     # lcol.change <- lcalib[,,j] - lcalib.means
     # calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcol.change[,1])
@@ -89,13 +92,16 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
     #linearize known color standard values?
 
 
-    for(j in 1:3){ #dim(col.change)[3]){
+    for(j in 1:dim(calibrated.array)[3]){
       col.change <- calibration.array[,,j] - color.standard.values
       #substract away RGB deviation for each color
       calibrated.array[,1,j] <- sampled.array$sampled.color[,1,j] - mean(col.change[,1])
       calibrated.array[,2,j] <- sampled.array$sampled.color[,2,j] - mean(col.change[,2])
       calibrated.array[,3,j] <- sampled.array$sampled.color[,3,j] - mean(col.change[,3])
 
+      calibrated.perimeter[,1,j] <- sampled.array$sampled.perimeter[,1,j] - mean(col.change[,1])
+      calibrated.perimeter[,2,j] <- sampled.array$sampled.perimeter[,2,j] - mean(col.change[,2])
+      calibrated.perimeter[,3,j] <- sampled.array$sampled.perimeter[,3,j] - mean(col.change[,3])
       #substract away RGB deviation for each color linearized
       # lcol.change <- lcalib[,,j] - linearize.colors(color.standard.values)
       # calibrated.linearized.array[,1,j] <- sampled.array$linearized.color[,1,j] - mean(lcol.change[,1])
@@ -111,9 +117,14 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   calibrated.array[calibrated.array < 0] <- 0
   calibrated.array[calibrated.array > 1] <- 1
 
+  dimnames(calibrated.perimeter)[[3]] <- image.names
+  #limit adjustments to viable image ranges
+  calibrated.perimeter[calibrated.perimeter < 0] <- 0
+  calibrated.perimeter[calibrated.perimeter > 1] <- 1
+
 
   #mesh.colors needs to also return a list of pairwise sample points that had overlapping pixels#### This is handled as a separate function currently...
-  calibrated.mesh.colors <- list(sampled.color = sampled.array$sampled.color, calibrated = calibrated.array, delaunay.map = sampled.array$delaunay.map)
+  calibrated.mesh.colors <- list(sampled.color = sampled.array$sampled.color, calibrated = calibrated.array, delaunay.map = sampled.array$delaunay.map, calibrated.perimeter = calibrated.perimeter)
 
   class(calibrated.mesh.colors) <- "calibrated.mesh.colors"
   return(calibrated.mesh.colors)

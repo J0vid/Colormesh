@@ -66,6 +66,11 @@ plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visu
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, main = "Raw sampled", xlab = "", ylab = "")
   } else if(visualization_type == "calibrated"){
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, xlab = "", ylab = "")
+  } else if(visualization_type == "differences"){
+    num.breaks <- 100
+    bright.diffs <- colorRampPalette(c("black", "white"))(num.breaks)
+    cal.uncal <- mesh.colors.object$calibrated[,,individual] - mesh.colors.object$sampled.color[,,individual]
+    plot(mesh.colors.object$delaunay, col = bright.diffs[cut(cal.uncal, num.breaks)], pch = 19, xlab = "", ylab = "")
   }
   }
 

@@ -25,6 +25,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     # sampled.r <- sampled.g <- sampled.b <- matrix(0, ncol = nrow(delaunay.template$interior), nrow = dim(landmarks)[3])
     # if(is.null(calib.file) == F) calibration.array <- array(NA, dim = c(sum(as.numeric(calib.file$ID) == 1), 3, dim(landmarks)[3]))
     sampled.array <- array(NA, dim = c(nrow(delaunay.template$interior), 3, length(image.names)))
+    sampled.array.perimeter <- array(NA, dim = c(nrow(delaunay.template$perimeter), 3, length(image.names)))
     # calibrated.array <- sampled.array
     circle.coords <- sampling.circle(px.radius)
 
@@ -39,6 +40,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
 
     #match up delaunay points to image by flipping Y axis on image dimensions
       translated.interior <-  cbind(delaunay.template$interior[,1], delaunay.template$interior[,2])
+      translated.perimeter <- cbind(delaunay.template$perimeter[,1], delaunay.template$perimeter[,2])
       #add buffer to image so we don't ask for pixels that don't exist
       buffered.image = array(0, dim = c(dim(tmp.image)[1]+ 2*px.radius,dim(tmp.image)[2]+ 2*px.radius, 3))
       buffered.image[(px.radius):(dim(tmp.image)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.image)[2]+(px.radius)),] <- tmp.image
@@ -48,8 +50,15 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
         sampled.array[j,1,i] <-  mean(diag(buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.interior[j,2] + circle.coords[,2])), 1]))
         sampled.array[j,2,i] <-  mean(diag(buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 2]))
         sampled.array[j,3,i] <-  mean(diag(buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 3]))
-      }
+
+        if(j <= nrow(translated.perimeter)){
+          sampled.array.perimeter[j,1,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 1]))
+          sampled.array.perimeter[j,2,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 2]))
+          sampled.array.perimeter[j,3,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 3]))
+          }
+        }
       dimnames(sampled.array)[[3]] <- image.names
+      dimnames(sampled.array.perimeter)[[3]] <- image.names
 
     if(i == 1){
       end.time <- as.numeric(Sys.time())
@@ -62,9 +71,12 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
   } #end i
 
     #linearize sampling array
-    if(linearize.color.space) sampled.array <- linearize.colors(sampled.array)
+    if(linearize.color.space){
+      sampled.array <- linearize.colors(sampled.array)
+      sampled.array.perimeter <- linearize.colors(sampled.array.perimeter)
+    }
 
-  mesh.colors <- list(sampled.color = sampled.array, delaunay.map = delaunay.map, linearized = if(linearize.color.space){T}else{F}, imagedir = imagedir, image.names = image.names)
+  mesh.colors <- list(sampled.color = sampled.array, delaunay.map = delaunay.map, linearized = if(linearize.color.space){T}else{F}, imagedir = imagedir, image.names = image.names, sampled.perimeter = sampled.array.perimeter)
 
   class(mesh.colors) <- "mesh.colors"
   return(mesh.colors)
