@@ -66,8 +66,9 @@ tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, fli
   points(tri.interior, col = 2)
   lines(tri.object.prime[point.map,], lwd = 1.5, col = "yellow")
 
-  #Old returned list with centroids in case that's a breaking change: tri.surf.object <- list(interior = tri.interior, perimeter = tri.object.prime, centroids = tri.cent.plot, final.mesh = gen.tri, point.map = point.map)
-  tri.surf.object <- list(interior = tri.interior, perimeter = tri.object.prime, final.mesh = gen.tri, point.map = point.map)
+  #Old returned list with centroids in case that's a breaking change:
+  tri.surf.object <- list(interior = tri.interior, perimeter = tri.object.prime, centroids = tri.cent.plot, final.mesh = gen.tri, point.map = point.map)
+  # tri.surf.object <- list(interior = tri.interior, perimeter = tri.object.prime, final.mesh = gen.tri, point.map = point.map)
   class(tri.surf.object) <- c("tri.surf.points")
   return(tri.surf.object)
 }

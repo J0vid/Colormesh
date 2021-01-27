@@ -4,7 +4,7 @@
 \alias{plot.tri.surf.points}
 \title{plotting method for objects of class "tri.surf.points"}
 \usage{
-\method{plot}{tri.surf.points}(x, style = "points", ...)
+\method{plot}{tri.surf.points}(x, style = "points", corresponding.image, ...)
 }
 \arguments{
 \item{x}{an object of class "tri.surf.points"}
