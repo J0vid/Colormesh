@@ -6,7 +6,7 @@
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
 #' @method plot tri.surf.points
 #' @export
-plot.tri.surf.points <- function(x, style = "points", corresponding.image,...){
+plot.tri.surf.points <- function(x, style = "points", corresponding.image, wireframe.color = "black", point.color = "red",...){
   if(style == "points"){
     plot(x$perimeter, ylim = rev(range(x$perimeter[,2])), asp = 1, xlab = "", ylab = "", ...)
     points(x$interior, ...)
@@ -16,12 +16,12 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image,...){
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
     plot(x$perimeter, typ = "n", ylab = "", xlab = "", asp = 1, axes = F, ylim = rev(range(x$perimeter[,2])), ...)
-    points(x$centroids[are.you.in == 1,], col = 2, pch = 19, cex = .25, ...)
+    points(x$centroids[are.you.in == 1,], col = point.color, pch = 19, cex = .25, ...)
 
     for(j in c(1:nrow(triangles(x$final.mesh)))[are.you.in==1]){
-      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,2],]))
-      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,3],]))
-      lines(rbind(tri.object[triangles(x$final.mesh)[j,2],], tri.object[triangles(x$final.mesh)[j,3],]))
+      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,2],]), col = wireframe.color)
+      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,3],]), col = wireframe.color)
+      lines(rbind(tri.object[triangles(x$final.mesh)[j,2],], tri.object[triangles(x$final.mesh)[j,3],]), col = wireframe.color)
     }
   }
 
@@ -29,13 +29,12 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image,...){
     plot(corresponding.image)
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
-    points(x$perimeter, typ = "n", ylab = "", xlab = "", asp = 1, ylim = rev(range(x$perimeter[,2])), ...)
-    points(x$centroids[are.you.in == 1,], col = 2, pch = 19, cex = .25, ...)
+    points(x$centroids[are.you.in == 1,], col = point.color, pch = 19, cex = .25, ...)
 
     for(j in c(1:nrow(triangles(x$final.mesh)))[are.you.in==1]){
-      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,2],]))
-      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,3],]))
-      lines(rbind(tri.object[triangles(x$final.mesh)[j,2],], tri.object[triangles(x$final.mesh)[j,3],]))
+      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,2],]), col = wireframe.color, lwd = .5)
+      lines(rbind(tri.object[triangles(x$final.mesh)[j,1],], tri.object[triangles(x$final.mesh)[j,3],]), col = wireframe.color, lwd = .5)
+      lines(rbind(tri.object[triangles(x$final.mesh)[j,2],], tri.object[triangles(x$final.mesh)[j,3],]), col = wireframe.color, lwd = .5)
     }
 
   }
