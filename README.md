@@ -116,16 +116,14 @@ test.image = load.image("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images
 
 # Generating the sampling template
 
-The user provides the consensus.array (the x,y coordinates, defined above), perimeter.map (the order in which to read the points, defined above), a numerical value for the number of rounds of Delaunay triangulation to perform, the test.image (defined above), and the logical for flip.delaunay. The pixels that will be sampled are defined and shown in the resulting image plot.    
-*Note: the circles shown in the overlay plot are not equal to the size of the sampling circle size.*
+The user provides the consensus.array (the x,y coordinates, defined above), perimeter.map (the order in which to read the points, defined above), a numerical value for the number of rounds of Delaunay triangulation to perform, the test.image (defined above), and the logical for flip.delaunay. The alignment check draws a yellow line around the perimeter of your speciment and red circles are plotted at the pixel coordinates that will be sampled.    
+*Note: the circles shown in the alignment check are **not** equal to the size of the sampling circle size.*
 
 ```{r}
-
 specimen.sampling.template = tri.surf(consensus.array, perimeter.map, 3, test.image, flip.delaunay = FALSE)
 
 ## If the sampling template is upside-down, set flip.delaunay = TRUE
 specimen.sampling.template = tri.surf(consensus.array, perimeter.map, 3, test.image, flip.delaunay = TRUE)
-
 ```
 The images below show the resulting plot of flip.delaunay = TRUE/FALSE
 ![Outline example](images/test_image_flip_right.png) | ![Outline example](images/test_image_flip_wrong.png)
@@ -137,12 +135,9 @@ The images below show the resulting plot of flip.delaunay = TRUE/FALSE
 The *rgb.measure* function measures the RGB values of the points sampled from the unwarped specimen images (at the points identified above in the *tri.surf* function). In this function, the user provides the file path to the folder containing the unwarped (to the consensus shape) images that are to be sampled, followed by the .csv containing the image names with the 2nd column specified (unwarped image names are in the second column), "specimen.sampling.template" (which provides sampling coordinates), the user-specified size of the sampling circle **radius** in pixels (px.radius = 0 will only sample the pixel located at the centroid of the triangle), and the logical argument for whether you would like to apply the linear transform (based on international standard IEC 61966-2-1:1999),to convert sRGB values to linearized values. 
 
 ```{r}
-
 uncalib_RGB = rgb.measure("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/", specimen.factors[,2], specimen.sampling.template, px.radius = 2, linearize.color.space = FALSE)
 
-
 linear_uncalib_RGB = rgb.measure("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/", specimen.factors[,2], specimen.sampling.template, px.radius = 2, linearize.color.space = TRUE)
-
 ```
 
 
@@ -170,12 +165,10 @@ corrected.color.sample = <what ever the new function is> (will need uncalibrated
 ```
 ### Visualizing 
 
+## Plotting the sampling template
 The example code below shows how to plot the template where the specimen will be sampled. You may specify the style = "points" to plot the location of the points that will be sampled or style = "triangulation" to plot the triangulation that was generated and the centroids of each triangle. 
 
 ```{r}
-
-## Plotting the sampling template
-
 plot(specimen.sampling.template, style = "points")
 plot(specimen.sampling.template, style = "triangulation", wireframe.color = "black", point.color = "red")
 
@@ -187,9 +180,7 @@ plot(specimen.sampling.template, style = "triangulation", wireframe.color = "bla
 The "triangulation" style can be plotted overlaying the test.image (defined above). The following code shows how to make this plot. The default colors for both the "triangulation" and "overlay" styles draw the triangles in black and the sampling points (centroids) in red. However, The user can change the color of the triangles and centroids using the point.color = "" and wireframe.color = ""  arguments.
 
 ```{r}
-
 plot(specimen.sampling.template, corresponding.image = test.image, style = "overlay", wireframe.color = "grey", point.color = "yellow" )
-
 ```
 ![Outline example](images/specimen_template_overlay.png)
 
