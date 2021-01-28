@@ -11,7 +11,6 @@ devtools::install_github("j0vid/Colormesh", build_vignettes = T)
 
 The following command allows you to view the vignette:
 
-
 ```r
 ##################### I need to send you the images, csv file, and appropriate TPS files for you to include  ########################################
 vignette("Guppy-images”)
@@ -35,7 +34,7 @@ To prepare images for RGB color data sampling using Delaunay Triangulation, prep
 
 
 ### Reading in .csv files
-Code below loads in the two csv files needed to use the Colormesh package to extract color data: 
+Code below loads in the two .csv files needed to use the Colormesh package to extract color data: 
 
  1. Using base R, read in the .csv containing the specimen image names and identification information. The first column MUST be 
     the unique image names of the original images that contain the color standard. The second column MUST contain 
@@ -96,10 +95,11 @@ Colormesh needs to know what order to read the landmarks in so that a perimeter 
 perimeter.map <- c(1, 8:17, 2, 18:19, 3, 20:27, 4, 28:42,5,43:52, 6, 53:54, 7, 55:62)
 
 ```
+
 ![Outline example](images/outline.png)
 
 
-## Calculating sample location and checking alignment 
+# Calculating sample location and checking alignment 
 
 IMPORTANT: Test that your sampling points properly overlay your image. Image readers (e.g., EBImage & imager) place the 0,0 x,y-coordinate in the upper left corner. In contrast, the coordinates in the TPS file place 0,0 in the bottom left corner. Colormesh assumes this to be true. To check this, the code below is used to read in a test image, calculate the sampling template, then plot the Delaunay triangulation wire-frame on top of the image to ensure that you are properly sampling the image. 
 
@@ -111,8 +111,8 @@ To check that Colormesh will be sampling your speciment correctly, first read in
 
 ```{r}
 test.image = load.image("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/TULPAAM03_1015_un.TIF")
-
 ```
+
 
 # Generating the sampling template
 
@@ -125,12 +125,14 @@ specimen.sampling.template = tri.surf(consensus.array, perimeter.map, 3, test.im
 ## If the sampling template is upside-down, set flip.delaunay = TRUE
 specimen.sampling.template = tri.surf(consensus.array, perimeter.map, 3, test.image, flip.delaunay = TRUE)
 ```
-The images below show the resulting plot of flip.delaunay = TRUE/FALSE
+
+The images below show the outcomes of the flip.delaunay logical argument.
+
 ![Outline example](images/test_image_flip_right.png) | ![Outline example](images/test_image_flip_wrong.png)
 
 
 
-## Setting the sampling circle size
+### Setting the sampling circle size
 
 The *rgb.measure* function measures the RGB values of the points sampled from the unwarped specimen images (at the points identified above in the *tri.surf* function). In this function, the user provides the file path to the folder containing the unwarped (to the consensus shape) images that are to be sampled, followed by the .csv containing the image names with the 2nd column specified (unwarped image names are in the second column), "specimen.sampling.template" (which provides sampling coordinates), the user-specified size of the sampling circle **radius** in pixels (px.radius = 0 will only sample the pixel located at the centroid of the triangle), and the logical argument for whether you would like to apply the linear transform (based on international standard IEC 61966-2-1:1999),to convert sRGB values to linearized values. 
 
