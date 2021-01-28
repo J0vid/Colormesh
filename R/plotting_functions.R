@@ -53,14 +53,14 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 
 plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "sampled", ...){
   if(visualization_type == "sampled"){
-  plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, xlab = "", ylab = "")
+  plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
   } else if(visualization_type == "comparison"){
     image.files <- list.files(mesh.colors.object$imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
     tmp.image <- load.image(paste0(mesh.colors.object$imagedir, image.files[grepl(mesh.colors.object$image.names[individual], image.files)]))
     # implot(tmp.image, points(mesh.colors.object$delaunay$interior[,1], mesh.colors.object$delaunay$interior[,2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19))
     par(mfrow = c(2,1))
     plot(tmp.image, axes = F)
-    plot(mesh.colors.object$delaunay$interior[,1], -mesh.colors.object$delaunay$interior[,2] + dim(tmp.image)[2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, xlab = "", ylab = "", asp = 1, axes = F)
+    plot(mesh.colors.object$delaunay$interior[,1], -mesh.colors.object$delaunay$interior[,2] + dim(tmp.image)[2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1, axes = F, xlab = "", ylab = "")
   }
   }
 
