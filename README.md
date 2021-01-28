@@ -96,7 +96,7 @@ perimeter.map <- c(1, 8:17, 2, 18:19, 3, 20:27, 4, 28:42,5,43:52, 6, 53:54, 7, 5
 
 ```
 
-![Outline example](images/outline.png)
+![](images/outline.png)
 
 
 # Calculating sample location and checking alignment 
@@ -112,7 +112,7 @@ To check that Colormesh will be sampling your speciment correctly, first read in
 ```{r}
 test.image = load.image("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/TULPAAM03_1015_un.TIF")
 ```
-![Outline example](images/TULPAAM03_1015_un.png)
+![](images/TULPAAM03_1015_un.png)
 
 # Generating the sampling template
 
@@ -128,7 +128,7 @@ specimen.sampling.template = tri.surf(consensus.array, perimeter.map, 3, test.im
 
 The images below show the outcomes of the flip.delaunay logical argument.
 
-![Outline example](images/test_image_flip_right.png) | ![Outline example](images/test_image_flip_wrong.png)
+![](images/test_image_flip_right.png) | ![](images/test_image_flip_wrong.png)
 
 
 
@@ -175,7 +175,7 @@ plot(specimen.sampling.template, style = "points")
 plot(specimen.sampling.template, style = "triangulation", wireframe.color = "black", point.color = "red")
 
 ```
-![Outline example](images/specimen_template_points.png) | ![Outline example](images/specimen_template_traingulation.png)
+![](images/specimen_template_points.png) | ![](images/specimen_template_traingulation.png)
 
 
 
@@ -184,7 +184,7 @@ The "triangulation" style can be plotted overlaying the test.image (defined abov
 ```{r}
 plot(specimen.sampling.template, corresponding.image = test.image, style = "overlay", wireframe.color = "grey", point.color = "yellow" )
 ```
-![Outline example](images/specimen_template_overlay.png)
+![](images/specimen_template_overlay.png)
 
 
 
