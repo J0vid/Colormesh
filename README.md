@@ -167,7 +167,7 @@ corrected.color.sample = <what ever the new function is> (will need uncalibrated
 ```
 ### Visualizing 
 
-## Plotting the sampling template
+# Plotting the sampling template
 The example code below shows how to plot the template where the specimen will be sampled. You may specify the style = "points" to plot the location of the points that will be sampled or style = "triangulation" to plot the triangulation that was generated and the centroids of each triangle. 
 
 ```{r}
