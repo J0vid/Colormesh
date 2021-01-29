@@ -183,6 +183,29 @@ plot(specimen.sampling.template, corresponding.image = test.image, style = "over
 ```
 ![](images/specimen_template_overlay.png)
 
+### Plotting sampled color
+The example code below will plot the color sampled using the rgb.measure function. The "individual = " is a numerical argument allows you to plot a specific specimen (e.g., individual = 8 plots the 8th image that appears in the specimen.factors .csv). The default of visualization_type = "sampled" which plots the color values that were sampled from the image. *Note that a plot of sampled values where linearize.color.space = TRUE will be darker than the original image due to the application of the linear transform.*
+
+```{r}
+plot(uncalib_RGB, individual = 8, visualization_type = "sampled")
+
+plot(linear_uncalib_RGB, individual = 8, visualization_type = "sampled")
+```
+
+![](images/uncalib_sampled_sRGB.png) | ![](images/uncalib_sampled_linearized.png) 
+
+
+To compare your plotted sampled color values to the original image the color values were sampled from, set visualization_type = "comparison". 
+*Note: Linearized RGB values will have a darker appearance.* 
+
+```{r}
+plot(uncalib_RGB, individual = 8, visualization_type = "comparison")
+plot(linear_uncalib_RGB, individual = 8, visualization_type = "comparison" )
+```
+![](images/uncalib_comparison.png) | ![](images/linear_uncalib_comparison.png)
+
+
+
 
 
 
