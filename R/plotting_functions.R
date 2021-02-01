@@ -12,6 +12,14 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
     points(x$interior, ...)
   }
 
+  if(style == "interior"){
+    plot(x$interior, ylim = rev(range(x$perimeter[,2])), asp = 1, xlab = "", ylab = "", ...)
+  }
+
+  if(style == "perimeter"){
+    plot(x$perimeter, ylim = rev(range(x$perimeter[,2])), asp = 1, xlab = "", ylab = "", ...)
+  }
+
   if(style == "triangulation"){
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
@@ -51,10 +59,10 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 #' @method plot mesh.colors
 #' @export
 
-plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "sampled", ...){
-  if(visualization_type == "sampled"){
+plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "sampled", ...){
+  if(style == "sampled"){
   plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
-  } else if(visualization_type == "comparison"){
+  } else if(style == "comparison"){
     image.files <- list.files(mesh.colors.object$imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
     tmp.image <- load.image(paste0(mesh.colors.object$imagedir, image.files[grepl(mesh.colors.object$image.names[individual], image.files)]))
     # implot(tmp.image, points(mesh.colors.object$delaunay$interior[,1], mesh.colors.object$delaunay$interior[,2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19))
@@ -73,14 +81,14 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_t
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
 #' @method plot calibrated.mesh.colors
 #' @export
-plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, visualization_type = "calibrated", ...){
-  if(visualization_type == "diagnostic"){
+plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, style = "calibrated", ...){
+  if(style == "diagnostic"){
     par(mfrow = c(2,1))
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, main = "Calibrated")
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, main = "Raw sampled")
-  } else if(visualization_type == "calibrated"){
+  } else if(style == "calibrated"){
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
-  } else if(visualization_type == "differences"){
+  } else if(style == "differences"){
     num.breaks <- 100
     bright.diffs <- colorRampPalette(c("black", "white"))(num.breaks)
     cal.uncal <- mesh.colors.object$calibrated[,,individual] - mesh.colors.object$sampled.color[,,individual]
