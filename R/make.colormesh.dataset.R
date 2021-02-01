@@ -42,7 +42,7 @@ make.colormesh.dataset <- function(calibrated.data, specimen.factors, use.perime
     combined.df <- data.frame(specimen.factors, rgb.interior, rgb.perimeter, interior.lms, perimeter.lms)
   }
 
-  if(use.perimeter.data == F) combined.df <- data.frame(specimen_factors, rgb.interior, interior.lms)
+  if(use.perimeter.data == F) combined.df <- data.frame(specimen.factors, rgb.interior, interior.lms)
   if(is.null(write2csv) == F) write.csv(write2csv)
 
   return(combined.df)
