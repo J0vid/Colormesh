@@ -19,7 +19,7 @@ colnames(delaunay.dists.long) <- c("point1", "point2", "distance")
 too.close <- delaunay.dists.long[delaunay.dists.long[,3] < px.radius & delaunay.dists.long[,3] != 0,]
 
 #aspect ratio? plot(delaunay.map, xlab = "", ylab = "", asp = max(delaunay.map$interior[,2])/max(delaunay.map$interior[,1]))
-plot(delaunay.map, xlab = "", ylab = "")
+plot(delaunay.map)
 points(delaunay.map$interior[too.close[,1],], col = 2)
 
 print(paste0("Indices of pairwise interior points that are within ", px.radius, " pixels of eachother."))
