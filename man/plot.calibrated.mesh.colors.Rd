@@ -4,17 +4,12 @@
 \alias{plot.calibrated.mesh.colors}
 \title{plotting individual specimens before AND after color sampling | select individual or 3 random side by side individuals}
 \usage{
-\method{plot}{calibrated.mesh.colors}(
-  mesh.colors.object,
-  individual = 1,
-  visualization_type = "calibrated",
-  ...
-)
+\method{plot}{calibrated.mesh.colors}(mesh.colors.object, individual = 1, style = "interior", ...)
 }
 \arguments{
 \item{individual}{which individual from your landmark dataframe you'd like to plot}
 
-\item{visualization_type}{plot raw "sampled" color or "calibrated" color? Sampled is the default.}
+\item{style}{plot raw "interior" color or "calibrated" color? Sampled is the default.}
 
 \item{...}{Additional plotting parameters to be passed to plot.default}
 

@@ -8,7 +8,7 @@
 #' @param flip.y.values should the calbration points be flipped to match the images?
 #' @return The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay. Finally, a calibrated array of color values will be returned under $calibrated
 #' @export
-rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, color.standard.values = NULL, px.radius = 2, flip.y.values = T){
+rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, color.standard.values = NULL, px.radius = 2, flip.y.values = F){
 
 #check that if color standard is suppplied, it is actually a matrix
   if(is.null(color.standard.values) == F & missing(color.standard.values)) stop("color.standard.values is not provided. Please make sure to define your color standard.")
@@ -28,12 +28,19 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
     tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
     img.dim <- dim(tmp.image)
 
+    calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
     if(flip.y.values & i == 1) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
 
     buffered.image <- array(0, dim = c(dim(tmp.image)[1],dim(tmp.image)[2], 3))
     buffered.image[,,1] <- as.matrix(tmp.image[,,1])
     buffered.image[,,2] <- as.matrix(tmp.image[,,2])
     buffered.image[,,3] <- as.matrix(tmp.image[,,3])
+
+    if(max(buffered.image) > 20){ #if the image looks like it's in a non-normalize scale, normalize it
+      buffered.image[,,1] <- as.matrix(tmp.image[,,1])/max(tmp.image[,,1])
+      buffered.image[,,2] <- as.matrix(tmp.image[,,2])/max(tmp.image[,,2])
+      buffered.image[,,3] <- as.matrix(tmp.image[,,3])/max(tmp.image[,,3])
+    }
 
 
     for(j in 1:nrow(calibration.array)){

@@ -4,12 +4,12 @@
 \alias{plot.mesh.colors}
 \title{plotting individual specimens after color sampling}
 \usage{
-\method{plot}{mesh.colors}(mesh.colors.object, individual = 1, visualization_type = "sampled", ...)
+\method{plot}{mesh.colors}(mesh.colors.object, individual = 1, style = "interior", ...)
 }
 \arguments{
 \item{individual}{which individual from your landmark dataframe you'd like to plot}
 
-\item{visualization_type}{plot raw "sampled" color or "calibrated" color? Sampled is the default.}
+\item{style}{plot raw "sampled" color or "calibrated" color? Sampled is the default.}
 
 \item{...}{Additional plotting parameters to be passed to plot.default}
 

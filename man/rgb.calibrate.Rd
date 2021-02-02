@@ -11,7 +11,7 @@ rgb.calibrate(
   calib.file,
   color.standard.values = NULL,
   px.radius = 2,
-  flip.y.values = T
+  flip.y.values = F
 )
 }
 \arguments{

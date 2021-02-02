@@ -8,6 +8,7 @@ make.colormesh.dataset(
   calibrated.data,
   specimen.factors,
   use.perimeter.data = F,
+  use.uncalibrated.data = F,
   write2csv = NULL
 )
 }

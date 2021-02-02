@@ -6,7 +6,7 @@
 #' @param write.csv A directory is to write a csv to, if desired
 #' @return The function will return a dataframe of specimen data (inherits the original column names) and landmark x & y values along with calibrated RGB values.
 #' @export
-make.colormesh.dataset <- function(calibrated.data, specimen.factors, use.perimeter.data = F, write2csv = NULL){
+make.colormesh.dataset <- function(calibrated.data, specimen.factors, use.perimeter.data = F, use.uncalibrated.data = F, write2csv = NULL){
 
   #interior color data####
   rgb.interior <- array2row3d(calibrated.data$calibrated[,,order(dimnames(calibrated.data$calibrated)[[3]], specimen.factors$V1)])
@@ -15,6 +15,15 @@ make.colormesh.dataset <- function(calibrated.data, specimen.factors, use.perime
   rgb.names[,2] <- paste0("g_interior", 1:nrow(calibrated.data$calibrated))
   rgb.names[,3] <- paste0("b_interior", 1:nrow(calibrated.data$calibrated))
   colnames(rgb.interior) <- array2row3d(rgb.names)[1,]
+
+  if(use.uncalibrated.data){
+  rgb.interior <- array2row3d(calibrated.data$sampled.color[,,order(dimnames(calibrated.data$sampled.color)[[3]], specimen.factors$V1)])
+  rgb.names <- calibrated.data$sampled.color[,,1]
+  rgb.names[,1] <- paste0("r_interior", 1:nrow(calibrated.data$sampled.color))
+  rgb.names[,2] <- paste0("g_interior", 1:nrow(calibrated.data$sampled.color))
+  rgb.names[,3] <- paste0("b_interior", 1:nrow(calibrated.data$sampled.color))
+  colnames(rgb.interior) <- array2row3d(rgb.names)[1,]
+  }
 
   #interior lms####
   interior.lms <- array2row(calibrated.data$delaunay.map$interior)
@@ -32,6 +41,15 @@ make.colormesh.dataset <- function(calibrated.data, specimen.factors, use.perime
     rgb.names[,3] <- paste0("b_perimeter", 1:nrow(calibrated.data$calibrated.perimeter))
     colnames(rgb.perimeter) <- array2row3d(rgb.names)[1,]
 
+    #add uncalibrated perimeter option
+   if(use.uncalibrated.data){
+     rgb.perimeter <- array2row3d(calibrated.data$calibrated.perimeter[,,order(dimnames(calibrated.data$calibrated.perimeter)[[3]], specimen.factors$V1)])
+    rgb.names <- calibrated.data$calibrated.perimeter[,,1]
+    rgb.names[,1] <- paste0("r_perimeter", 1:nrow(calibrated.data$calibrated.perimeter))
+    rgb.names[,2] <- paste0("g_perimeter", 1:nrow(calibrated.data$calibrated.perimeter))
+    rgb.names[,3] <- paste0("b_perimeter", 1:nrow(calibrated.data$calibrated.perimeter))
+    colnames(rgb.perimeter) <- array2row3d(rgb.names)[1,]
+   }
     #perimeter.lms
     perimeter.lms <- array2row(calibrated.data$delaunay.map$perimeter)
     xy.names <- calibrated.data$delaunay.map$perimeter
