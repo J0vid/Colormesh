@@ -23,13 +23,13 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
   circle.coords <- sampling.circle(px.radius)
 
-  calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
-  if(flip.y.values) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
-
   for(i in 1:length(image.names)){
 
     tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
     img.dim <- dim(tmp.image)
+
+    if(i == 1) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
+    if(flip.y.values & i == 1) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
 
     buffered.image <- array(0, dim = c(dim(tmp.image)[1],dim(tmp.image)[2], 3))
     buffered.image[,,1] <- as.matrix(tmp.image[,,1])
