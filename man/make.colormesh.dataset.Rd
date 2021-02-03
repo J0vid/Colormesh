@@ -5,15 +5,14 @@
 \title{Combine metadata with calibrated colormesh data for analysis}
 \usage{
 make.colormesh.dataset(
-  calibrated.data,
+  df,
   specimen.factors,
   use.perimeter.data = F,
-  use.uncalibrated.data = F,
   write2csv = NULL
 )
 }
 \arguments{
-\item{calibrated.data}{A calibrated.mesh.colors object (generated from rgb.calibrate)}
+\item{df}{A calibrated.mesh.colors object (generated from rgb.calibrate) or mesh.colors object (generated from rgb.measure)}
 
 \item{specimen.factors}{The covariate data that you want to combine with the calibrated data}
 

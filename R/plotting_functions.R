@@ -61,12 +61,12 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 
 plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interior", ...){
   if(style == "interior"){
-  plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
+  plot(mesh.colors.object$delaunay, style = "interior", col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
   } else if(style == "perimeter"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.perimeter[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay, style = "perimeter", col = rgb(mesh.colors.object$sampled.perimeter[,,individual]), pch = 19)
   } else if(style == "points"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
-    points(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.perimeter[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay, style = "interior", col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
+    points(mesh.colors.object$delaunay$perimeter, col = rgb(mesh.colors.object$sampled.perimeter[,,individual]), pch = 19)
   }  else if(style == "comparison"){
     image.files <- list.files(mesh.colors.object$imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
     tmp.image <- load.image(paste0(mesh.colors.object$imagedir, image.files[grepl(mesh.colors.object$image.names[individual], image.files)]))
@@ -89,8 +89,8 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interi
 plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interior", ...){
   #interior, perimeter, all points plots
   if(style == "perimeter"){
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated.perimeter[,,individual]), pch = 19)
-  } else if(style == "diagnostic"){
+    plot(mesh.colors.object$delaunay, style = "perimeter", col = rgb(mesh.colors.object$calibrated.perimeter[,,individual]), pch = 19)
+  } else if(style == "comparison"){
     par(mfrow = c(2,1))
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, main = "Calibrated")
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, main = "Raw sampled")
@@ -98,7 +98,7 @@ plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, styl
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
     }else if(style == "points"){
       plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
-      points(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated.perimeter[,,individual]), pch = 19)
+      points(mesh.colors.object$delaunay$perimeter, col = rgb(mesh.colors.object$calibrated.perimeter[,,individual]), pch = 19)
     } else if(style == "differences"){
     num.breaks <- 100
     bright.diffs <- colorRampPalette(c("black", "white"))(num.breaks)

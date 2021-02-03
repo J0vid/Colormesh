@@ -2,7 +2,7 @@
 #'
 #' @param sampled.array Previously sampled data from the rgb.measure function.
 #' @param imagedir directory of images to measure for calibration. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
-#' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
+#' @param image.names A vector of image names to look for in imagedir.
 #' @param color.standard.values a matrix of known values for collected color standard points. Should be N_points x 3
 #' @param px.radius The size of the circular neighborhood (in pixels) to sample color around each triangulated point.
 #' @param flip.y.values should the calbration points be flipped to match the images?
@@ -12,7 +12,8 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
 #check that if color standard is suppplied, it is actually a matrix
   if(is.null(color.standard.values) == F & missing(color.standard.values)) stop("color.standard.values is not provided. Please make sure to define your color standard.")
-  if(is.null(color.standard.values) == F & ncol(color.standard.values) > 3) stop("color.standard.values has more columns than expected. Is the data in N_colors X RGB format?")
+  if(is.null(color.standard.values) == F){
+    if(ncol(color.standard.values) > 3) stop("color.standard.values has more columns than expected. Is the data in N_colors X RGB format?")}
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")

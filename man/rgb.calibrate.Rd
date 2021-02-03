@@ -19,7 +19,7 @@ rgb.calibrate(
 
 \item{imagedir}{directory of images to measure for calibration. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.}
 
-\item{image.names}{A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.}
+\item{image.names}{A vector of image names to look for in imagedir.}
 
 \item{color.standard.values}{a matrix of known values for collected color standard points. Should be N_points x 3}
 
