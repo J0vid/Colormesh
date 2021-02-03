@@ -12,6 +12,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
 #check that if color standard is suppplied, it is actually a matrix
   if(is.null(color.standard.values) == F & missing(color.standard.values)) stop("color.standard.values is not provided. Please make sure to define your color standard.")
+  if(is.null(color.standard.values) == F & ncol(color.standard.values) > 3) stop("color.standard.values has more columns than expected. Is the data in N_colors X RGB format?")
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
@@ -72,6 +73,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   if(sampled.array$linearized == T){
     calibration.array <- linearize.colors(calibration.array)
     calib.means <- array.mean(calibration.array)
+    color.standard.values <- linearize.colors(color.standard.values)[,,1]
   }
   # lcalib.means <- array.mean(lcalib)
   col.change <- calib.means

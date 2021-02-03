@@ -34,10 +34,13 @@ linearize.colors <- function(rgb.object) {
 
   } else if(length(dim(linearized.rgb.object)) < 3) {
 
-    linearized.rgb.object <- array(NA, dim = c(dim(rgb.object), 1))
-    rgb.object.array <- array(NA, dim = c(dim(rgb.object), 1))
+    linearized.rgb.object <- array(NA, dim = c(dim(rgb.object), 2))
+    rgb.object.array <- array(NA, dim = c(dim(rgb.object), 2))
     linearized.rgb.object[,,1] <- rgb.object
     rgb.object.array[,,1] <- rgb.object
+    linearized.rgb.object[,,2] <- rgb.object
+    rgb.object.array[,,2] <- rgb.object
+
 
     ## Transform the red measure to linear values
     linearized.rgb.object[,1,] <- apply(rgb.object.array[,1,], 1:2, function(x) if (x < 0.04045){

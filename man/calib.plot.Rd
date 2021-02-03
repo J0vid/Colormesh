@@ -4,12 +4,14 @@
 \alias{calib.plot}
 \title{Diagnostic tool for looking at calibration images and the sampling landmarks}
 \usage{
-calib.plot(corresponding.image, calib.file)
+calib.plot(corresponding.image, calib.file, point.size = 2)
 }
 \arguments{
 \item{corresponding.image}{an example calibration image}
 
 \item{calib.file}{tps2array object with the sampled color standard}
+
+\item{point.size}{change the point size on the image}
 }
 \value{
 a plot to check if you should flip the y-axis of the color standard landmarks
