@@ -4,12 +4,14 @@
 \alias{point.overlap}
 \title{Diagnostic tool for looking at point sampling density}
 \usage{
-point.overlap(delaunay.map, px.radius)
+point.overlap(delaunay.map, px.radius, style = "points")
 }
 \arguments{
 \item{delaunay.map}{delaunay triangulation object}
 
 \item{px.radius}{The size of the circular neighborhood (in pixels) to sample color around each triangulated point.}
+
+\item{style}{What kind of plot to show overlapping points with. Options are "points" and "triangulation".}
 }
 \value{
 An index of points pairs that will have overlapping (and redundant) pixel information. Only for the interior points of a delaunay triangulation (not the perimeter)
