@@ -93,7 +93,7 @@ perimeter.map <- c(1, 8:17, 2, 18:19, 3, 20:27, 4, 28:42,5,43:52, 6, 53:54, 7, 5
 
 ```
 
-![](images/outline.png)
+![](images/perimeter_line_map.png)
 
 
 ### Calculating sample location and checking alignment 
