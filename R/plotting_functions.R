@@ -71,7 +71,9 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interi
     image.files <- list.files(mesh.colors.object$imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
     tmp.image <- load.image(paste0(mesh.colors.object$imagedir, image.files[grepl(mesh.colors.object$image.names[individual], image.files)]))
     # implot(tmp.image, points(mesh.colors.object$delaunay$interior[,1], mesh.colors.object$delaunay$interior[,2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19))
-    par(mfrow = c(2,1))
+    par(mfrow = c(2,1),
+        oma = c(2.5,2.5,1,1),
+        mar = c(0,0,3.5,3.5))
     plot(tmp.image, axes = F)
     plot(mesh.colors.object$delaunay$interior[,1], -mesh.colors.object$delaunay$interior[,2] + dim(tmp.image)[2], col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1, axes = F, xlab = "", ylab = "")
   }
@@ -91,7 +93,9 @@ plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, styl
   if(style == "perimeter"){
     plot(mesh.colors.object$delaunay, style = "perimeter", col = rgb(mesh.colors.object$calibrated.perimeter[,,individual]), pch = 19)
   } else if(style == "comparison"){
-    par(mfrow = c(2,1))
+    par(mfrow = c(2,1),
+        oma = c(2.5,2.5,1,1),
+        mar = c(0.5,0.5,3.5,3.5))
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, main = "Calibrated")
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, main = "Raw sampled")
   } else if(style == "interior"){

@@ -37,8 +37,8 @@ linearize.colors <- function(rgb.object) {
     linearized.rgb.object <- array(NA, dim = c(dim(rgb.object), 2))
     rgb.object.array <- array(NA, dim = c(dim(rgb.object), 2))
     linearized.rgb.object[,,1] <- rgb.object
-    rgb.object.array[,,1] <- rgb.object
     linearized.rgb.object[,,2] <- rgb.object
+    rgb.object.array[,,1] <- rgb.object
     rgb.object.array[,,2] <- rgb.object
 
 
