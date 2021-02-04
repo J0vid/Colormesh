@@ -17,5 +17,8 @@ Imports:
     Morpho,
     imager,
     tripack,
-    sp
+    sp,
+    fields
+Depends:
+    imager
 VignetteBuilder: knitr

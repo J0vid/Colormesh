@@ -11,7 +11,9 @@ tps.unwarp(
   write.dir = NULL,
   color.sampling = F,
   num.delaunay.passes = 2,
-  px.radius = 2
+  point.map,
+  px.radius = 2,
+  calib.file = NULL
 )
 }
 \arguments{
@@ -27,7 +29,11 @@ tps.unwarp(
 
 \item{num.delaunay.passes}{The number of rounds of delaunay triangulation to perform if color sampling is desired.}
 
+\item{point.map}{The order of points around the perimeter of your object}
+
 \item{px.radius}{The size of the circular neighborhood (in pixels) to sample color around each triangulated point.}
+
+\item{calib.file}{If color standard data is provided and color sampling is selected, $calibrated color will provide second set of color sampling data, adjusted for the differences in color standard values between images}
 }
 \value{
 If write.images is true, warped images will be saved to the write.dir directory. If color sampling is true, the function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.

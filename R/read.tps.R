@@ -1,9 +1,9 @@
-#' read TPS files
+#' read TPS files and convert data to an array
 #'
 #' @param data A .TPS file
 #' @return A matrix of the landmarks for each observation
 #' @export
-read.tps <- function(data) {
+read.tps <- function(data){
   # Reads the .tps file format produced by TPSDIG
   # (http://life.bio.sunysb.edu/morph/ into a single data frame
   # USAGE: R> read.tps("filename.tps")
@@ -30,6 +30,26 @@ read.tps <- function(data) {
       ID = ID[i],
       SCALE = SCALE[i]))
   }
-  do.call(rbind, landmarks) # rbind the list items into a data.frame
+
+  tpsfile <- do.call(rbind, landmarks) # rbind the list items into a data.frame
+
+  #this function assumes unique image names!
+  # arrayname <- substr(unique(tpsfile$IMAGE), 1, nchar(as.character(unique(tpsfile$IMAGE))) - 4)
+  arrayname <- factor(unique(tpsfile$IMAGE))
+  Nlandmarks <- sum(tpsfile$ID == unique(tpsfile$ID)[1])
+  # ID.nums <- rep(0, length(tpsfile$ID))
+  coord.array <- array(dim = c(Nlandmarks, 2, length(arrayname)))
+  # for (i in 0:(length(tpsfile$ID)/Nlandmarks)) {
+  #   ID.nums[((i * Nlandmarks) + 1):(((i + 1) * Nlandmarks) +
+  #                                     1)] = rep(i, length(Nlandmarks))
+  # }
+  for (ind in 1:length(coord.array[1, 1, ])) {
+    coord.array[, , ind] = as.matrix(tpsfile[tpsfile$ID == unique(tpsfile$ID)[ind],
+                                             1:2])
+  }
+  # dimnames(coord.array)[[3]] <- (arrayname)
+
+  return(coord.array)
+
 }
 
