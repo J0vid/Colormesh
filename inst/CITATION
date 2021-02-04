@@ -1,0 +1,15 @@
+citHeader("To cite Colormesh in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Colormesh: A novel method for quantifying variation in complex color patterns",
+  author   = "Jennifer J. Valvo, F. Helen Rodd, David Houle, J. David Aponte, Mitchel J. Daniel, Kenna Dwinell, Kimberly A. Hughes",
+  journal  = "Biorxiv",
+  year     = "2020",
+  url      = "https://www.biorxiv.org/content/10.1101/2020.07.17.205369v1",
+  textVersion = paste(
+"Colormesh: A novel method for quantifying variation in complex color patterns
+Jennifer J. Valvo, F. Helen Rodd, David Houle, J. David Aponte, Mitchel J. Daniel, Kenna Dwinell, Kimberly A. Hughes
+bioRxiv 2020.07.17.205369; doi: https://doi.org/10.1101/2020.07.17.205369"
+  )
+)
