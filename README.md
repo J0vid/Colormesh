@@ -38,12 +38,12 @@ Code below loads in the two .csv files needed to use the Colormesh package to ex
     contain any other information you may need to identify your specimens.
 
  2. Using base R, read in the .csv containing the known RGB values for each of the colors on your color standard. The color channel 
-    values should be on the scale of 0 to 1; if the are out of 255, simply divide by 255. The columns
-    of this csv should be the different colors found on your color standard. Each row should provide the known
+    values should be on the scale of 0 to 1; if the are out of 255, simply divide by 255. The rows
+    of this csv should be the different colors found on your color standard. Each column should provide the known
     color values the three (RGB) color channels. For example, if you have 5 colors in your color standard, you
-    will have 5 columns. The first row of the csv should contain the known RED value for each of the five colors.
-    The second row should contain the GREEN color channel values for each of the five colors on the standard. 
-    The third row should have the BLUE color channel values for each of the five known colors on the standard. 
+    will have 5 rows. The first column of the csv should contain the known RED value for each of the five colors.
+    The second column should contain the GREEN color channel values for each of the five colors on the standard. 
+    The third column should have the BLUE color channel values for each of the five known colors on the standard. 
 
 ```r
 specimen.factors = read.csv("C:/Users/jennv/Desktop/Colormesh_Test_2/specimen_factors.csv", header = F) 
