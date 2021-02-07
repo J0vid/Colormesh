@@ -8,23 +8,23 @@
 #' @export
 plot.tri.surf.points <- function(x, style = "points", corresponding.image, wireframe.color = "black", point.color = "red",...){
   if(style == "points"){
-    par(mfrow = c(1,1))
+    # par(mfrow = c(1,1))
     plot(x$perimeter, ylim = rev(range(x$perimeter[,2])), asp = 1, xlab = "", ylab = "", ...)
     points(x$interior, ...)
   }
 
   if(style == "interior"){
-    par(mfrow = c(1,1))
+    # par(mfrow = c(1,1))
     plot(x$interior, ylim = rev(range(x$perimeter[,2])), asp = 1, xlab = "", ylab = "", ...)
   }
 
   if(style == "perimeter"){
-    par(mfrow = c(1,1))
+    # par(mfrow = c(1,1))
     plot(x$perimeter, ylim = rev(range(x$perimeter[,2])), asp = 1, xlab = "", ylab = "", ...)
   }
 
   if(style == "triangulation"){
-    par(mfrow = c(1,1))
+    # par(mfrow = c(1,1))
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
     plot(x$perimeter, typ = "n", ylab = "", xlab = "", asp = 1, axes = F, ylim = rev(range(x$perimeter[,2])), ...)
@@ -38,7 +38,7 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
   }
 
   if(style == "overlay"){
-    par(mfrow = c(1,1))
+    # par(mfrow = c(1,1))
     plot(corresponding.image)
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
@@ -67,7 +67,7 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interior", ...){
   if(style == "interior"){
     par(mfrow = c(1,1))
-    plot(mesh.colors.object$delaunay, style = "interior", col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay$perimeter, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1, ylim = rev(range(mesh.colors.object$delaunay$perimeter[,2])), ylab = "", xlab = "")
   } else if(style == "perimeter"){
     par(mfrow = c(1,1))
     plot(mesh.colors.object$delaunay, style = "perimeter", col = rgb(mesh.colors.object$sampled.perimeter[,,individual]), pch = 19)
@@ -101,12 +101,12 @@ plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, styl
   #interior, perimeter, all points plots
   if(style == "perimeter"){
     par(mfrow = c(1,1))
-    plot(mesh.colors.object$delaunay, style = "perimeter", col = rgb(mesh.colors.object$calibrated.perimeter[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay$perimeter, col = rgb(mesh.colors.object$calibrated.perimeter[,,individual]), pch = 19, asp = 1, ylim = rev(range(mesh.colors.object$delaunay$perimeter[,2])), ylab = "", xlab = "")
   } else if(style == "comparison"){
-    par(mfrow = c(1,1))
     par(mfrow = c(2,1),
         oma = c(2.5,2.5,1,1),
         mar = c(0.5,0.5,3.5,3.5))
+
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19, main = "Calibrated")
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, main = "Raw sampled")
   } else if(style == "interior"){
@@ -124,5 +124,3 @@ plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, styl
       plot(mesh.colors.object$delaunay, col = bright.diffs[cut(cal.uncal, num.breaks)], pch = 19)
   }
   }
-
-
