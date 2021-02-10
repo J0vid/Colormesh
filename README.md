@@ -175,7 +175,7 @@ uncalib_RGB = rgb.measure("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_imag
 linear_uncalib_RGB = rgb.measure("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/", specimen.factors[,2], specimen.sampling.template, px.radius = 2, linearize.color.space = TRUE)
 ```
 
-##Visualizing the sampled color
+## Visualizing the sampled color
 
 The example code below will plot the color sampled using the *rgb.measure* function. The "individual = " argument allows you to plot a specific specimen. The default of style = "points" which plots the color values that were sampled from the image (perimeter and interior). Similar to the plotting options above, you have the option of only plotting the perimeter or the interior points.  To compare your plotted sampled color values to the original image the color values were sampled from, set style = "comparison". Note that a plot of sampled values where linearize.color.space = TRUE will be darker than the original image due to the application of the linear transform.
 
@@ -251,24 +251,62 @@ linear_calib_RGB <- rgb.calibrate(linear_uncalib_RGB, imagedir =  "C:/Users/jenn
 
 To plot your calibrated colors, you have the same options as above. With style = "points" both perimeter and interior points where color has been calibrated will be plotted. To print just the perimeter, style = "perimeter". With style = "interior" only the interior calibrated color values will be plotted. To compare your calibrated points to the uncalibrated points, set style = "comparison". 
 
+Plotting calibrated color values with style = "points"
 ```r
 plot(calib_RGB, individual = 5, style = "points")
+```
+![](images/calib_plot.png)
+
+Plotting calibrated color values with style = "perimeter"
+```r
 plot(calib_RGB, individual = 5, style = "perimeter")
+```
+
+
+Plotting calibrated color values with style = "interior"
+```r
 plot(calib_RGB, individual = 5, style = "interior")
+```
+
+
+Plotting calibrated color values with style = "comparison"
+```r
 plot(calib_RGB, individual = 5, style = "comparison")
 ```
+![](images/calib_uncalib_comparison.png)
+
 
 
 
 Linearized values can be plotted, as well. 
 *Note: Linearized RGB values will have a darker appearance.* 
 
+Plotting linearized calibrated color values with style = "points"
 ```r
 plot(linear_calib_RGB, individual = 5, style = "points")
+```
+![](images/linear_calib_plot.png)
+
+Plotting linearized calibrated color values with style = "perimeter"
+```r
 plot(linear_calib_RGB, individual = 5, style = "perimeter")
+```
+
+
+Plotting linearized calibrated color values with style = "interior"
+```r
 plot(linear_calib_RGB, individual = 5, style = "interior")
+```
+
+
+Plotting linearized calibrated color values with style = "comparison"
+```r
 plot(linear_calib_RGB, individual = 5, style = "comparison")
 ```
+![](images/lienar_calib_linear_uncalib_comparison.png)
+
+
+
 
 
 ## Extracting your data
