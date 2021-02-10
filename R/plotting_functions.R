@@ -67,7 +67,7 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interior", ...){
   if(style == "interior"){
     par(mfrow = c(1,1))
-    plot(mesh.colors.object$delaunay$perimeter, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1, ylim = rev(range(mesh.colors.object$delaunay$perimeter[,2])), ylab = "", xlab = "")
+    plot(mesh.colors.object$delaunay$perimeter, style = "interior", col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1, ylim = rev(range(mesh.colors.object$delaunay$perimeter[,2])), ylab = "", xlab = "")
   } else if(style == "perimeter"){
     par(mfrow = c(1,1))
     plot(mesh.colors.object$delaunay, style = "perimeter", col = rgb(mesh.colors.object$sampled.perimeter[,,individual]), pch = 19)
@@ -111,7 +111,7 @@ plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, styl
     plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, main = "Raw sampled")
   } else if(style == "interior"){
     par(mfrow = c(1,1))
-    plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
+    plot(mesh.colors.object$delaunay, style = "interior", col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
     }else if(style == "points"){
       par(mfrow = c(1,1))
       plot(mesh.colors.object$delaunay, col = rgb(mesh.colors.object$calibrated[,,individual]), pch = 19)
