@@ -9,14 +9,14 @@
 \arguments{
 \item{individual}{which individual from your landmark dataframe you'd like to plot}
 
-\item{style}{plot raw "interior" color or "calibrated" color? Sampled is the default.}
+\item{style}{options include "interior", "perimeter", "points", and "comparison".}
 
 \item{...}{Additional plotting parameters to be passed to plot.default}
 
-\item{x}{an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay}
+\item{x}{an object of class "calibrated.mesh.colors".}
 }
 \value{
-A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
+A plot of calibrated mesh colors
 }
 \description{
 plotting individual specimens before AND after color sampling | select individual or 3 random side by side individuals

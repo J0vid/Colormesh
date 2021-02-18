@@ -67,7 +67,7 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interior", ...){
   if(style == "interior"){
     par(mfrow = c(1,1))
-    plot(mesh.colors.object$delaunay$perimeter, style = "interior", col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19, asp = 1, ylim = rev(range(mesh.colors.object$delaunay$perimeter[,2])), ylab = "", xlab = "")
+    plot(mesh.colors.object$delaunay, style = "interior", col = rgb(mesh.colors.object$sampled.color[,,individual]), pch = 19)
   } else if(style == "perimeter"){
     par(mfrow = c(1,1))
     plot(mesh.colors.object$delaunay, style = "perimeter", col = rgb(mesh.colors.object$sampled.perimeter[,,individual]), pch = 19)
@@ -90,11 +90,11 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interi
 
 #' plotting individual specimens before AND after color sampling | select individual or 3 random side by side individuals
 #'
-#' @param x an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay
+#' @param x an object of class "calibrated.mesh.colors".
 #' @param individual which individual from your landmark dataframe you'd like to plot
-#' @param style plot raw "interior" color or "calibrated" color? Sampled is the default.
+#' @param style options include "interior", "perimeter", "points", and "comparison".
 #' @param ... Additional plotting parameters to be passed to plot.default
-#' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
+#' @return A plot of calibrated mesh colors
 #' @method plot calibrated.mesh.colors
 #' @export
 plot.calibrated.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interior", ...){
