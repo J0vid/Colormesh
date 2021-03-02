@@ -41,3 +41,13 @@ If write.images is true, warped images will be saved to the write.dir directory.
 \description{
 Non-linear image registration using TPS deformation.
 }
+\examples{
+#load landmarks
+guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+#order the landmarks to make a continuous perimeter around the guppy shape
+point.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
+example.sample <- tps.unwarp(imagedir = path.package("my_package"),"/inst/extdata/my_raw_data.csv",sep=""), landmarks = guppy.lms, point.map = point.map, color.sampling = T)
+#you can fill in write.dir to save the unwarped images and open them up.
+#Alternatively, you can plot the color sampled data
+plot(example.sample, individual = 2)
+}
