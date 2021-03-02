@@ -1,7 +1,9 @@
 #' read TPS files and convert data to an array
 #'
 #' @param data A .TPS file
-#' @return A matrix of the landmarks for each observation
+#' @return An array of N_landmarks x 2 x N_observations
+#' @examples
+#' tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
 #' @export
 tps2array <- function(data){
   # Reads the .tps file format produced by TPSDIG

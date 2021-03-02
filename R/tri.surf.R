@@ -1,18 +1,19 @@
-#' Flips landmarks to the same orientation if you have a mixture of left and right facing data
+#' Fit a delaunay triangulation to an outline of landmarks.
 #'
 #' @import imager
+#' @importFrom tripack tri.mesh
+#' @importFrom sp point.in.polygon
 #' @param tri.object A 2D matrix of landmarks to initialize delaunay triangulation
 #' @param point.map A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation
 #' @param num.passes How many rounds of delaunay triangulation to perform. In each pass, the centroids of the triangles will be calculated and be used as points in the next round of triangulation.
-#' @param corresponding.images Supply a corresponding image to the mesh to make sure that the points line up with the image correctly
+#' @param corresponding.image Supply a corresponding image to the mesh to make sure that the points line up with the image correctly. If an image is not provided, no plot will be produced.
 #' @param flip.delaunay Logical value for fliping the Y-axis of the delaunay points. Set delaunay.flip to true if your points appear upside down on the image.
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
+#' @examples
+#' data(guppies)
+#' delaunay.map <- tri.surf(raw.gup[,,1], point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
 #' @export
-tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, flip.delaunay = F){
-
-  require(tripack)
-  require(sp)
-  require(imager)
+tri.surf <- function(tri.object, point.map, num.passes, corresponding.image = NULL, flip.delaunay = F){
 
   if(length(dim(tri.object)) > 2 & dim(tri.object)[3] == 1) tri.object <- tri.object[,,1]
   if(length(dim(tri.object)) > 2 & dim(tri.object)[3] > 1){
@@ -62,9 +63,11 @@ tri.surf <- function(tri.object, point.map, num.passes, corresponding.image, fli
     tri.cent.plot[,2] <- -tri.cent.plot[,2] + dim(corresponding.image)[2]
   }
 
+  if(is.null(corresponding.image) == F){
   plot(corresponding.image)
   points(tri.interior, col = 2)
   lines(tri.object.prime[point.map,], lwd = 1.5, col = "yellow")
+ }
 
   #Old returned list with centroids in case that's a breaking change:
   tri.surf.object <- list(interior = tri.interior, perimeter = tri.object.prime, centroids = tri.cent.plot, final.mesh = gen.tri, point.map = point.map)

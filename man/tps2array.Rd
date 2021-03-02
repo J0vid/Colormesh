@@ -10,8 +10,11 @@ tps2array(data)
 \item{data}{A .TPS file}
 }
 \value{
-A matrix of the landmarks for each observation
+An array of N_landmarks x 2 x N_observations
 }
 \description{
 read TPS files and convert data to an array
+}
+\examples{
+tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
 }

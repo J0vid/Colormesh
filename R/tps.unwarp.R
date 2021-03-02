@@ -23,12 +23,13 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
   suppressMessages(mean.lm <- procSym(landmarks, scale = F, CSinit = F)$mshape)
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif|*.png")
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.PNG|*.png")
   start.time <- as.numeric(Sys.time())
 
   if(color.sampling){
     #triangulate
-    delaunay.template <- tri.surf(mean.lm, point.map, 4)
+    corresponding.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][1]]))
+    suppressMessages(delaunay.template <- tri.surf(mean.lm, point.map, 4, corresponding.image = corresponding.image, flip.delaunay = T))
     # sampled.r <- sampled.g <- sampled.b <- matrix(0, ncol = nrow(delaunay.template$interior), nrow = dim(landmarks)[3])
     if(is.null(calib.file) == F) calibration.array <- array(NA, dim = c(sum(as.numeric(calib.file$ID) == 1), 3, dim(landmarks)[3]))
     sampled.array <- array(NA, dim = c(nrow(delaunay.template$interior), 3, dim(landmarks)[3]))
@@ -36,10 +37,11 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
     circle.coords <- sampling.circle(px.radius)
   }
 
-  for(i in 1:3){ #length(image.files)){
+  for(i in 1:length(image.files)){
     tmp.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][i]]))
     img.dim <- dim(tmp.image)
-    orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
+    # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
+    orig.lms <- cbind(abs(landmarks[,1,i]), abs(landmarks[,2,i]- img.dim[2]))
     tar.lms <- cbind(mean.lm[,1] + img.dim[1]/2, mean.lm[,2] + img.dim[2]/2)
 
     image_defo <- function(x, y){ #I'm aware that it's terrible practice to use variables out of scope
@@ -64,9 +66,15 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
     if(color.sampling){
       translated.interior <-  cbind(delaunay.template$interior[,1] + img.dim[1]/2, delaunay.template$interior[,2] + img.dim[2]/2)
       #add buffer to image so we don't as for pixels that don't exist
-      buffered.image = array(0, dim = c(dim(tmp.warp)[1]+ 2*px.radius,dim(tmp.warp)[2]+ 2*px.radius, 3))
+      buffered.image = array(0, dim = c(dim(tmp.warp)[1]+ 2*px.radius, dim(tmp.warp)[2]+ 2*px.radius, 3))
       buffered.image[(px.radius):(dim(tmp.warp)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.warp)[2]+(px.radius)),] = tmp.warp
       # buffered.image[(px.radius):(dim(tmp.warp)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.warp)[2]+(px.radius)),] = tmp.warp[,,]+ final.adjustment2[ind,]
+
+      if(max(buffered.image) > 20){ #if the image looks like it's in a non-normalize scale, normalize it
+        buffered.image[(px.radius):(dim(tmp.warp)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.warp)[2]+(px.radius)),1] <- as.matrix(tmp.warp[,,1])/max(tmp.warp[,,1])
+        buffered.image[(px.radius):(dim(tmp.warp)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.warp)[2]+(px.radius)),2] <- as.matrix(tmp.warp[,,2])/max(tmp.warp[,,2])
+        buffered.image[(px.radius):(dim(tmp.warp)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.warp)[2]+(px.radius)),3] <- as.matrix(tmp.warp[,,3])/max(tmp.warp[,,3])
+      }
 
       for(j in 1:length(translated.interior[,1])){
         sampled.array[j,1,i] <-  mean(diag(buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.interior[j,2] + circle.coords[,2])), 1]))
@@ -109,7 +117,7 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
     dimnames(calibrated.array)[[3]] <- dimnames(landmarks)[[3]]
   } else {calibrated.array <- NULL}
 
-  mesh.colors <- list(sampled.color = sampled.array, delaunay = delaunay.template, calibrated.color = calibrated.array)
+  mesh.colors <- list(sampled.color = sampled.array, delaunay = delaunay.template, calibrated = calibrated.array, imagedir = imagedir, image.names = dimnames(landmarks)[[3]])
 
   class(mesh.colors) <- "mesh.colors"
   return(mesh.colors)

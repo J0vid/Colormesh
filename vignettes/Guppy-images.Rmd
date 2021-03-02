@@ -15,11 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(tripack)
-library(sp)
-library(imager)
-library(Morpho)
-# library(Jovid) #I think I've eliminated the use of this package
+
 library(Colormesh)
 
 load("../data/guppies.Rdata")
@@ -31,14 +27,32 @@ imagedir <- "../inst/extdata/"
 
 ```{r convert TPS data to array}
 
-raw.gup <-  Colormesh::tps2array(gup.coord)
+# raw.gup <-  Colormesh::tps2array(gup.coord)
+
+arrayname <- as.character(unique(gup.coord$IMAGE))
+  Nlandmarks <- sum(gup.coord$ID == unique(gup.coord$ID)[1])
+  # ID.nums <- rep(0, length(gup.coord$ID))
+  raw.gup <- array(dim = c(Nlandmarks, 2, length(arrayname)))
+  # for (i in 0:(length(gup.coord$ID)/Nlandmarks)) {
+  #   ID.nums[((i * Nlandmarks) + 1):(((i + 1) * Nlandmarks) +
+  #                                     1)] = rep(i, length(Nlandmarks))
+  # }
+  for (ind in 1:length(raw.gup[1, 1, ])) {
+    raw.gup[, , ind] = as.matrix(gup.coord[gup.coord$ID == unique(gup.coord$ID)[ind],
+                                             1:2])
+  }
+
+  if(dim(raw.gup)[3] == 1){ dimnames(raw.gup)[[3]] <- list(arrayname)
+  } else{dimnames(raw.gup)[[3]] <- (arrayname)}
+
+
 raw.gup <- flip.lms(raw.gup, imagedir, gup.factors$side)
 
 ```
 
 ```{r plot starting landmarks}
 
-gup.map= c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
+gup.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
 
 plot(raw.gup[,,1])
 lines(raw.gup[gup.map,,1])
@@ -47,7 +61,7 @@ lines(raw.gup[gup.map,,1])
 
 ```{r image unwarping and color sampling}
 
-gup.colors <- tps.unwarp(imagedir, raw.gup, write.images = T, write.dir = "~/Downloads/guppy_warps/", color.sampling = T, point.map = gup.map, calib.file = calibfile)
+gup.colors <- tps.unwarp(imagedir, raw.gup, write.images = T, write.dir = "~/Downloads/guppy_warps/", color.sampling = T, point.map = gup.map)
 
 plot(gup.colors, individual = 1, visualization_type = "sampled")
 
