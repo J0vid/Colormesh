@@ -7,6 +7,7 @@
 tps.unwarp(
   imagedir,
   landmarks,
+  image.names,
   write.images = T,
   write.dir = NULL,
   color.sampling = F,
@@ -20,6 +21,8 @@ tps.unwarp(
 \item{imagedir}{directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.}
 
 \item{landmarks}{A landmark array with dimensions N_landmarks x 2 x N_observations. dimnames(landmarks)[[3]] should have the corresponding image filenames for each observation.}
+
+\item{image.names}{A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.}
 
 \item{write.images}{T or F indicating whether or not to save warped images. This is highly recommended so you can check out of image warping worked like expected.}
 
@@ -42,11 +45,16 @@ If write.images is true, warped images will be saved to the write.dir directory.
 Non-linear image registration using TPS deformation.
 }
 \examples{
-#load landmarks
+#load landmarks and covariate data
 guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+
 #order the landmarks to make a continuous perimeter around the guppy shape
 point.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
-example.sample <- tps.unwarp(imagedir = path.package("my_package"),"/inst/extdata/my_raw_data.csv",sep=""), landmarks = guppy.lms, point.map = point.map, color.sampling = T)
+
+#unwarp images
+example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/inst/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir(), point.map = point.map, color.sampling = T)
+
 #you can fill in write.dir to save the unwarped images and open them up.
 #Alternatively, you can plot the color sampled data
 plot(example.sample, individual = 2)

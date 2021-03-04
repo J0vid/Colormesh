@@ -1,7 +1,10 @@
 #' Non-linear image registration using TPS deformation.
 #'
+#' @importFrom sp point.in.polygon
+#' @importFrom tripack tri.mesh
 #' @param imagedir directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param landmarks A landmark array with dimensions N_landmarks x 2 x N_observations. dimnames(landmarks)[[3]] should have the corresponding image filenames for each observation.
+#' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param write.images T or F indicating whether or not to save warped images. This is highly recommended so you can check out of image warping worked like expected.
 #' @param write.dir Where to save warped images. Images will be named after the original image name (is that a bad idea because of overwriting? We will find out).
 #' @param color.sampling T or F indicating whether or not to sample color using delaunay triangulation.
@@ -11,16 +14,21 @@
 #' @param calib.file If color standard data is provided and color sampling is selected, $calibrated color will provide second set of color sampling data, adjusted for the differences in color standard values between images
 #' @return If write.images is true, warped images will be saved to the write.dir directory. If color sampling is true, the function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
 #' @examples
-#' #load landmarks
+#' #load landmarks and covariate data
 #' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+#' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+#'
 #' #order the landmarks to make a continuous perimeter around the guppy shape
 #' point.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
-#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/inst/extdata/"), landmarks = guppy.lms, point.map = point.map, color.sampling = T)
+#'
+#' #unwarp images
+#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/inst/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir(), point.map = point.map, color.sampling = T)
+#'
 #' #you can fill in write.dir to save the unwarped images and open them up.
 #' #Alternatively, you can plot the color sampled data
 #' plot(example.sample, individual = 2)
 #' @export
-tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, color.sampling = F, num.delaunay.passes = 2, point.map, px.radius = 2, calib.file = NULL){
+tps.unwarp <- function(imagedir, landmarks, image.names, write.images = T, write.dir = NULL, color.sampling = F, num.delaunay.passes = 2, point.map, px.radius = 2, calib.file = NULL){
 
   require(sp)
   require(tripack)
@@ -37,7 +45,7 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
 
   if(color.sampling){
     #triangulate
-    corresponding.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][1]]))
+    corresponding.image <-load.image(paste0(imagedir, image.files[grepl(image.names[1], image.files)]))
     suppressMessages(delaunay.template <- tri.surf(mean.lm, point.map, 4, corresponding.image = corresponding.image, flip.delaunay = T))
     # sampled.r <- sampled.g <- sampled.b <- matrix(0, ncol = nrow(delaunay.template$interior), nrow = dim(landmarks)[3])
     if(is.null(calib.file) == F) calibration.array <- array(NA, dim = c(sum(as.numeric(calib.file$ID) == 1), 3, dim(landmarks)[3]))
@@ -47,10 +55,11 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
   }
 
   for(i in 1:length(image.files)){
-    tmp.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][i]]))
+    # tmp.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][i]]))
+    tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
-    orig.lms <- cbind(abs(landmarks[,1,i]), abs(landmarks[,2,i]- img.dim[2]))
+    orig.lms <- cbind((landmarks[,1,i]), abs(landmarks[,2,i]- img.dim[2]))
     tar.lms <- cbind(mean.lm[,1] + img.dim[1]/2, mean.lm[,2] + img.dim[2]/2)
 
     image_defo <- function(x, y){ #I'm aware that it's terrible practice to use variables out of scope
@@ -108,7 +117,7 @@ tps.unwarp <- function(imagedir, landmarks, write.images = T, write.dir = NULL, 
       estimated.time <- (iteration.time * length(image.files)) / 60
     }
 
-    cat(paste0("Processed ", image.name, ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes"))
+    cat(paste0("Processed ", image.name, ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes \n"))
 
   } #end i
 
