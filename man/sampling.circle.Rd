@@ -15,3 +15,6 @@ The coordinates of a circle with radius px.radius
 \description{
 Internal function for color sampling an image. Calculates the pixels in a circular neighborhood of specified radius.
 }
+\examples{
+plot(sampling.circle(4), asp = 1)
+}

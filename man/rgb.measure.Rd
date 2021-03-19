@@ -24,8 +24,22 @@ rgb.measure(
 \item{linearize.color.space}{should the sampled color data be transformed into linear color space}
 }
 \value{
-If write.images is true, warped images will be saved to the write.dir directory. If color sampling is true, the function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
+The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
 }
 \description{
 Color sampling from a set of pre-warped images
+}
+\examples{
+#load landmarks and covariate data
+guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+
+#unwarp images
+example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = paste0(path.package("Colormesh"),"/extdata/"))
+
+rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/"), image.names = specimen_factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
+
+plot(rgb.test, individual = 5)
+plot(rgb.test, individual = 5, style = "comparison")
+
 }

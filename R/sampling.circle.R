@@ -2,6 +2,8 @@
 #'
 #' @param px.radius How many neighboring pixels to include when analyzing image color at a given landmark. A value of 1 just gives back the original pixel.
 #' @return The coordinates of a circle with radius px.radius
+#' @examples
+#' plot(sampling.circle(4), asp = 1)
 #' @export
 sampling.circle <- function(px.radius = 2){
   y = -px.radius:px.radius

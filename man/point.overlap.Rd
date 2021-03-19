@@ -19,3 +19,9 @@ An index of points pairs that will have overlapping (and redundant) pixel inform
 \description{
 Diagnostic tool for looking at point sampling density
 }
+\examples{
+
+data(guppies)
+delaunay.map <- tri.surf(raw.gup[,,1], point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 4, test.image)
+point.overlap(delaunay.map, 2)
+}

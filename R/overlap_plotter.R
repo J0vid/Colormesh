@@ -4,6 +4,11 @@
 #' @param px.radius The size of the circular neighborhood (in pixels) to sample color around each triangulated point.
 #' @param style What kind of plot to show overlapping points with. Options are "points" and "triangulation".
 #' @return An index of points pairs that will have overlapping (and redundant) pixel information. Only for the interior points of a delaunay triangulation (not the perimeter)
+#' @examples
+#'
+#' data(guppies)
+#' delaunay.map <- tri.surf(raw.gup[,,1], point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 4, test.image)
+#' point.overlap(delaunay.map, 2)
 #' @export
 
 

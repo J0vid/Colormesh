@@ -5,7 +5,20 @@
 #' @param delaunay.map delaunay triangulation object
 #' @param px.radius The size of the circular neighborhood (in pixels) to sample color around each triangulated point.
 #' @param linearize.color.space should the sampled color data be transformed into linear color space
-#' @return If write.images is true, warped images will be saved to the write.dir directory. If color sampling is true, the function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
+#' @return The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
+#' @examples
+#' #load landmarks and covariate data
+#' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+#' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+#'
+#' #unwarp images
+#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = paste0(path.package("Colormesh"),"/extdata/"))
+#'
+#'rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/"), image.names = specimen_factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
+#'
+#'plot(rgb.test, individual = 5)
+#'plot(rgb.test, individual = 5, style = "comparison")
+#'
 #' @export
 rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linearize.color.space = F){
 

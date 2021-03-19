@@ -4,18 +4,7 @@
 \alias{tps.unwarp}
 \title{Non-linear image registration using TPS deformation.}
 \usage{
-tps.unwarp(
-  imagedir,
-  landmarks,
-  image.names,
-  write.images = T,
-  write.dir = NULL,
-  color.sampling = F,
-  num.delaunay.passes = 2,
-  point.map,
-  px.radius = 2,
-  calib.file = NULL
-)
+tps.unwarp(imagedir, landmarks, image.names, write.dir = NULL)
 }
 \arguments{
 \item{imagedir}{directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.}
@@ -24,22 +13,10 @@ tps.unwarp(
 
 \item{image.names}{A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.}
 
-\item{write.images}{T or F indicating whether or not to save warped images. This is highly recommended so you can check out of image warping worked like expected.}
-
 \item{write.dir}{Where to save warped images. Images will be named after the original image name (is that a bad idea because of overwriting? We will find out).}
-
-\item{color.sampling}{T or F indicating whether or not to sample color using delaunay triangulation.}
-
-\item{num.delaunay.passes}{The number of rounds of delaunay triangulation to perform if color sampling is desired.}
-
-\item{point.map}{The order of points around the perimeter of your object}
-
-\item{px.radius}{The size of the circular neighborhood (in pixels) to sample color around each triangulated point.}
-
-\item{calib.file}{If color standard data is provided and color sampling is selected, $calibrated color will provide second set of color sampling data, adjusted for the differences in color standard values between images}
 }
 \value{
-If write.images is true, warped images will be saved to the write.dir directory. If color sampling is true, the function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
+warped images will be saved to the write.dir directory.
 }
 \description{
 Non-linear image registration using TPS deformation.
@@ -49,13 +26,6 @@ Non-linear image registration using TPS deformation.
 guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
 specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 
-#order the landmarks to make a continuous perimeter around the guppy shape
-point.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
-
 #unwarp images
-example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/inst/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir(), point.map = point.map, color.sampling = T)
-
-#you can fill in write.dir to save the unwarped images and open them up.
-#Alternatively, you can plot the color sampled data
-plot(example.sample, individual = 2)
+example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir())
 }
