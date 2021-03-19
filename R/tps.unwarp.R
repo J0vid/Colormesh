@@ -24,7 +24,7 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
 
   if(imagedir == write.dir) stop("Please write the warped images to a different path, so your original data don't get overwritten!")
 
-  suppressMessages(mean.lm <- procSym(landmarks, scale = F, CSinit = F)$mshape)
+  suppressMessages(mean.lm <- Morpho::procSym(landmarks, scale = F, CSinit = F)$mshape)
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.PNG|*.png")
