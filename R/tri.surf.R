@@ -1,7 +1,7 @@
 #' Fit a delaunay triangulation to an outline of landmarks.
 #'
 #' @import imager
-#' @importFrom tripack tri.mesh
+#' @importFrom tripack tri.mesh triangles
 #' @importFrom sp point.in.polygon
 #' @param tri.object A 2D matrix of landmarks to initialize delaunay triangulation
 #' @param point.map A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation
