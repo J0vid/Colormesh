@@ -33,10 +33,10 @@ tri.surf <- function(tri.object, point.map, num.passes, corresponding.image = NU
   for(i in 1:num.passes){
 
     gen.tri <- tri.mesh(tri.object[,1], tri.object[,2])
-    tri.cent <- matrix(0, nrow= length(triangles(gen.tri)[,1]), ncol= 2) #get centroids from triangulation
+    tri.cent <- matrix(0, nrow= length(tripack::triangles(gen.tri)[,1]), ncol= 2) #get centroids from triangulation
 
     for(j in 1:length(tri.cent[,1])){
-      tri.cent[j,] = round(colMeans(tri.object[triangles(gen.tri)[j,1:3],]))
+      tri.cent[j,] = round(colMeans(tri.object[tripack::triangles(gen.tri)[j,1:3],]))
     }
 
     are.you.in <- point.in.polygon(tri.cent[,1], tri.cent[,2], tri.object.prime[point.map,1], tri.object.prime[point.map,2]) #index for out of boundary triangles caused by concavities
