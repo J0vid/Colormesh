@@ -12,8 +12,8 @@
 #' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
 #' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 #'
-#' #unwarp images
-#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir())
+#'  #unwarp images
+#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir())
 #' @export
 tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
 
@@ -27,7 +27,7 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
   suppressMessages(mean.lm <- Morpho::procSym(landmarks, scale = F, CSinit = F)$mshape)
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.PNG|*.png")
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.tiff|*.PNG|*.png")
   start.time <- as.numeric(Sys.time())
 
   for(i in 1:length(image.files)){
@@ -42,7 +42,7 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
       xs <- c(0:(img.dim[1] - 1))
       ys <- c(0:(img.dim[2] - 1))
       img.long <- as.matrix(expand.grid(xs, ys))
-      img.long <- tps3d(img.long, tar.lms, orig.lms, threads = 0)
+      img.long <- Morpho::tps3d(img.long, tar.lms, orig.lms, threads = 0)
       return(list(x= img.long[,1], y = img.long[,2]))
     }
 
