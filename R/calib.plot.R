@@ -7,6 +7,13 @@
 #' @param col change point colors
 #' @param individual which specimen do you want to plot? Defaults to the first specimen
 #' @return a plot to check if you should flip the y-axis of the color standard landmarks
+#' @examples
+#' #load covariates and calibration file
+#' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+#' calib.file <- tps2array(system.file("extdata", "calib_LM_coords.TPS", package = "Colormesh"))
+#'
+#' calib.plot(paste0(path.package("Colormesh"),"/extdata/original_images/"), image.names = specimen.factors[,1], calib.file = calib.file)
+#'
 #' @export
 
 
