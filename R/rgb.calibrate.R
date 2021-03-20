@@ -7,6 +7,19 @@
 #' @param px.radius The size of the circular neighborhood (in pixels) to sample color around each triangulated point.
 #' @param flip.y.values should the calbration points be flipped to match the images?
 #' @return The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay. Finally, a calibrated array of color values will be returned under $calibrated
+#' @examples
+#'
+#' #load landmarks and covariate data
+#' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+#' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+#' calib.file <- tps2array(system.file("extdata", "calib_LM_coords.TPS", package = "Colormesh"))
+#'
+#'rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), image.names = specimen_factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
+#'
+#'calibration.test <- rgb.calibrate(rgb.test, imagedir = paste0(path.package("Colormesh"),"/extdata/original_images/"), image.names = specimen_factors[,1], calib.file = calib.file)
+#'
+#'#check result####
+#'plot(calibration.test, individual = 2, style = "comparison")
 #' @export
 rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, color.standard.values = NULL, px.radius = 2, flip.y.values = F){
 

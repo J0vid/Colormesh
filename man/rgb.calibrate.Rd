@@ -33,3 +33,17 @@ The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations
 \description{
 Calibration of existing color sampled data
 }
+\examples{
+
+#load landmarks and covariate data
+guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+calib.file <- tps2array(system.file("extdata", "calib_LM_coords.TPS", package = "Colormesh"))
+
+rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), image.names = specimen_factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
+
+calibration.test <- rgb.calibrate(rgb.test, imagedir = paste0(path.package("Colormesh"),"/extdata/original_images/"), image.names = specimen_factors[,1], calib.file = calib.file)
+
+#check result####
+plot(calibration.test, individual = 2, style = "comparison")
+}

@@ -11,10 +11,7 @@
 #' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
 #' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 #'
-#' #unwarp images
-#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = paste0(path.package("Colormesh"),"/extdata/"))
-#'
-#'rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/"), image.names = specimen_factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
+#'rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), image.names = specimen_factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
 #'
 #'plot(rgb.test, individual = 5)
 #'plot(rgb.test, individual = 5, style = "comparison")

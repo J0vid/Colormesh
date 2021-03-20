@@ -24,8 +24,8 @@ Non-linear image registration using TPS deformation.
 \examples{
 #load landmarks and covariate data
 guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
-specimen.factors <- c("GPHP-001.tiff", "GPHP-002.tiff", "GPHP-003.tiff", "GPHP-004.tiff", "GPHP-005.tiff", "GPLP-001.tiff", "GPLP-002.tiff", "GPLP-003.tiff", "GPLP-004.tiff", "GPLP-005.tiff")
+specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 
  #unwarp images
-example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/"), landmarks = guppy.lms, image.names = specimen.factors, write.dir = tempdir())
+example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir())
 }
