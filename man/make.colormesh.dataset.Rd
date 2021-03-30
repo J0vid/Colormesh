@@ -18,7 +18,7 @@ make.colormesh.dataset(
 
 \item{use.perimeter.data}{If TRUE, we will return the color values for the perimeter landmarks as well as the interior landmarks.}
 
-\item{write.csv}{A directory is to write a csv to, if desired}
+\item{write2csv}{A directory is to write a csv to, if desired}
 }
 \value{
 The function will return a dataframe of specimen data (inherits the original column names) and landmark x & y values along with calibrated RGB values.

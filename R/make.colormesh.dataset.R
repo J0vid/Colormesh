@@ -3,7 +3,7 @@
 #' @param df A calibrated.mesh.colors object (generated from rgb.calibrate) or mesh.colors object (generated from rgb.measure)
 #' @param specimen.factors The covariate data that you want to combine with the calibrated data
 #' @param use.perimeter.data If TRUE, we will return the color values for the perimeter landmarks as well as the interior landmarks.
-#' @param write.csv A directory is to write a csv to, if desired
+#' @param write2csv A directory is to write a csv to, if desired
 #' @return The function will return a dataframe of specimen data (inherits the original column names) and landmark x & y values along with calibrated RGB values.
 #' @export
 make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F, write2csv = NULL){
