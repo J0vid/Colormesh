@@ -17,10 +17,7 @@
 #' @export
 tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
 
-  require(sp)
-  require(tripack)
-
-  if(is.null(write.dir)) stop("Please provide a folder to save images to by using the write.dir parameter. Alternatively, don't save images by making write.images = FALSE.")
+  if(is.null(write.dir)) stop("Please provide a folder to save images to by using the write.dir parameter.")
 
   if(imagedir == write.dir) stop("Please write the warped images to a different path, so your original data don't get overwritten!")
 
@@ -32,7 +29,9 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
 
   for(i in 1:length(image.files)){
     # tmp.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][i]]))
-    tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+    # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+
+    tmp.image <- image_reader(imagedir, image.files[grepl(image.names[i], image.files)])
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
     orig.lms <- cbind((landmarks[,1,grepl(image.names[i], dimnames(landmarks)[[3]])]), abs(landmarks[,2,grepl(image.names[i], dimnames(landmarks)[[3]])]- img.dim[2]))
@@ -54,7 +53,6 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
     tmp.warp <- imwarp(tmp.image, map = image_defo, direction = "reverse")
     # image.name <- substr(dimnames(landmarks)[[3]][i], 1, nchar(as.character(dimnames(landmarks)[[3]][i])) - 4)
 
-    #should I create a directory in the current working directory if write.dir is not provided? dir.create("warped_images")
     imager::save.image(tmp.warp, file = paste0(write.dir, image.names[i],"_unwarped.png"))
 
     if(i == 1){

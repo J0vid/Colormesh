@@ -22,9 +22,7 @@
 #' @export
 rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linearize.color.space = F){
 
-  require(sp)
-  require(tripack)
-  require(imager)
+
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.nef|*.orf|*.crw")
@@ -46,7 +44,8 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
   for(i in 1:length(image.names)){
     #the issue with the old approach is that we need to get the lm names from somewhere and it's no longer from the TPS readin
     #it has to be from coords
-    tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+    # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+    tmp.image <- image_reader(imagedir, image.files[grepl(image.names[i], image.files)])
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
 
@@ -54,6 +53,14 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     #match up delaunay points to image by flipping Y axis on image dimensions
       translated.interior <-  cbind(delaunay.template$interior[,1], delaunay.template$interior[,2])
       translated.perimeter <- cbind(delaunay.template$perimeter[,1], delaunay.template$perimeter[,2])
+
+      #add offset if image was originally RAW format
+
+
+
+
+
+
       #add buffer to image so we don't ask for pixels that don't exist
       buffered.image = array(0, dim = c(dim(tmp.image)[1]+ 2*px.radius,dim(tmp.image)[2]+ 2*px.radius, 3))
       buffered.image[(px.radius):(dim(tmp.image)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.image)[2]+(px.radius)),] <- tmp.image

@@ -7,7 +7,7 @@
 array2row(data)
 }
 \arguments{
-\item{data}{an array of N_landmarks x 3 x N_specimens}
+\item{data}{an array of N_landmarks x 2 x N_specimens}
 }
 \value{
 
