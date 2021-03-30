@@ -55,11 +55,17 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
       translated.perimeter <- cbind(delaunay.template$perimeter[,1], delaunay.template$perimeter[,2])
 
       #add offset if image was originally RAW format
+      supported.raw.formats <- c("cr2","nef","orf","crw","CR2")
+      tmp.name <- image.files[grepl(image.names, image.files)]
 
+      if(substr(tmp.name, nchar(tmp.name) - 2, nchar(tmp.name)) %in% supported.raw.formats){
+      off.y <- min(which(rowMeans(tmp.image) < 1))
+      off.x <- min(which(colMeans(tmp.image) < 1))
 
+      translated.interior <-  cbind(delaunay.template$interior[,1] + off.y, delaunay.template$interior[,2] - off.x)
+      translated.perimeter <- cbind(delaunay.template$perimeter[,1] + off.y, delaunay.template$perimeter[,2] - off.x)
 
-
-
+      }
 
       #add buffer to image so we don't ask for pixels that don't exist
       buffered.image = array(0, dim = c(dim(tmp.image)[1]+ 2*px.radius,dim(tmp.image)[2]+ 2*px.radius, 3))
