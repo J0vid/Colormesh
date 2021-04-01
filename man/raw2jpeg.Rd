@@ -14,16 +14,16 @@ raw2jpeg(imagedir, image.names, writedir)
 \item{writedir}{directory to save converted images.}
 }
 \value{
-This function reads in Raw image formats and converts them to jpeg. These jpegs can then be used by geomorph for landmarking within R.
+This function reads in Raw image formats and converts them to jpeg. The function returns the paths to the images that were converted. These jpeg locations can then be used by geomorph for landmarking within R.
 }
 \description{
 Read in and convert raw images to jpeg for digitization in geomorph
 }
 \examples{
 #load an image and convert
-
+#host a link on a site
 #use newly created jpegs for landmarking
-
+geomorph::digitize2d(raw2jpeg("~/Downloads/Colormesh_Raw_test/", "IMG_7647.CR2", "~/"), nlandmarks = 3, tpsfile = "test.tps")
 #remove tmpdir
 
 }

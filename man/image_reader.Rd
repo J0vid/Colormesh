@@ -2,7 +2,7 @@
 % Please edit documentation in R/image_reader.R
 \name{image_reader}
 \alias{image_reader}
-\title{Read in various image formats for the Colormesh pipeline}
+\title{Internal tool to read in various image formats for the Colormesh pipeline}
 \usage{
 image_reader(imagedir, image.names)
 }
@@ -15,5 +15,5 @@ image_reader(imagedir, image.names)
 Returns the loaded image
 }
 \description{
-Read in various image formats for the Colormesh pipeline
+Internal tool to read in various image formats for the Colormesh pipeline
 }
