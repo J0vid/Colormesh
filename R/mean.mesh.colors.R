@@ -22,7 +22,7 @@ array.mean <- function (data){
 mean.mesh.colors <- function(mesh.colors.object, covariate_data = NULL, group_labels = NULL){
 
   if(is.null(covariate_data)){
-    mean.mesh <- array.mean(mesh.colors.object$sampled.color)
+    mean.mesh <- rowMeans(mesh.colors.object$sampled.color, dims = 2)
   } else{
     if(is.null(group_labels)) stop("Give me some group labels to calculate a mean with!")
     for(i in 1:length(group_labels)){

@@ -1,4 +1,4 @@
-#' Read in various image formats for the Colormesh pipeline
+#' Internal tool to read in various image formats for the Colormesh pipeline
 #' @importFrom magick image_read
 #' @importFrom imager load.image magick2cimg
 #' @param imagedir directory of images.
