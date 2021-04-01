@@ -1,5 +1,5 @@
 #' Read in and convert raw images to jpeg for digitization in geomorph
-#' @importfrom magick image_read image_convert image_write
+#' @importFrom magick image_read image_convert image_write
 #' @param imagedir directory of images to measure. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param writedir directory to save converted images.
