@@ -3,12 +3,7 @@
 #' @return a matrix of N_landmarks x N_dims
 #' @export
 array.mean <- function (data){
-  mean.matrix = matrix(0, nrow = length(data[, 1, 1]), ncol = length(data[1,, 1]))
-  for (i in 1:length(data[, 1, 1])) {
-    for (j in 1:length(data[1, , 1])) {
-      mean.matrix[i, j] = mean(data[i, j, ])
-    }
-  }
+  mean.matrix <- rowMeans(data, dims = 2)
   return(mean.matrix)
 }
 

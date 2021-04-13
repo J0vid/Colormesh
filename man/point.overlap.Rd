@@ -21,7 +21,11 @@ Diagnostic tool for looking at point sampling density
 }
 \examples{
 
-data(guppies)
-delaunay.map <- tri.surf(raw.gup[,,1], point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 4, test.image)
+#create delaunay map
+consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
+test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPHP_unw_001.jpg"))
+delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
+
+#plot overlapping points
 point.overlap(delaunay.map, 2)
 }

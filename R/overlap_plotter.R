@@ -6,12 +6,14 @@
 #' @return An index of points pairs that will have overlapping (and redundant) pixel information. Only for the interior points of a delaunay triangulation (not the perimeter)
 #' @examples
 #'
-#' data(guppies)
-#' delaunay.map <- tri.surf(raw.gup[,,1], point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 4, test.image)
+#' #create delaunay map
+#' consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
+#' test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPHP_unw_001.jpg"))
+#' delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
+#'
+#' #plot overlapping points
 #' point.overlap(delaunay.map, 2)
 #' @export
-
-
 point.overlap <- function(delaunay.map, px.radius, style = "points"){
 
 # full symmetric distance matrix of triangulation object interior points

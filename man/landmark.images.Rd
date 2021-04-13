@@ -24,7 +24,7 @@ landmark.images(
 \item{dump.tmp.images}{Logical value to keep temporarily created jpegs. By default they will be deleted when landmarking is completed.}
 }
 \value{
-This function reads in Raw image formats and converts them to jpeg. The function returns the paths to the images that were converted. These jpeg locations can then be used by geomorph for landmarking within R.
+This function reads in several image formats and converts them to jpeg. The function returns the paths to the images that were converted, as well as the landmarks.
 }
 \description{
 Read in and convert images to jpeg for digitization in geomorph
