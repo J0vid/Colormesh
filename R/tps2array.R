@@ -33,25 +33,30 @@ tps2array <- function(data){
       SCALE = SCALE[i]))
   }
 
-  tpsfile <- do.call(rbind, landmarks) # rbind the list items into a data.frame
-
-  #this function assumes unique image names!
-  # arrayname <- substr(unique(tpsfile$IMAGE), 1, nchar(as.character(unique(tpsfile$IMAGE))) - 4)
-  arrayname <- as.character(unique(tpsfile$IMAGE))
-  Nlandmarks <- sum(tpsfile$ID == unique(tpsfile$ID)[1])
-  # ID.nums <- rep(0, length(tpsfile$ID))
-  coord.array <- array(dim = c(Nlandmarks, 2, length(arrayname)))
-  # for (i in 0:(length(tpsfile$ID)/Nlandmarks)) {
-  #   ID.nums[((i * Nlandmarks) + 1):(((i + 1) * Nlandmarks) +
-  #                                     1)] = rep(i, length(Nlandmarks))
-  # }
-  for (ind in 1:length(coord.array[1, 1, ])) {
-    coord.array[, , ind] = as.matrix(tpsfile[tpsfile$ID == unique(tpsfile$ID)[ind],
-                                             1:2])
+  coord.array <- array(NA, dim = c(nrow(landmarks[[1]]), 2, length(landmarks)), dimnames = list(1:nrow(landmarks[[1]]), c("X", "Y"), rep(NA, length(landmarks))))
+  for(i in 1:length(landmarks)){
+   coord.array[,,i] <- as.matrix(landmarks[[i]][,1:2])
+   dimnames(coord.array)[[3]][i] <- as.character(landmarks[[i]]$IMAGE[1])
   }
-
-  if(dim(coord.array)[3] == 1){ dimnames(coord.array)[[3]] <- list(arrayname)
-  } else{dimnames(coord.array)[[3]] <- (arrayname)}
+  # tpsfile <- do.call(rbind, landmarks) # rbind the list items into a data.frame
+  #
+  # #this function assumes unique image names!
+  # # arrayname <- substr(unique(tpsfile$IMAGE), 1, nchar(as.character(unique(tpsfile$IMAGE))) - 4)
+  # arrayname <- as.character(unique(tpsfile$IMAGE))
+  # Nlandmarks <- sum(tpsfile$ID == unique(tpsfile$ID)[1])
+  # # ID.nums <- rep(0, length(tpsfile$ID))
+  # coord.array <- array(dim = c(Nlandmarks, 2, length(arrayname)))
+  # # for (i in 0:(length(tpsfile$ID)/Nlandmarks)) {
+  # #   ID.nums[((i * Nlandmarks) + 1):(((i + 1) * Nlandmarks) +
+  # #                                     1)] = rep(i, length(Nlandmarks))
+  # # }
+  # for (ind in 1:length(coord.array[1, 1, ])) {
+  #   coord.array[, , ind] = as.matrix(tpsfile[tpsfile$IMAGE == unique(tpsfile$IMAGE)[ind],
+  #                                            1:2])
+  # }
+  #
+  # if(dim(coord.array)[3] == 1){ dimnames(coord.array)[[3]] <- list(arrayname)
+  # } else{dimnames(coord.array)[[3]] <- (arrayname)}
 
   return(coord.array)
 

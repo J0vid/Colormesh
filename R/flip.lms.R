@@ -9,7 +9,6 @@
 flip.lms <- function(landmarks, imagepath, side_data, side_code = "right"){
   #this function requires that the images are the same dimensions they were when you did the landmarking, otherwise it won't flip the image correctly
   #assumes constant image dimensions
-
   imagepath <- paste0(imagepath, list.files(imagepath, pattern = "*.JPG|*.jpg|*.tif|*.png")[1])
   flip.ref = dim(load.image(imagepath[1]))[1]
 
