@@ -5,6 +5,8 @@
 #' @param imagedir directory of images to measure. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param nlandmarks number of landmarks to acquire per image.
+#' @param scale how long is the scale in your images?
+#' @param Multscale Logical value--should the coords be pre-multiplied by scale value?
 #' @param writedir directory to save converted images. If left NULL, images will be save to a temporary directory
 #' @param dump.tmp.images Logical value to keep temporarily created jpegs. By default they will be deleted when landmarking is completed.
 #' @return This function reads in several image formats and converts them to jpeg. The function returns the paths to the images that were converted, as well as the landmarks.
@@ -15,7 +17,7 @@
 #' ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPHP_001.tiff", nlandmarks = 3)
 #'
 #' @export
-landmark.images <- function(imagedir, image.names, nlandmarks, writedir = NULL, dump.tmp.images = T){
+landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Multscale = F, writedir = NULL, dump.tmp.images = T){
 
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.CR2|*.nef|*.orf|*.crw")
   if(is.null(writedir)){
@@ -35,7 +37,7 @@ landmark.images <- function(imagedir, image.names, nlandmarks, writedir = NULL, 
 
   written.images <- paste0(writedir, "/", dir(writedir, pattern = "*.jpg"))
 
-  geomorph::digitize2d(filelist = written.images, nlandmarks = nlandmarks, tpsfile = paste0(writedir, "/Colormesh_landmarks.TPS"))
+  geomorph::digitize2d(filelist = written.images, nlandmarks = nlandmarks, tpsfile = paste0(writedir, "/Colormesh_landmarks.TPS"), scale = scale, MultScale = Multscale)
 
   cm_lm <- tps2array(paste0(writedir, "/Colormesh_landmarks.TPS"))
   dimnames(cm_lm)[[3]] <- image.names

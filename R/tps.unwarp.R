@@ -53,6 +53,7 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
     tmp.warp <- imwarp(tmp.image, map = image_defo, direction = "reverse")
     # image.name <- substr(dimnames(landmarks)[[3]][i], 1, nchar(as.character(dimnames(landmarks)[[3]][i])) - 4)
 
+    #needs to save as the format it read in as
     imager::save.image(tmp.warp, file = paste0(write.dir, image.names[i],"_unwarped.png"))
 
     if(i == 1){

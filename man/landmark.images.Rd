@@ -8,6 +8,8 @@ landmark.images(
   imagedir,
   image.names,
   nlandmarks,
+  scale = NULL,
+  Multscale = F,
   writedir = NULL,
   dump.tmp.images = T
 )
@@ -18,6 +20,10 @@ landmark.images(
 \item{image.names}{A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.}
 
 \item{nlandmarks}{number of landmarks to acquire per image.}
+
+\item{scale}{how long is the scale in your images?}
+
+\item{Multscale}{Logical value--should the coords be pre-multiplied by scale value?}
 
 \item{writedir}{directory to save converted images. If left NULL, images will be save to a temporary directory}
 
