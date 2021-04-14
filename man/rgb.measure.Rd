@@ -30,8 +30,7 @@ The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations
 Color sampling from a set of pre-warped images
 }
 \examples{
-#load landmarks and covariate data
-guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+#covariate data and consensus lms
 specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
 test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPHP_unw_001.jpg"))

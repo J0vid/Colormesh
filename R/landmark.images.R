@@ -42,7 +42,7 @@ landmark.images <- function(imagedir, image.names, nlandmarks, writedir = NULL, 
 
   if(dump.tmp.images) file.remove(written.images)
 
-  return(list(lms = cm_lm, written.images = written.images))
+  return(cm_lm)
 }
 
 
