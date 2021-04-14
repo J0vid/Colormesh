@@ -1,7 +1,7 @@
 #' Read in and convert images to jpeg for digitization in geomorph
 #' @importFrom magick image_read
 #' @importFrom imager load.image magick2cimg save.image
-#' @importFrom geomorph digitize2d
+#' @importFrom geomorph digitize2d define.sliders gpagen
 #' @param imagedir directory of images to measure. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param nlandmarks number of landmarks to acquire per image.

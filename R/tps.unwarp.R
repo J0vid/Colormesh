@@ -1,12 +1,12 @@
 #' Non-linear image registration using TPS deformation.
-#'
+#' @importFrom Morpho tps3d procSym
 #' @importFrom sp point.in.polygon
 #' @importFrom tripack tri.mesh
 #' @param imagedir directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param landmarks A landmark array with dimensions N_landmarks x 2 x N_observations. dimnames(landmarks)[[3]] should have the corresponding image filenames for each observation.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param write.dir Where to save warped images. Images will be named after the original image name (is that a bad idea because of overwriting? We will find out).
-#' @return warped images will be saved to the write.dir directory.
+#' @return warped images will be saved to the write.dir directory. We also return the consensus shape of the landmarks. This can be used for delaunay triangulation.
 #' @examples
 #' #load landmarks and covariate data
 #' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
@@ -64,5 +64,5 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
     cat(paste0("Processed ", image.names[i], ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes \n"))
 
   } #end i
-return(tar.lms)
+return(mean.lm)
 }

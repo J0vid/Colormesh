@@ -16,7 +16,7 @@ tps.unwarp(imagedir, landmarks, image.names, write.dir = NULL)
 \item{write.dir}{Where to save warped images. Images will be named after the original image name (is that a bad idea because of overwriting? We will find out).}
 }
 \value{
-warped images will be saved to the write.dir directory.
+warped images will be saved to the write.dir directory. We also return the consensus shape of the landmarks. This can be used for delaunay triangulation.
 }
 \description{
 Non-linear image registration using TPS deformation.
