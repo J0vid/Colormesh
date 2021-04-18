@@ -14,8 +14,13 @@
 #' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
 #' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 #'
-#'  #unwarp images
-#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir())
+#' #define slides for guppy data
+#' sliders <- geomorph::define.sliders(c(1,8:17, 2, 18:19, 3, 20:27, 4, 28:42, 5, 43:52, 6, 53:54, 7, 55:62))
+#' #remove type 1 landmarks from sliders matrix
+#' sliders <- sliders[sliders[,2] >= 8,]
+#'
+#' #unwarp images--change writedir if you want to see the images!
+#' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), landmarks = guppy.lms, image.names = specimen.factors[,1], sliders = sliders, write.dir = tempdir())
 #' @export
 tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, sliders = NULL){
 
