@@ -1,11 +1,13 @@
 #' Non-linear image registration using TPS deformation.
 #' @importFrom Morpho tps3d procSym
+#' @importFrom geomorph gpagen
 #' @importFrom sp point.in.polygon
 #' @importFrom tripack tri.mesh
 #' @param imagedir directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param landmarks A landmark array with dimensions N_landmarks x 2 x N_observations. dimnames(landmarks)[[3]] should have the corresponding image filenames for each observation.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param write.dir Where to save warped images. Images will be named after the original image name (is that a bad idea because of overwriting? We will find out).
+#' @param sliders An index of sliding semilandmarks for calculating the mean landmark shape.
 #' @return warped images will be saved to the write.dir directory. We also return the consensus shape of the landmarks. This can be used for delaunay triangulation.
 #' @examples
 #' #load landmarks and covariate data
@@ -15,13 +17,18 @@
 #'  #unwarp images
 #' example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir())
 #' @export
-tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL){
+tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, sliders = NULL){
 
   if(is.null(write.dir)) stop("Please provide a folder to save images to by using the write.dir parameter.")
 
   if(imagedir == write.dir) stop("Please write the warped images to a different path, so your original data don't get overwritten!")
 
-  suppressMessages(mean.lm <- Morpho::procSym(landmarks, scale = F, CSinit = F)$mshape)
+  # suppressMessages(mean.lm <- Morpho::procSym(landmarks, scale = F, CSinit = F)$mshape)
+  suppressMessages({
+    tmp.reg <- geomorph::gpagen(landmarks, curves = sliders, print.progress = F)
+    mean.lm <- tmp.reg$consensus * mean(tmp.reg$Csize)
+    })
+
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.tiff|*.PNG|*.png")

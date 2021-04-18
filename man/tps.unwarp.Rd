@@ -4,7 +4,7 @@
 \alias{tps.unwarp}
 \title{Non-linear image registration using TPS deformation.}
 \usage{
-tps.unwarp(imagedir, landmarks, image.names, write.dir = NULL)
+tps.unwarp(imagedir, landmarks, image.names, write.dir = NULL, sliders = NULL)
 }
 \arguments{
 \item{imagedir}{directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.}
@@ -14,6 +14,8 @@ tps.unwarp(imagedir, landmarks, image.names, write.dir = NULL)
 \item{image.names}{A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.}
 
 \item{write.dir}{Where to save warped images. Images will be named after the original image name (is that a bad idea because of overwriting? We will find out).}
+
+\item{sliders}{An index of sliding semilandmarks for calculating the mean landmark shape.}
 }
 \value{
 warped images will be saved to the write.dir directory. We also return the consensus shape of the landmarks. This can be used for delaunay triangulation.
