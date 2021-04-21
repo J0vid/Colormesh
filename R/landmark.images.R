@@ -19,12 +19,13 @@
 #' @export
 landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Multscale = F, writedir = NULL, dump.tmp.images = T){
 
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.CR2|*.nef|*.orf|*.crw")
+  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tif|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
   if(is.null(writedir)){
     dump.tmp.images <- T
     writedir <- tempdir()
   }
   for(i in 1:length(image.names)){
+    if(length(grepl(image.names[i], image.files)) == 0) stop(paste0("Didn't find a matching image name in the provided directory. Please check that image.names match the images in imagedir."))
     rawread <- image_reader(imagedir, image.files[grepl(image.names[i], image.files)])
     # rawread <- image_read(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
 

@@ -36,7 +36,7 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
 
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.tiff|*.PNG|*.png")
+  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tif|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
   start.time <- as.numeric(Sys.time())
 
   for(i in 1:length(image.files)){
