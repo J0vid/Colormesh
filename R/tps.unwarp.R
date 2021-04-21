@@ -77,5 +77,5 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
     cat(paste0("Processed ", image.names[i], ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), "minutes \n"))
 
   } #end i
-return(mean.lm)
+return(tar.lms)
 }
