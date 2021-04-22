@@ -95,7 +95,7 @@ To check that Colormesh will be sampling your speciment correctly, first read in
 ```r
 test.image = load.image("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/TULPAAM03_1015_un.TIF")
 ```
-![](images/TULPAAM03_1015_un.png)
+![](images/TULPAAM03_1015_un.jpg)
 
 
 ## Calculating sample location and checking alignment 
