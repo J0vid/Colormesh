@@ -31,6 +31,6 @@ Fit a delaunay triangulation to an outline of landmarks.
 }
 \examples{
 consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
-test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPLP_unw_001.jpg"))
+test.image <- image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), "GPLP_unw_001.jpg")
 delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
 }

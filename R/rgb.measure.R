@@ -10,7 +10,7 @@
 #' #covariate data and consensus lms
 #' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 #' consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
-#' test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPLP_unw_001.jpg"))
+#' test.image <- image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), "GPLP_unw_001.jpg")
 #' delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
 #'
 #' rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), image.names = specimen.factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
@@ -55,7 +55,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
 
       #add offset if image was originally RAW format
       supported.raw.formats <- c("cr2","nef","orf","crw","CR2")
-      tmp.name <- image.files[grepl(image.names, image.files)]
+      tmp.name <- image.files[grepl(image.names[i], image.files)]
 
       if(substr(tmp.name, nchar(tmp.name) - 2, nchar(tmp.name)) %in% supported.raw.formats){
       off.y <- min(which(rowMeans(tmp.image) < 1))
