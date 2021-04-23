@@ -11,7 +11,7 @@
 #' @return A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
 #' @examples
 #' consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
-#' test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPHP_unw_001.jpg"))
+#' test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPLP_unw_001.jpg"))
 #' delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
 #' @export
 tri.surf <- function(tri.object, point.map, num.passes, corresponding.image = NULL, flip.delaunay = F){

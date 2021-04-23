@@ -14,7 +14,7 @@
 #' @seealso \code{\link[geomorph]{digitize2d}} (used for landmarking)
 #' @examples
 #' #example place 3 landmarks on one image
-#' ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPHP_001.tiff", nlandmarks = 3)
+#' ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPLP_001.tiff", nlandmarks = 3)
 #'
 #' @export
 landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Multscale = F, writedir = NULL, dump.tmp.images = T){

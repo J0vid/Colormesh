@@ -40,7 +40,7 @@ This function is a wrapper around geomorph::digitize2d() that a) allows for more
 }
 \examples{
 #example place 3 landmarks on one image
-ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPHP_001.tiff", nlandmarks = 3)
+ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPLP_001.tiff", nlandmarks = 3)
 
 }
 \seealso{
