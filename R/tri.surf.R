@@ -3,7 +3,7 @@
 #' @import imager
 #' @importFrom tripack tri.mesh triangles
 #' @importFrom sp point.in.polygon
-#' @param tri.object A 2D matrix of landmarks to initialize delaunay triangulation
+#' @param tri.object A 2D matrix of landmarks to initialize delaunay triangulation. This should be the configuration you used for unwarping. If you did your unwarping in Colormesh, the target configuration was returned by the function.
 #' @param point.map A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation
 #' @param num.passes How many rounds of delaunay triangulation to perform. In each pass, the centroids of the triangles will be calculated and be used as points in the next round of triangulation.
 #' @param corresponding.image Supply a corresponding image to the mesh to make sure that the points line up with the image correctly. If an image is not provided, no plot will be produced.

@@ -11,6 +11,7 @@ landmark.images(
   scale = NULL,
   Multscale = F,
   writedir = NULL,
+  tps.filename = NULL,
   dump.tmp.images = T
 )
 }
@@ -25,7 +26,9 @@ landmark.images(
 
 \item{Multscale}{Logical value--should the coords be pre-multiplied by scale value?}
 
-\item{writedir}{directory to save converted images. If left NULL, images will be save to a temporary directory}
+\item{writedir}{directory to save converted images and the TPS file. If left NULL, data will be saved to a temporary directory.}
+
+\item{tps.filename}{a name for the TPS file. If no name is provided, it will default to "/Colormesh_landmarks.TPS"}
 
 \item{dump.tmp.images}{Logical value to keep temporarily created jpegs. By default they will be deleted when landmarking is completed.}
 }
@@ -40,7 +43,7 @@ This function is a wrapper around geomorph::digitize2d() that a) allows for more
 }
 \examples{
 #example place 3 landmarks on one image
-ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPLP_001.tiff", nlandmarks = 3)
+ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPLP_001.png", nlandmarks = 3)
 
 }
 \seealso{

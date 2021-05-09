@@ -19,5 +19,6 @@ Internal tool to read in various image formats for the Colormesh pipeline
 }
 \examples{
  #read in an image and plot it
- plot(image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), "GPLP_unw_001.jpg"))
+ ex.image <- image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), "GPLP_unw_001.jpg")
+ plot(ex.image)
 }

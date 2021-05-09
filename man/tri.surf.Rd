@@ -13,7 +13,7 @@ tri.surf(
 )
 }
 \arguments{
-\item{tri.object}{A 2D matrix of landmarks to initialize delaunay triangulation}
+\item{tri.object}{A 2D matrix of landmarks to initialize delaunay triangulation. This should be the configuration you used for unwarping. If you did your unwarping in Colormesh, the target configuration was returned by the function.}
 
 \item{point.map}{A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation}
 
