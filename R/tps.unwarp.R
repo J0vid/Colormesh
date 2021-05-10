@@ -50,7 +50,11 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
     if(is.null(target)){
       tar.lms <- cbind(mean.lm[,1] + img.dim[1]/2, mean.lm[,2] + img.dim[2]/2)
       tar.lms[,2] <- abs(tar.lms[,2] - img.dim[2])
-    } else {tar.lms <- target}
+    } else {
+      tar.lms <- cbind(target[,1] + img.dim[1]/2, target[,2] + img.dim[2]/2)
+      #make sure supplied target is correct scale
+      if(diff(range(target)) < 5) tar.lms <- tar.lms * mean(tmp.reg$Csize)
+      }
 
     if(is.null(target) == F & nrow(landmarks) != nrow(tar.lms)) stop("The supplied target does not have the same number of landmarks as the data.")
 
