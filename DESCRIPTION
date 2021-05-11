@@ -5,13 +5,14 @@ Version: 2.0
 Author: J. David Aponte & Jenn Valvo
 Maintainer: J. David Aponte <daponte08@gmail.com>
 Description: Color variation is one of the most obvious examples of variation in nature. Objective quantification and interpretation of variation in color and complex patterns is challenging. Assessment of variation in color patterns is limited by the reduction of color into categorical measures and lack of spatial information. We present Colormesh as a novel method for analyzing complex color patterns that offers unique capabilities. Compared to other methods, Colormesh maintains the continuous measure of color at individual sampling points throughout the pattern. This is particularly useful for analyses of variation in color patterns, whether interest is in specific locations or the pattern as a whole. In our approach, the use of Delaunay triangulation to determine sampling location eliminates the need for color patterns to have clearly defined pattern elements, and users are not required to identify discrete color categories. This method is complementary to several other methods available for color pattern quantification, and can be usefully deployed to address a wide range of questions about color pattern variation.
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 Imports:
     Morpho,
     imager,
