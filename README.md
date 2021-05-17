@@ -43,13 +43,9 @@ known.rgb <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/known_RGB.csv",
 
 
 
-
-
 # Image Processing
 
-## Within the Colormesh environment
-
-### Landmark Placement 
+## Landmark Placement within the Colormesh environment
 
 Colormesh calls on the image digitization ability found in the *geomorph* package to create the required landmark data array. The *landmark.images* function will temporarily convert images to jpgs solely for obtaining the coordinates of the landmarks that are placed. A plot window will open with the first image and the user will be prompted to set the scale......
 To avoid accidental sampling of the compressed jpg images, the logical argument, dump.tmp.images is set = T which will remove these temporary images. The array of landmark coordinate data is saved in the global environment and is written as a TPS file to the directory you provided. 
@@ -58,16 +54,32 @@ To avoid accidental sampling of the compressed jpg images, the logical argument,
 ## we left the arguments, "writedir" and "dump.tmp.images" = NULL because we were not interested in saving the temporary images.
 specimen.LM <- landmark.images(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/",image.names = specimen.factors[ ,1], nlandmarks = 62, writedir = "C:/Users/jennv/Desktop/Colormesh_test_tif/", dump.tmp.images = T, scale = 10)
 
-calib.LM.tif <- landmark.images(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_tif/", image.names = specimen.factors.tif[ ,1], nlandmarks = 5, writedir = "C:/Users/jennv/Desktop/Colormesh_test_tif/", dump.tmp.images = T)
+calib.LM <- landmark.images(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_tif/", image.names = specimen.factors.tif[ ,1], nlandmarks = 5, writedir = "C:/Users/jennv/Desktop/Colormesh_test_tif/", dump.tmp.images = T)
+
+```
+
+## Landmark placement performed externally
+
+When landmarks are placed using other geometric morphometric software, coordinate data are typically saved as a TPS file. The function *tps2array* will read in the .TPS file containing landmark coordinatedata and convert the information into the required array format. You will need to import the coordinate data for landmarks that were placed on the color standard. You will also need to import the coordinates for the landmarks placed around each of the specimen images; unwarping images to the consensus shape within the Colormesh environment will produce the other required landmark coordinate data set: the coordinates for the consensus shape (see the *tps.unwarp* function below). 
+
+```r
+## The code below reads in the TPS file generated in the TPSdig software. This TPS file contains 62 landmark coordinates that were placed around each of the three specimens. 
+
+specimen.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/orig_LM_jpg.TPS")
+
+
+## The code below reads in the TPS file generated in the TPSdig software. This TPS file contains the coordinates for landmarks placed on the color standard contained within each specimen image. These landmarks will identify where the image will be sampled for the calibration process. 
+
+calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_jpg.TPS")
 
 ```
 
 
-### Image transformation (unwarping to a consensus shape)
+## Generating consensus images within Colormesh 
 
-Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. The example code below performs the Generalized Procrustes Analysis utilizing the *geomorph* package to generate a consensus shape. The *imager* package is then used to to perfor a thin-plate spline transformation to the images. 
+Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. The function first performs a Generalized Procrustes Analysis utilizingemploying the utilities of the *geomorph* package to generate a consensus shape. Then, the *imager* package is used to to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory identified by the user.  
 
-The first step is to define the perimeter map of the specimen and identifying which landmarks are sliding landmarks (semilandmarks). This perimeter map tells Colormesh the order in which to connect the points so a perimeter is drawn. This perimeter map is used in both the unwarping process and the Delaunay triangulation (described below) to determine sampling locations. The code below tells Colormesh what order to read the landmarks in so that a perimeter is drawn around the specimen in a "connect-the-dots" manner. In the guppy example below, the first seven landarks that were placed around the guppy were at traditional landmark locations (easily identifiable between images); the remaining 55 landmarks are referred to as semilandmarks. Semilandmarks are interspersed between the traditional landmarks and allowed to slide along the tangent of the curve they create when generating a consensus shape.
+The first step is to define the perimeter map of the specimen and identifying which landmarks, if any, are sliding landmarks (semilandmarks). This perimeter map tells Colormesh the order in which to connect the points so a perimeter is drawn. This perimeter map is used in both the unwarping process (landmark sliding) and the Delaunay triangulation (described below) to determine sampling locations. The code below tells Colormesh what order to read the landmarks in so that a perimeter is drawn around the specimen in a "connect-the-dots" manner. In the guppy example below, the first seven landarks that were placed around the guppy were at traditional landmark locations (easily identifiable between images); the remaining 55 landmarks are referred to as semilandmarks. Semilandmarks are interspersed between the traditional landmarks and allowed to slide along the tangent of the curve they create when generating a consensus shape.
 
 ```r
 ## Define perimeter map (order the points occur around the perimeter)
@@ -79,59 +91,38 @@ sliders <- make.sliders(perimeter.map, main.lms = 1:7)
 ![](images/perimeter_line_map.png)
 
 
-
-
-
-
-## Importing data from externally processed images 
-
-### When landmarks are placed around specimen and on color standard 
-When landmarks are placed using other geometric morphometric software, coordinate data are typically saved as a TPS file. The function *tps2array* will read in the .TPS file containing landmark coordinatedata and convert the information into the required array format. You will need to import the coordinate data for landmarks that were placed on the color standard. You will also need to import the coordinates for the landmarks placed around each of the specimen images; unwarping images to the consensus shape within the Colormesh environment will produce the other required landmark coordinate data set: the coordinates for the consensus shape (see the *tps.unwarp* function below). 
-
-```r
-## The code below reads in the TPS file generated in the TPSdig software. This TPS file contains 62 landmark coordinates that were placed around each of the three specimens. 
-specimen.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/orig_LM_jpg.TPS")
-
-## Note that our example specimen images are cropped close to the specimen. Cropping was completed prior to landmark placement within the TPSdig software. These example images are cropped because they were unwarped using the *TPS series* software. Cropping of specimen images is necessary when using the *TPS series* software to unwarp a large number of images; image file size influences how many images can be unwarped to a consensus shape, therefore cropping increases the number of images that can be unwarped at the same time.
-
-
-## The code below reads in the TPS file generated in the TPSdig software. This TPS file contains the coordinates for landmarks placed on the color standard contained within each specimen image. These landmarks will identify where the image will be sampled for the calibration process. 
-calib.LM.jpg <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_jpg.TPS")
-
-## Note that landmark placement was on the original (uncropped) specimen images. 
-
-
-## The code below reads in the coordinates of the consensus specimen shape
-consensus.array = tps2array(data= "C:/Users/jennv/Desktop/Colormesh_Test_2/consensus_LM_coords.TPS")
-```
-
-### Image transformation (unwarping to a consensus shape) within the Colormesh environment following external landmark placement 
-Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. This can be performed on landmark coordinate data that has been imported into the Colormesh environment (see above). The function first performs a Generalized Procrustes Analysis utilizingemploying the utilities of the *geomorph* package to generate a consensus shape. Then, the *imager* package is used to to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory identified by the user.  
-
-The first step is to define the perimeter map of the specimen and identifying which landmarks, if any, are sliding landmarks (semilandmarks). This perimeter map tells Colormesh the order in which to connect the points so a perimeter is drawn. This perimeter map is used in both the unwarping process (landmark sliding) and the Delaunay triangulation (described below) to determine sampling locations. The code below tells Colormesh what order to read the landmarks in so that a perimeter is drawn around the specimen in a "connect-the-dots" manner. In the guppy example below, the first seven landarks that were placed around the guppy were at traditional landmark locations (easily identifiable between images); the remaining 55 landmarks are referred to as semilandmarks. Semilandmarks are interspersed between the traditional landmarks and allowed to slide along the tangent of the curve they create when generating a consensus shape.
-
-```r
-## Define perimeter map (order the points occur around the perimeter)
-perimeter.map <- c(1, 8:17, 2, 18:19, 3, 20:27, 4, 28:42,5,43:52, 6, 53:54, 7, 55:62)
-
-## Define sliders (main.lms identifies which of all 62 landmarks are the tranditional landmarks and therefore will not slide along a curve)
-sliders <- make.sliders(perimeter.map, main.lms = 1:7)
-```
-![](images/perimeter_line_map.png)
-
-
 Prior to running the *tps.unwarp* function, you will need to create a file folder as a destination for writing the unwarped images. The information required by the function includes: the directory containing the original specimen images that are to be unwarped to the concensus shape identified by the "imagedir" argument (note: these images must all have the same pixel dimensions). Also provided to the function are the landmark coordinate data array for the landmarks that were placed around each specimen contained in these images. To align the coordinate data with the appropriate images, you must provide the image names from the CSV file (1st column). If you have defined landmarks that are semilandmarks, and therefore allowed to slide, they also need to be identified. And finally, you must provide the directory where Colormesh will write the unwarped images. These unwarped images will be saved as PNG images, which is an uncompressed image format.
 
 ```{r}
-unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM.ext, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
+## Example code using landmark coordinate data array generated by placing landmarks within the Colormesh environment
+unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
 
+## Example code using landmark coordinate data array that was imported using the tps2array function (landmarks were placed in an external program)
+unwarped.jpg.ext <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM.ext, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
 ```
 The output of the function is a list having two elements. The "target" element of the list is the landmark coordinate data for the consensus shape generated by the function. The names given to the unwarped images appear as the 2nd list element. The resulting unwarped images are written to the directory given by the user and specimens. When image files are opened, specimens will now have the same shape. Some black areas near the edges of the images are expected as they are part of the unwarping process.
 
 
-### Importing landmark coordinate data of the consensus shape
-Colormesh can be used to sample color from consensus shaped images even if the entirity of image processing has occured externally. The information needed requires the user to simply import the landmark coordinate data of the consensus shape. You will also need to import the landmark coordinate data for the locations to sample on the color standard if you plan on calibrating your images.
+## All image processing was completed entire outside the Colormesh environment 
+Colormesh can be used to sample color from consensus shaped images even if the entirity of image processing has occured externally. When generating the consensus images externally, you will then need to provide some of the required information to Colormesh by simply importing what is needed. 
+This includes: 
+     1. The two CSV files described above. However, the image information CSV should have the unique names of the unwarped images as the 2nd column of the CSV file.
+     2. The two required arrays containing landmark coordinate data: the coordinates of landmarks placed on the color standard and the other array will be the 
+         landmark coordinate data of the CONSENSUS shape. These can be imported using the *tps2array* function described above.
+     3. The two required images sets residing in their own folders. One image set will include the original image (with the color standard) and the other image 
+         set is the unwarped images.  
 
+```{r}
+## Example code for reading in the CSV files
+specimen.factors <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/specimen_factors.csv", header = T) ## First column = original image names, 2nd column = unwarped names
+known.rgb <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/known_RGB.csv", header = T) 
+
+## Example code for reading in the TPS files and converting them to the appropriate array format
+consensus.LM = tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/consensus_LM_coords.TPS") ## NOTE: CONSENSUS SHAPE COORDINATES ONLY
+calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_jpg.TPS")
+
+## Two image file folders are also needed. 
+```
 
 
 # Color Sampling
