@@ -78,7 +78,7 @@ calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_j
 
 
 # Image Processing - Consensus shape images 
-Similar to landmarking, images can be unwarped to a consensus shape either within the Colormesh environment or in your favorite geometric morphometrics software, then imported into Colormesh for sampling. Below, we describe these two options.
+Similar to landmarking, images can be unwarped to a consensus shape either within the Colormesh environment or in your favorite geometric morphometrics software, then imported into Colormesh for sampling. Below, we describe these two options. The aim of generating the consensus shaped images is to standardize the shape of the specimen. This process generates two of the required files needed as input for the Colormesh sampling pipeline: a set of landmark coordinates of the consensus shape and the set of images where specimens have a consensus shape.  
 
 ## Option 1) Generating consensus images within the Colormesh environment 
 
