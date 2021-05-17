@@ -29,7 +29,7 @@ The files listed below are required in order to sample color from digital images
 
 
 
-# Preparing CSV Files
+# I. Preparing CSV Files
 
  1. Using base R, read in the .csv containing the specimen image names (omit file extensions such as .jpg or .tif) and identification information. The first column MUST contain unique image names. If images were unwarped to a consensus shape outside of Colormesh, include the unique names of the unwarped images in the send column of this csv. The remaining columns can contain any other information you may need to identify your specimens.
 
@@ -43,10 +43,10 @@ known.rgb <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/known_RGB.csv",
 
 
 
-# Image Processing
+# II. Image Processing: Landmark placement & generating consensus shaped images
 
 
-## Landmark placement
+## A. Landmark placement
 Landmark placement may be performed either within the Colormesh environment or externally. The aim of landmarks placement is to generate the two arrays containing landmark coordinate data. Landmarks placed within the Colormesh environment will automatically generate the appropriate arrays. Alternatively, landmarks placed using other software that are in the TPS file format can simply be imported, as described below.
 
 ### Option 1) Landmark Placement within the Colormesh environment
@@ -79,10 +79,7 @@ calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_j
 ```
 
 
-# Image Processing
-
-
-## Consensus shape images 
+## B. Consensus shape images 
 Similar to landmarking, images can be unwarped to a consensus shape either within the Colormesh environment or in your favorite geometric morphometrics software, then imported into Colormesh for sampling. Below, we describe these two options. The aim of generating the consensus shaped images is to standardize the shape of the specimen. This process generates two of the required files needed as input for the Colormesh sampling pipeline: a set of landmark coordinates of the consensus shape and the set of images where specimens have a consensus shape.  
 
 ### Option 1) Generating consensus images within the Colormesh environment 
