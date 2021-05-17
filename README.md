@@ -12,19 +12,19 @@ The following example code will guide you through the process of using Colormesh
 devtools::install_github("https://github.com/J0vid/Colormesh")
 ```
 
-## Using Colormesh (V2.0)
+# Using Colormesh (V2.0)
 
 
-# Required files for Colormesh (V2.0) Color Sampling
-To prepare images for color sampling, the following is required (image processing files may be generated externally, and then imported):
+## Required files for Colormesh (V2.0) Color Sampling
+To prepare images for color sampling, the files listed below are required in order to sample color from digital images that have been unwarped to a consensus shape. Some of the required files are obtained during image processing. Image processing may be completed entirely within the Colormesh package. Alternatively, some or all of the image processing steps may be completed externally in your geometric morphometric program of choice given landmark data are contained in a TPS file format. Required files are:
 
-  1. A .csv file containing factors that uniquely identify specimen images. This .csv file will be used as a check to ensure measured color and calibration correction (if used) is applied to the appropriate image. The first column MUST contain the unique image name. If image unwarping (to the consensus shape) was completed externally, include the unique image names of the unwarped images in the second column. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after this column.
+  1. A .csv file containing factors the specimen image names - these names must be unique. This .csv file will be used as a check to ensure measured color and calibration correction (if used) is applied to the appropriate image. The first column MUST contain the unique image name. If image unwarping (to the consensus shape) was completed externally, include the unique image names of the unwarped images in the second column. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after the image name column(s).
   
   2. A .csv file containing the known RGB values of the colors on the color standard to be used for calibration. They should be on a scale of 0 to 1. Each row is a color on the standard, each column is a color channel; the know R, G, and B values must appear in columns 1, 2, and 3, respectively. If known RGB values are on a scale of 0-255, simply divide by 255 to convert values to the proper scale.
   
-  3. Two image file folders: One file folder containing the original images that have the color standard and another file folder for the unwarped images (if unwarped images are generated externally they can be stored in this location or if unwarping images within Colormesh, this folder will become populated with the unwarped images).
+  3. Two image file folders: One file folder containing the original images that have the color standard and another file folder for the unwarped images. If unwarped images were generated externally they can be stored in this unwarped file folder. if unwarping images within Colormesh, this folder will become populated with the unwarped images.
    
-  4. Two landmark coordinate data arrays: one having coordinate data for landmarks placed on the color standard and the other having landmark data for the specimen. If landmark placement is performed within Colormesh, these arrays will be generated when using the functions described below. If landmark data files are generated externally, they're typically in the form of TPS files. These TPS files are easily loaded into Colormesh using a function that converts them into the appropriate array format.  
+  4. Two landmark coordinate data arrays: one having coordinate data for landmarks placed on the color standard and the other having landmark data for the consensus shape of the specimens. If landmark placement and unwarping of specimen images is performed within Colormesh, these arrays will be generated when using the functions described below. If these landmark data files are generated externally, they're typically in the form of TPS files. These TPS files are easily loaded into Colormesh using a function that converts them into the appropriate array format (see below).  
 
 
 
