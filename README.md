@@ -16,7 +16,7 @@ devtools::install_github("https://github.com/J0vid/Colormesh")
 
 
 ## Required files for Colormesh (V2.0) Color Sampling
-To prepare images for color sampling, the files listed below are required in order to sample color from digital images that have been unwarped to a consensus shape. Some of the required files are obtained during image processing. Image processing may be completed entirely within the Colormesh package. Alternatively, some or all of the image processing steps may be completed externally in your geometric morphometric program of choice given landmark data are contained in a TPS file format. Required files are:
+The files listed below are required in order to sample color from digital images that have been unwarped to a consensus shape. Some of the required files are obtained during image processing. Image processing may be completed entirely within the Colormesh package. Alternatively, some or all of the image processing steps may be completed externally in your geometric morphometric program of choice given landmark data are contained in a TPS file format. Required files are:
 
   1. A .csv file containing factors the specimen image names - these names must be unique. This .csv file will be used as a check to ensure measured color and calibration correction (if used) is applied to the appropriate image. The first column MUST contain the unique image name. If image unwarping (to the consensus shape) was completed externally, include the unique image names of the unwarped images in the second column. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after the image name column(s).
   
