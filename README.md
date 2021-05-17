@@ -113,13 +113,17 @@ The output of the function is a list having two elements. The "target" element o
 ### Option 2) Preparing for the Colormesh sampling pipeline using images that were unwarped to a consensus shape outside the Colormesh environment 
 Colormesh can be used to sample color from consensus shaped images even if the entirity of image processing has occured externally. When generating the consensus images externally, you will then need to provide some of the required information to Colormesh by simply importing what is needed. 
 This includes: 
-     1. The two CSV files described above. However, the image information CSV should have the unique names of the unwarped images as the 2nd column of the CSV file.
-     2. The two required arrays containing landmark coordinate data: the coordinates of landmarks placed on the color standard and the other array will be the 
+     1. Defining the perimeter map to prepare the dataset for Delaunay triangulation. 
+     2. The two CSV files described above. However, the image information CSV should have the unique names of the unwarped images as the 2nd column of the CSV file.
+     3. The two required arrays containing landmark coordinate data: the coordinates of landmarks placed on the color standard and the other array will be the 
          landmark coordinate data of the CONSENSUS shape. These can be imported using the *tps2array* function described above.
-     3. The two required images sets residing in their own folders. One image set will include the original image (with the color standard) and the other image 
+     4. The two required images sets residing in their own folders. One image set will include the original image (with the color standard) and the other image 
          set is the unwarped images.  
 
 ```{r}
+## Defining the perimeter map - this will be used in the Color Sampling pipeline
+perimeter.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
+
 ## Example code for reading in the CSV files
 specimen.factors <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/specimen_factors.csv", header = T) ## First column = original image names, 2nd column = unwarped names
 known.rgb <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/known_RGB.csv", header = T) 
