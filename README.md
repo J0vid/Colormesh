@@ -29,7 +29,7 @@ To prepare images for color sampling, the files listed below are required in ord
 
 
 
-#Preparing CSV Files
+# Preparing CSV Files
 
  1. Using base R, read in the .csv containing the specimen image names (omit file extensions such as .jpg or .tif) and identification information. The first column MUST contain unique image names. If images were unwarped to a consensus shape outside of Colormesh, include the unique names of the unwarped images in the send column of this csv. The remaining columns can contain any other information you may need to identify your specimens.
 
@@ -45,11 +45,11 @@ known.rgb = read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/known_RGB.csv", 
 
 
 
-#Image Processing
+# Image Processing
 
-##Within the Colormesh environment
+## Within the Colormesh environment
 
-###Landmark Placement 
+### Landmark Placement 
 
 Colormesh calls on the image digitization ability found in the *geomorph* package to create the required landmark data array. The *landmark.images* function will temporarily convert images to jpgs solely for obtaining the coordinates of the landmarks that are placed. A plot window will open with the first image and the user will be prompted to set the scale......
 To avoid accidental sampling of the compressed jpg images, the logical argument, dump.tmp.images is set = T which will remove these temporary images. The array of landmark coordinate data is saved in the global environment and is written as a TPS file to the directory you provided. 
@@ -63,7 +63,7 @@ calib.LM.tif <- landmark.images(imagedir = "C:/Users/jennv/Desktop/Colormesh_tes
 ```
 
 
-###Image transformation (unwarping to a consensus shape)
+### Image transformation (unwarping to a consensus shape)
 
 Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. The example code below performs the Generalized Procrustes Analysis utilizing the *geomorph* package to generate a consensus shape. The *imager* package is then used to to perfor a thin-plate spline transformation to the images. 
 
@@ -83,9 +83,9 @@ sliders <- make.sliders(perimeter.map, main.lms = 1:7)
 
 
 
-##Importing data from externally processed images 
+## Importing data from externally processed images 
 
-###When landmarks are placed around specimen and on color standard 
+### When landmarks are placed around specimen and on color standard 
 When landmarks are placed using other geometric morphometric software, coordinate data are typically saved as a TPS file. The function *tps2array* will read in the .TPS file containing landmark coordinatedata and convert the information into the required array format. You will need to import the coordinate data for landmarks that were placed on the color standard. You will also need to import the coordinates for the landmarks placed around each of the specimen images; unwarping images to the consensus shape within the Colormesh environment will produce the other required landmark coordinate data set: the coordinates for the consensus shape (see the *tps.unwarp* function below). 
 
 ```r
@@ -105,7 +105,7 @@ calib.LM.jpg <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_j
 consensus.array = tps2array(data= "C:/Users/jennv/Desktop/Colormesh_Test_2/consensus_LM_coords.TPS")
 ```
 
-###Image transformation (unwarping to a consensus shape) within the Colormesh environment following external landmark placement 
+### Image transformation (unwarping to a consensus shape) within the Colormesh environment following external landmark placement 
 Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. This can be performed on landmark coordinate data that has been imported into the Colormesh environment (see above). The function first performs a Generalized Procrustes Analysis utilizingemploying the utilities of the *geomorph* package to generate a consensus shape. Then, the *imager* package is used to to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory identified by the user.  
 
 The first step is to define the perimeter map of the specimen and identifying which landmarks, if any, are sliding landmarks (semilandmarks). This perimeter map tells Colormesh the order in which to connect the points so a perimeter is drawn. This perimeter map is used in both the unwarping process (landmark sliding) and the Delaunay triangulation (described below) to determine sampling locations. The code below tells Colormesh what order to read the landmarks in so that a perimeter is drawn around the specimen in a "connect-the-dots" manner. In the guppy example below, the first seven landarks that were placed around the guppy were at traditional landmark locations (easily identifiable between images); the remaining 55 landmarks are referred to as semilandmarks. Semilandmarks are interspersed between the traditional landmarks and allowed to slide along the tangent of the curve they create when generating a consensus shape.
@@ -129,7 +129,7 @@ unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg
 The output of the function is a list having two elements. The "target" element of the list is the landmark coordinate data for the consensus shape generated by the function. The names given to the unwarped images appear as the 2nd list element. The resulting unwarped images are written to the directory given by the user and specimens. When image files are opened, specimens will now have the same shape. Some black areas near the edges of the images are expected as they are part of the unwarping process.
 
 
-###Importing landmark coordinate data of the consensus shape
+### Importing landmark coordinate data of the consensus shape
 Colormesh can be used to sample color from consensus shaped images even if the entirity of image processing has occured externally. The information needed requires the user to simply import the landmark coordinate data of the consensus shape. You will also need to import the landmark coordinate data for the locations to sample on the color standard if you plan on calibrating your images.
 
 
