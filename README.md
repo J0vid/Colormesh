@@ -1,12 +1,12 @@
 # Colormesh
-An R package for extraction of color data from digital images.
+An R package for generating consensus shaped specimen images and the extraction of color data from digital images.
 
 ## Installation
 
-The following example code will guide you through the process of using Colormesh to extract color from your digital photos. The process of using Colormesh is divided into three major sections below: Preparing CSV Files, Image Processing, and Color Sampling. Image processing includes both landmark placement and image deformation (genertion of a consensus shape specimen). The Image Processing section is further divided into two subsections: one describing image processing within the Colormesh environment nad the other showing how to import files with varying amounts of processing performed externally. Because some users may already be familiar with existing geometric morphometric software, we have enabled Colormesh to import files typically generatied by external processing (e.g., TPS files). Colormesh can be used regardless of the level of image processing that has been completed externally. The external processing examples provided below used the *TPS Series* software by James Rohlf, availble for free at the Stonybrook Morphometrics website (http://www.sbmorphometrics.org/). 
+The following example code will guide you through the process of using Colormesh to transform images to a consensus specimen shape and extract color from these images. The process of using Colormesh is divided into three major sections below: Preparing CSV Files, Image Processing, and Color Sampling. Image processing includes both landmark placement and image transformation (genertion of a consensus shape specimen). The Image Processing section is further divided into two subsections: Landmark placement and generating consensus shaped images. Each subsection offers two options: the first demonstrating the respective processes within the Colormesh environment and the second describing the importation of the required files that were generated externally. Because some users may already be familiar with existing geometric morphometric software, we have enabled Colormesh to import files typically generatied by external processing (e.g., TPS files). Colormesh can be used regardless of the level of image processing that has been completed externally. The external processing examples provided below used the *TPS Series* software by James Rohlf, availble for free at the Stonybrook Morphometrics website (http://www.sbmorphometrics.org/). 
 
 
-## Installing Colormesh from github
+### Installing Colormesh from github
 ```r
 ## Need to make sure this is updated
 devtools::install_github("https://github.com/J0vid/Colormesh")
@@ -16,7 +16,7 @@ devtools::install_github("https://github.com/J0vid/Colormesh")
 
 
 ## Required files for Colormesh (V2.0) Color Sampling
-The files listed below are required in order to sample color from digital images that have been unwarped to a consensus shape. Some of the required files are obtained during image processing. Image processing may be completed entirely within the Colormesh package. Alternatively, some or all of the image processing steps may be completed externally in your geometric morphometric program of choice given landmark data are contained in a TPS file format. Required files are:
+The files listed below are required to proceed with the color sampling pipeline. Some of the required files are obtained during image processing. Image processing may be completed entirely within the Colormesh package. Alternatively, some or all of the image processing steps may be completed externally in your geometric morphometric program of choice given landmark data are contained in a TPS file format. Required files are:
 
   1. A .csv file containing factors such as the specimen image names - these names must be unique. The first column MUST contain the unique image name. This .csv file will be used as a check to ensure measured color and calibration correction (if used) are associated with the appropriate image. If image unwarping (to the consensus shape) was completed externally, include the unique image names of the unwarped images in the second column. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after the image name column(s).
   
@@ -29,7 +29,7 @@ The files listed below are required in order to sample color from digital images
 
 
 
-# I. Preparing CSV Files
+# I. Preparing the required CSV Files
 
  1. Using base R, read in the .csv containing the specimen image names (omit file extensions such as .jpg or .tif) and identification information. The first column MUST contain unique image names. If images were unwarped to a consensus shape outside of Colormesh, include the unique names of the unwarped images in the send column of this csv. The remaining columns can contain any other information you may need to identify your specimens.
 
@@ -51,8 +51,10 @@ Landmark placement may be performed either within the Colormesh environment or e
 
 ### Option 1) Landmark Placement within the Colormesh environment
 
-Colormesh calls on the image digitization ability found in the *geomorph* package to create the required landmark data array. The *landmark.images* function will temporarily convert images to jpgs solely for obtaining the coordinates of the landmarks that are placed. A plot window will open with the first image and the user will be prompted to set the scale......
-To avoid accidental sampling of the compressed jpg images, the logical argument, dump.tmp.images is set = T which will remove these temporary images. The array of landmark coordinate data is saved in the global environment and is written as a TPS file to the directory you provided. 
+Colormesh calls on the image digitization ability found in the *geomorph* package to create the required landmark data array. The *landmark.images* function behaves similarly to  the *digitize2d* function within the *geomorph* package; it will temporarily convert images to jpgs solely for obtaining landmark coordinates. A plot window will open with the first image and the user will be prompted to set the scale. In the example code below, the scale = 10. To set the scale, the user will create a line segment that expands across 10mm of the scale. The user first clicks the left mouse button (general click on Macs) to place the first point of the line segment to be drawn. To place the second point, the user clicks on the scale again to create the line segment. The user will be promprted to whether they would like to keep the scale - to redraw the line segment, type "n". To keep the segment, type "y". The user will now begin placing the landmarks around the specimen. After placement of each landmark, the user will be prompted as to whether they would like to keep the landmark - "y" will advance to the next landmark, "n" will allow the user to place that landmark again (the "old" landmark will appear on the specimen, however, the recorded coordinates of the old landmark are replaced with the new coordinates). After placing the number of landmars defined in the funcion (nlandmarks = ), the user is prompted to advance to the next specimen. Upone completion of landmark placement on all specimens, a TPS file will be written to the directory specified in the function. The array of coordinates will be stored in the R environment.
+
+
+Note: To avoid accidental sampling of the compressed jpg images, the logical argument, dump.tmp.images is set = T which will remove these temporary images. The array of landmark coordinate data is saved in the global environment and is written as a TPS file to the directory you provided. 
 
 ```{r}
 ## we left the arguments, "writedir" and "dump.tmp.images" = NULL because we were not interested in saving the temporary images.
