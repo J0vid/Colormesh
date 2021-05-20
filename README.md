@@ -3,7 +3,7 @@ An R package for generating consensus shaped specimen images and the extraction 
 
 ## Installation
 
-The following example code will guide you through the process of using Colormesh to transform images to a consensus specimen shape and extract color from these images. The process of using Colormesh is divided into three major sections below: Preparing CSV Files, Image Processing, and Color Sampling. Image processing includes both landmark placement and image transformation (generation of consensus shape specimen images). The Image Processing section is further divided into two subsections: Landmark placement and generating consensus shaped images. Each subsection offers two options: the first demonstrating their respective processes within the Colormesh environment and the second describing the importation of the required files that were generated externally. Because some users may already be familiar with existing geometric morphometric software, we have enabled Colormesh to import files typically generatied by external processing (e.g., TPS files). Colormesh can be used regardless of the level of image processing that has been completed externally. The external processing examples provided below used the *TPS Series* software by James Rohlf, availble for free at the Stonybrook Morphometrics website (http://www.sbmorphometrics.org/). 
+The following example code will guide you through the process of using Colormesh to transform images to a consensus specimen shape and extract color from these images. The process of using Colormesh is divided into three major sections below: Preparing CSV Files, Image Processing, and Color Sampling. Image processing includes both landmark placement and image transformation (generation of consensus shape specimen images). The Image Processing section is further divided into two subsections: Landmark placement and Consensus shaped images. Each subsection offers two options: the first demonstrating their respective processes within the Colormesh environment and the second describing the importation of the required files that were generated externally. Because some users may already be familiar with existing geometric morphometric software, we have enabled Colormesh to import files typically generatied by external processing (e.g., TPS files). Colormesh can be used regardless of the level of image processing that has been completed externally. The external processing examples provided below used the *TPS Series* software by James Rohlf, availble for free at the Stonybrook Morphometrics website (http://www.sbmorphometrics.org/). 
 
 
 ### Installing Colormesh from github
@@ -79,10 +79,10 @@ calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_j
 ```
 
 
-## B. Generating consensus shape images 
+## B. Consensus shape images 
 Similar to landmark placement, images can be unwarped to a consensus shape either within the Colormesh environment or in your favorite geometric morphometrics software then imported into Colormesh for sampling. Below, we describe these two options. The aim of generating the consensus shaped images is to standardize the shape of the specimen. This process generates two of the required files needed as input for the Colormesh sampling pipeline: 1) the array of landmark coordinates of the consensus shape and 2) the set of images where specimens have been unwarped to a consensus shape.  
 
-### Option 1) Within the Colormesh environment 
+### Option 1) Generating consensus shaped images within the Colormesh environment 
 
 Images that are unwarped to a consensus shape within the Colormesh environment must be of the same pixel dimensions (height x width). For example, our images are 4368 pixels x 2912 pixels. Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. The function first performs a Generalized Procrustes Analysis by employing the utilities of the *geomorph* package. Then, the *imager* package is used to to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory specified by the user.  
 
@@ -101,16 +101,23 @@ sliders <- make.sliders(perimeter.map, main.lms = 1:7)
 Prior to running the *tps.unwarp* function, you will need to create a file folder as a destination for writing the unwarped images. The information required by the function includes: the directory containing the original specimen images that are to be unwarped to the concensus shape identified by the "imagedir" argument (note: these images must all have the same pixel dimensions). Also provided to the function are the landmark coordinate data array for the landmarks that were placed around each specimen contained in these images. To align the coordinate data with the appropriate images, you must provide the image names from the CSV file (1st column). If you have defined landmarks that are semilandmarks, and therefore allowed to slide, they also need to be identified. And finally, you must provide the directory where Colormesh will write the unwarped images. These unwarped images will be saved as PNG images, which is an uncompressed image format.
 
 ```{r}
-## Example code using landmark coordinate data array generated by placing landmarks within the Colormesh environment
+## Example code if landmark placement was performed within the Colormesh environment
 unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
 
-## Example code using landmark coordinate data array that was imported using the tps2array function (landmarks were placed in an external program)
-unwarped.jpg.ext <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM.ext, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
+
+## Unwarping within the Colormesh environment using landmark data that was placed externally (see landmarks = specimen.LM.ext)
+unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM.ext, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
 ```
-The output of the function is a list having two elements. The "target" element of the list is the landmark coordinate data for the consensus shape generated by the function. The names given to the unwarped images appear as the 2nd list element. The resulting unwarped images are written to the directory given by the user and specimens. When image files are opened, specimens will now have the same shape. Some black areas near the edges of the images are expected as they are part of the unwarping process.
+![](images/IMG_7647_unwarped.png)
+![](images/IMG_7652_unwarped.png)
+![](images/IMG_7658_unwarped.png)
 
 
-### Option 2) Preparing for the Colormesh sampling pipeline using images that were unwarped to a consensus shape outside the Colormesh environment 
+
+The output of the function is a list having two elements. The "target" element of the list is the landmark coordinate data for the consensus shape generated by the function. The names given to the unwarped images appear as the 2nd list element. The resulting unwarped images are written to the directory given by the user and specimens; these images will be sampled for color in the Color Sampling pipeline (below). When image files are opened, specimens will now have the same shape. Note: Some black areas near the edges of the images are expected as they are part of the unwarping process.
+
+
+### Option 2) Consensus images were generated externally, preparing these images for the Color Sampling pipeline  
 Colormesh can be used to sample color from consensus shaped images even if the entirity of image processing has occured externally. When generating the consensus images externally, you will then need to provide some of the required information to Colormesh by simply importing what is needed. 
 This includes: 
      1. Defining the perimeter map to prepare the dataset for Delaunay triangulation. 
@@ -121,18 +128,21 @@ This includes:
          set is the unwarped images.  
 
 ```{r}
-## Defining the perimeter map - this will be used in the Color Sampling pipeline
+## 1. Defining the perimeter map - this will be used in the Color Sampling pipeline. This is the order of the row of x,y coordinates that will connect the landmarks in a "connect-the-dats" manner
 perimeter.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
 
-## Example code for reading in the CSV files
-specimen.factors <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/specimen_factors.csv", header = T) ## First column = original image names, 2nd column = unwarped names
+
+## 2. Example code for reading in the CSV files
+
+#### First column = original image names, 2nd column = unwarped names
+specimen.factors <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/specimen_factors.csv", header = T) 
 known.rgb <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/known_RGB.csv", header = T) 
 
-## Example code for reading in the TPS files and converting them to the appropriate array format
-consensus.LM = tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/consensus_LM_coords.TPS") ## NOTE: CONSENSUS SHAPE COORDINATES ONLY
+## 3. Example code for converting TPS files to the appropriate array format
+consensus.LM.ext = tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/consensus_LM_coords.TPS") ## NOTE: CONSENSUS SHAPE COORDINATES ONLY
 calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_jpg.TPS")
 
-## Two image file folders are also needed. 
+## 4. Two image folders holding the two sets of images (the original images set for the calibration process and the unwarped image set for the Color Sampling pipeline). 
 ```
 
 
