@@ -148,69 +148,74 @@ calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_j
 
 # Color Sampling
 To proceed with color sampling, you should now have availble to Colormesh: 
-   1. The two required CSV files. 
+   1. The two required CSV files (image information and known RGB values of the standard). 
    2. The two landmark coordinate arrays: one having land mark coordinate data of the CONSENSUS SPECIMEN SHAPE and the other having the landmark coordinate 
        data of where to sample the color standard for the calibration process.
    3. Two sets of images located in their own directories: the set of images that were unwarped to the consensus shape and the original set of images containing 
        the color standard. 
 
-## Determining sampling density
+In the Color Sampling pipeline, the user will 1) determine the density of sampling points, and 2) set the size of the sampling circles and measure their RGB values. For each of these sections below, we have included several alignment checks along the way to confirm the orientation of the image during the sampling process. We have also included several options for visualizing your plots under each section.   
 
-Colormesh uses Delaunay triangulation to determine locations to samples color. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape as the vertices of the triangles. It reads in the landmark coordinates of this consensus based on the order defined in the perimeter.map variable. The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation specified by the user; more rounds provides a greater density of sampling points. This is accomplished by using the centroids of the triangles created from the first round of Delaunay triangulation as the vertices for subsequent rounds of triangulation. In the images below, the centroids are shown as the red dots within the triangles.
+## 1. Determining sampling density
+
+Colormesh uses Delaunay triangulation as an unsupervised method of determining locations to sample color from the consensus shaped sspecimen images. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape as the vertices of the triangles. It reads in the landmark coordinates of this consensus based on the order defined in the *perimeter.map* variable. The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation specified by the user; more rounds provides a greater density of sampling points. This is accomplished by using the centroids of the triangles created from the first round of Delaunay triangulation as the vertices for subsequent rounds of triangulation. In the images below, the centroids are shown as the red dots within the triangles.
 
 Here's what an example of two, three, and four rounds of triangulation looks like:
 
 ![Triangulation example](images/DT.png)
 
 
-# Checking alignment and generating the sampling template
+### Checking alignment and generating the sampling template
 
-IMPORTANT: Test that your sampling points properly overlay your image. Image readers (e.g., EBImage & imager) place the 0,0 x,y-coordinate in the upper left corner. In contrast, the coordinates in the TPS file place 0,0 in the bottom left corner. Colormesh assumes this to be true. To check this, the code below is used to read in a test image, calculate the sampling template, then plot the Delaunay triangulation wire-frame on top of the image to ensure that you are properly sampling the image. 
+IMPORTANT: Test that your sampling points properly overlay your image. Image readers (e.g., EBImage & imager) place the 0,0 x,y-coordinate in the upper left corner. In contrast, the coordinates in the TPS file place 0,0 in the bottom left corner. Colormesh assumes this to be true. To check this, the code below is used to read in a test image, calculates the sampling template, then plot the Delaunay triangulation wire-frame on top of the image to ensure the sampling template is properly aligned with the images you will be sampling.  
 
-## Reading in a test image
+### Reading in a test image
 
 To check that Colormesh will be sampling your speciment correctly, first read in one of the unwarped images from your image file. This uses the load.image function from the *imager* package.
 
 ```r
-align.test1 <- load.image("C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/IMG_7647_unwarped.png")
+align.test1 <- load.image("C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/IMG_7658_unwarped.png")
 ```
-![](images/TULPAAM03_1015_un.jpg)
 
+### Calculating sample location and checking alignment 
 
-## Calculating sample location and checking alignment 
+The density of sampling points is determined by Colormesh's *tri.surf* function and is an integer defined by the user. The *tri.surf* function identifies the X,Y coordinates of the centroid for each triangle generated by Delaunay triangulation. If more than one round of triangulation is specified by the user, these centroids function as vertices for subsequent rounds of triangulation. At the completion of the user-specified rounds of triangulation, the pixel coordinate for each triangle's centroid is saved as sampling coordinates. The arguments defined in the function include: the array having the coordinates of the consensus shape, the perimeter map, the test image to check the alignment of the sampling template, and a logical argument to address whether to flip the y-coordinates (see below). By default, flip.delaunay = FALSE since imager assumed 0,0 to be in the upper left and most TPS file generators assume 0,0 to be in the lower left. Be sure your specimen.sampling.template is defined with the correct orientation (in dicated by whether the traingulation overlay is properly aligned). The alignment check draws a yellow line around the perimeter of your speciment and red circles are plotted at the pixel coordinates that will be sampled (circles are sized to be easily visible and do not represent the number of pixels that will be sampled). 
 
-The density of sampling points is determined by Colormesh's *tri.surf* function and is an integer defined by the user. The *tri.surf* function identifies the X,Y coordinates of the centroid for each triangle generated by Delaunay triangulation. If more than one round of triangulation is specified by the user, these centroids function as vertices for subsequent rounds of triangulation. At the completion of the user-specified rounds of triangulation, the pixel coordinate for each triangle's centroid is saved as sampling coordinates. 
-
-
-## Generating the sampling template
-
-The alignment check draws a yellow line around the perimeter of your speciment and red circles are plotted at the pixel coordinates that will be sampled (circles are sized to be easily visible and do not represent the number of pixels that will be sampled). The user provides the consensus.array (the TPS file of the consensus shape that was read in), the perimeter.map (to provide the order of points around the perimeter), an integer to indicate how many rounds of triangulations to perform, the name of the test image that was generated, and the logical argument for whether to flip the y-coordinate values. The sampling template will be plotted overlaying the test image to show the user how the images will be sampled. If the orientation of the sampling template needs to be flipped, the flip.delaunay logical will flip the y-coordinates. By default, flip.delaunay = FALSE since imager assumed 0,0 to be in the upper left and most TPS file generators assume 0,0 to be in the lower left. Be sure your specimen.sampling.template is defined with the correct orientation (in dicated by whether the traingulation overlay is properly aligned).
-
-*Note: the circles shown in the alignment check are **not** equal to the size of the sampling circle size.*
 
 ```r
 ## In this example, 3 rounds of Delaunay Triangulation will be performed.
+
+## Below shows example code using the consensus shape array that was calculated using the tps.unwarp function (unwarping was done within the Colormesh environment). 
 specimen.sampling.template <- tri.surf(unwarped.jpg$target, point.map = perimeter.map, 3, align.test1, flip.delaunay = F)
+
+## Below shows the example code if you imported the consensus specimen shape from a TPS file and converted it to an array (described above).
+specimen.sampling.template <- tri.surf(consensus.LM.ext, point.map = perimeter.map, 3, align.test1, flip.delaunay = F)
 ```
 
-The images below show the two outcomes of the flip.delaunay logical argument.
+The images below show the alignment plot with the two outcomes of the flip.delaunay logical argument.
 When flip.delaunay = FALSE
-![](images/test_image_flip_right.png)
+![](images/align_wrong.png)
 
 ```r
 ## If the sampling template is upside-down, set flip.delaunay = TRUE
+
+## Below shows example code using the consensus shape array that was calculated using the tps.unwarp function (unwarping was done within the Colormesh environment). 
 specimen.sampling.template <- tri.surf(unwarped.jpg$target, point.map = perimeter.map, 3, align.test1, flip.delaunay = T)
+
+## Below shows the example code if you imported the consensus specimen shape from a TPS file and converted it to an array (described above).
+specimen.sampling.template <- tri.surf(consensus.LM.ext, point.map = perimeter.map, 3, align.test1, flip.delaunay = T)
+
 ```
 When flip.delaunay = TRUE
-![](images/test_image_flip_wrong.png)
+![](images/align_correct.png)
 
 
 
-## Visualizing the sampling template
+### Visualizing the sampling template
 
 We have included the ability to plot the sampling template generated by the *tri.surf* function. The example code below shows how to plot the template where the specimen will be sampled. You may specify the style = "points" to plot the location of the all the points (perimeter and interior) that will be sampled, style = "perimeter" will print only the perimeter points, style = "interior" will plot only interior points, and style = "triangulation" will plot the triangulation that was generated and the centroids of each triangle. For style = "triangulation" you may change the color of the triangles that were generated (wireframe.color = ), as well as the color of the centroid (point.color = ).
 
-### No overlay on image
+_No overlay on image_
 Plotting a map of all points (both the perimeter and interior) that will be sampled
 ```r
 plot(specimen.sampling.template, style = "points")
@@ -236,15 +241,15 @@ plot(specimen.sampling.template, style = "triangulation", wireframe.color = "bla
 ![](images/plots_triangulation.png)
 
 
-### Overlay on image
+_Overlay on image_
 The "triangulation" style can be plotted overlaying the test.image (defined above). The following code shows how to make this plot. The default colors for both the "triangulation" and "overlay" styles draw the triangles in black and the sampling points (centroids) in red. However, The user can change the color of the triangles and centroids using the point.color =   and wireframe.color =  arguments.
 ```r
-plot(specimen.sampling.template, corresponding.image = test.image, style = "overlay", wireframe.color = "grey", point.color = "yellow" )
+plot(specimen.sampling.template, corresponding.image = align.test1, style = "overlay", wireframe.color = "grey", point.color = "yellow" )
 ```
 ![](images/specimen_template_overlay.png)
 
 
-## Setting the sampling circle size and measuring RGB
+## 2. Setting the sampling circle size and measuring RGB
 
 The *rgb.measure* function measures the RGB values of the points sampled from the unwarped specimen images (at the points identified above in the *tri.surf* function). To control the size of the sampling circle, the user provide the radius length (in pixels) out from the centroid, from which to sample the surrounding pixels. In this function, the user first provides the file path to the folder containing the unwarped (to the consensus shape) images that are to be sampled, followed by the .csv containing the image names with the 2nd column specified (unwarped image names are in the second column), next is the "specimen.sampling.template" (which provides sampling coordinates), an integer for the user-specified size of the sampling circle **radius** in pixels (px.radius = 0 will only sample the pixel located at the centroid of the triangle), and the logical argument for whether you would like to apply the linear transform (based on international standard IEC 61966-2-1:1999),to convert sRGB values to linearized values. 
 
