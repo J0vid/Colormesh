@@ -19,5 +19,6 @@ Imports:
     tripack,
     sp,
     fields,
-    magick
+    magick,
+    geomorph
 VignetteBuilder: knitr
