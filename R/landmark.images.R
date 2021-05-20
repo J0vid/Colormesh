@@ -37,7 +37,7 @@ landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Mul
 
   }
 
-  written.images <- paste0(writedir, "/", dir(writedir, pattern = "tmp_*.jpg"))
+  written.images <- paste0(writedir, "/", dir(writedir, pattern = "tmp_*"))
  if(is.null(tps.filename)) tps.filename <- "/Colormesh_landmarks.TPS"
   geomorph::digitize2d(filelist = written.images, nlandmarks = nlandmarks, tpsfile = paste0(writedir, tps.filename), scale = scale, MultScale = Multscale)
 
