@@ -11,8 +11,7 @@ landmark.images(
   scale = NULL,
   Multscale = F,
   writedir = NULL,
-  tps.filename = NULL,
-  dump.tmp.images = T
+  tps.filename = NULL
 )
 }
 \arguments{
@@ -26,7 +25,7 @@ landmark.images(
 
 \item{Multscale}{Logical value--should the coords be pre-multiplied by scale value?}
 
-\item{writedir}{directory to save converted images and the TPS file. If left NULL, data will be saved to a temporary directory.}
+\item{writedir}{directory to save the TPS file.}
 
 \item{tps.filename}{a name for the TPS file. If no name is provided, it will default to "/Colormesh_landmarks.TPS"}
 

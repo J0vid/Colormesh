@@ -18,13 +18,13 @@
 #' ex.landmark <- landmark.images(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), image.names = "GPLP_001.png", nlandmarks = 3)
 #'
 #' @export
-landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Multscale = F, writedir = NULL, tps.filename = NULL, dump.tmp.images = T){
+landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Multscale = F, writedir = NULL, tps.filename = NULL){
 
   image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tif|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
-  if(is.null(writedir)){
-    dump.tmp.images <- T
-    writedir <- tempdir()
-  }
+  if(is.null(writedir)) stop("Please provide a directory to save the TPS file to.")
+
+    tmpimgdir <- tempdir()
+
   for(i in 1:length(image.names)){
     if(length(grepl(image.names[i], image.files)) == 0) stop(paste0("Didn't find a matching image name in the provided directory. Please check that image.names match the images in imagedir."))
     rawread <- image_reader(imagedir, image.files[grepl(image.names[i], image.files)])
@@ -33,18 +33,18 @@ landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Mul
     # tmp.jpeg <- image_convert(rawread, "JPEG")
 
     # image_write(tmp.jpeg, path = paste0(writedir, "/", image.names[i], ".jpg"))
-    save.image(rawread, file = paste0(writedir, "/tmp_", image.names[i], ".jpg"))
+    save.image(rawread, file = paste0(tmpimgdir, "/tmp_", image.names[i], ".jpg"))
 
   }
 
-  written.images <- paste0(writedir, "/", dir(writedir, pattern = "tmp_*"))
+  written.images <- paste0(tmpimgdir, "/", dir(tmpimgdir, pattern = "tmp_*"))
  if(is.null(tps.filename)) tps.filename <- "/Colormesh_landmarks.TPS"
   geomorph::digitize2d(filelist = written.images, nlandmarks = nlandmarks, tpsfile = paste0(writedir, tps.filename), scale = scale, MultScale = Multscale)
 
   cm_lm <- tps2array(paste0(writedir, tps.filename))
   dimnames(cm_lm)[[3]] <- image.names
 
-  if(dump.tmp.images) #removed because I'm worried about removing files: file.remove(written.images)
+  file.remove(written.images)
 
   return(cm_lm)
 }
