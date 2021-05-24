@@ -117,11 +117,11 @@ The output of the function is a list having two elements. The "$target" element 
 
 If the entirety of image processing (Landmark placement and unwarping to a consensus shape) are performed externally, *Colormesh* can import all of the required files for the Color Sampling Pipeline. Below, we identify the required information to prepare for color sampling. This includes: 
 
-     * Defining the perimeter map to be used when generating the sampling template (Delaunay triangulation). 
-     * The specimen factors CSV: the unique unwarped image names must appear in the 2nd column, original image names appear in the 1st column.
-     * The CSV having the known RGB values of the color standard.
-     * The two required arrays containing landmark coordinate data: the coordinates of landmarks placed on the color standard and the other array will be the landmark coordinate data of the __CONSENSUS__ shape. These are imported using the *tps2array* function described above.
-     * The two required images sets residing in their own folders. One image set is the original images (with the color standard) and the other image set is the unwarped images.  
+   * Defining the perimeter map to be used when generating the sampling template (Delaunay triangulation). 
+   * The specimen factors CSV: the unique unwarped image names must appear in the 2nd column, original image names appear in the 1st column.
+   * The CSV having the known RGB values of the color standard.
+   * The two required arrays containing landmark coordinate data: the coordinates of landmarks placed on the color standard and the other array will be the landmark coordinate data of the __CONSENSUS__ shape. These are imported using the *tps2array* function described above.
+   * The two required images sets residing in their own folders. One image set is the original images (with the color standard) and the other image set is the unwarped images.  
 ```r
 ## Defining the perimeter map - this will be used in the Color Sampling pipeline. This is the order of the row of x,y coordinates that will connect the landmarks in a "connect-the-dots" manner
 perimeter.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
