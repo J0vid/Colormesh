@@ -1,4 +1,5 @@
 # __Colormesh__
+
 An R package for generating consensus shaped specimen images and the extraction of color data from digital images.
 
 # __1.  Installation__
@@ -43,7 +44,8 @@ known.rgb <- read.csv("C:/Users/jennv/Desktop/Colormesh_test_jpg/known_RGB.csv",
 
 ## 2.2  Image Processing: Landmark placement & generating consensus shaped images
 
-###    2.2.1  Landmark placement
+### 2.2.1  Landmark placement
+
 Landmark placement may be performed either within the *Colormesh* environment (Option 1, below) or externally (Option 2, below). The aim of landmarks placement is to generate the two arrays containing landmark coordinate data: one array having coordinate data for landmarks placed around each specimen and the other array having coordinate data for landmarks placed on the color standard. Landmarks placed within the *Colormesh* environment will automatically generate the appropriately formatted arrays. Alternatively, landmarks placed using other software that are in the TPS file format can simply be imported, as described in Option 2, below.
 
    Option 1) Landmark Placement within the Colormesh environment
@@ -72,10 +74,11 @@ calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_j
 ```
 
 
-###   2.2.2  Transforming images to a consensus shape within *Colormesh*
-   Similar to landmark placement, images can be unwarped to a consensus shape either within the Colormesh environment (described below) or in your favorite geometric morphometrics software then imported into Colormesh for sampling (Section 2.3, below). Here, we describe the use of the *tps.unwarp* function to transform images to a consensus shape. This process generates two of the required files needed as input for the Colormesh Sampling Pipeline: the array of landmark coordinates of the consensus shape and the set of images where specimens have been unwarped to a consensus shape.  
+### 2.2.2  Transforming images to a consensus shape within *Colormesh*
 
-   Images that are unwarped to a consensus shape within the Colormesh environment must be of the same pixel dimensions (height x width). For example, our images are 4368 pixels x 2912 pixels. Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. The function first performs a Generalized Procrustes Analysis by employing the utilities of the *geomorph* package. Then, the *imager* package is used to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory specified by the user.  
+Similar to landmark placement, images can be unwarped to a consensus shape either within the Colormesh environment (described below) or in your favorite geometric morphometrics software then imported into Colormesh for sampling (Section 2.3, below). Here, we describe the use of the *tps.unwarp* function to transform images to a consensus shape. This process generates two of the required files needed as input for the Colormesh Sampling Pipeline: the array of landmark coordinates of the consensus shape and the set of images where specimens have been unwarped to a consensus shape.  
+
+Images that are unwarped to a consensus shape within the Colormesh environment must be of the same pixel dimensions (height x width). For example, our images are 4368 pixels x 2912 pixels. Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. The function first performs a Generalized Procrustes Analysis by employing the utilities of the *geomorph* package. Then, the *imager* package is used to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory specified by the user.  
 
    1. Define perimeter map and sliding landmarks (if any) 
      
@@ -111,15 +114,13 @@ The output of the function is a list having two elements. The "$target" element 
 ![](images/IMG_7658_unwarped.png)
 
 ## 2.3  Image Processing was performed externally - importing the required files  
-If the entirety of image processing (Landmark placement and unwarping to a consensus shape) are performed externally, *Colormesh* can import all of the required files for the Color Sampling Pipeline. Below, we identify the required information to prepare for color sampling. This includes: 
-         * Defining the perimeter map to be used when generating the sampling template (Delaunay triangulation). 
-         * The specimen factors CSV: the unique unwarped image names must appear in the 2nd column, original image names appear in the 1st column.
-         * The CSV having the known RGB values of the color standard.
-         * The two required arrays containing landmark coordinate data: the coordinates of landmarks placed on the color standard and the other array will be the 
-         landmark coordinate data of the __CONSENSUS__ shape. These are imported using the *tps2array* function described above.
-         * The two required images sets residing in their own folders. One image set is the original images (with the color standard) and the other image 
-         set is the unwarped images.  
 
+If the entirety of image processing (Landmark placement and unwarping to a consensus shape) are performed externally, *Colormesh* can import all of the required files for the Color Sampling Pipeline. Below, we identify the required information to prepare for color sampling. This includes: 
+     * Defining the perimeter map to be used when generating the sampling template (Delaunay triangulation). 
+     * The specimen factors CSV: the unique unwarped image names must appear in the 2nd column, original image names appear in the 1st column.
+     * The CSV having the known RGB values of the color standard.
+     * The two required arrays containing landmark coordinate data: the coordinates of landmarks placed on the color standard and the other array will be the landmark coordinate data of the __CONSENSUS__ shape. These are imported using the *tps2array* function described above.
+     * The two required images sets residing in their own folders. One image set is the original images (with the color standard) and the other image set is the unwarped images.  
 ```r
 ## Defining the perimeter map - this will be used in the Color Sampling pipeline. This is the order of the row of x,y coordinates that will connect the landmarks in a "connect-the-dots" manner
 perimeter.map <- c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62)
@@ -139,6 +140,7 @@ calib.LM.ext <- tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_jp
 
 
 ## 2.4  Color Sampling Pipeline
+
 To proceed with color sampling, you should now have available to *Colormesh*: 
    * The two required CSV files (image information and known RGB values of the standard). 
    * The two landmark coordinate arrays: one having land mark coordinate data of the CONSENSUS SPECIMEN SHAPE and the other having the landmark coordinate data of where to sample the color standard for the calibration process.
@@ -148,57 +150,40 @@ In the Color Sampling pipeline, there are two main processes: 1) defining the sa
 
 ### 2.4.1. Calculating the sampling template (sampling density)
 
-Colormesh uses Delaunay triangulation as an unsupervised method of determining locations to sample color from the consensus shaped specimen images. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape as the vertices of the triangles. It reads in the landmark coordinates of this consensus based on the order defined in the *perimeter.map* variable. The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation specified by the user; more rounds provide a greater density of sampling points. This is accomplished by using the centroids of the triangles created from the first round of Delaunay triangulation as the vertices for subsequent rounds of triangulation. In the images below, the centroids are shown as the red dots within the triangles.
+Colormesh uses Delaunay triangulation as an unsupervised method of determining locations to sample color from the consensus shaped specimen images. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape as the vertices of the triangles. It reads in the landmark coordinates of this consensus based on the order defined in the *perimeter.map* variable. The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation specified by the user; more rounds provide a greater density of sampling points.
 
 Here's what an example of two, three, and four rounds of triangulation looks like:
 
-![Triangulation example](images/DT.png)
+![Triangulation example](images/DT.jpg)
 
 
-### Checking alignment and generating the sampling template
+### Generating the sampling template and checking alignment
 
-IMPORTANT: Test that your sampling points properly overlay your image. Image readers (e.g., EBImage & imager) place the 0,0 x,y-coordinate in the upper left corner. In contrast, the coordinates in the TPS file place 0,0 in the bottom left corner. Colormesh assumes this to be true. To check this, the code below is used to read in a test image, calculates the sampling template, then plot the Delaunay triangulation wire-frame on top of the image to ensure the sampling template is properly aligned with the images you will be sampling.  
+The sampling template is generated by the *tri.surf* function and is an integer defined by the user. The *tri.surf* function calculates the X,Y coordinates of the centroid for each triangle generated by Delaunay triangulation; Colormesh calls on the *tripack*package to perform the Delaunay triangulation. If more than one round of triangulation is specified by the user, these centroids function as vertices for subsequent rounds of triangulation. At the completion of the user-specified rounds of triangulation, the pixel coordinate for each triangle's centroid is saved as sampling coordinates. The arguments defined in the function include: the array having the coordinates of the __consensus shape__, the perimeter map, a test image to check the alignment of the sampling template, and a logical argument to address whether to flip the y-coordinates (see below). By default, flip.delaunay = FALSE. Be sure your specimen.sampling.template is defined with the correct orientation (indicated by whether the triangulation overlay is properly aligned). The alignment check draws a yellow line around the perimeter of your specimen and red circles are plotted at the pixel coordinates that will be sampled (NOTE: circles are sized to be easily visible and do not represent the number of pixels that will be sampled). 
 
-### Reading in a test image
+IMPORTANT: Test that your sampling points properly overlay your image. Image readers (e.g., EBImage & imager) place the 0,0 x,y-coordinate in the upper left corner. In contrast, the coordinates in the TPS file place 0,0 in the bottom left corner. Colormesh assumes this to be true. The example code below demonstrates how to load a test image and plot the sampling template over the image to check alignment. 
 
-To check that Colormesh will be sampling your specimen correctly, first read in one of the unwarped images from your image file. This uses the load.image function from the *imager* package.
 
 ```r
+## Reading in a test image using the imager package
 align.test1 <- load.image("C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/IMG_7658_unwarped.png")
-```
 
-### Calculating sample location and checking alignment 
+## In the examples below, num.passes = 3 means three rounds of Delaunay Triangulation will be performed.
+## Below shows example code using the consensus shape array that was calculated by the tps.unwarp function where unwarping was done within the Colormesh environment(Section 2.2.2, above). When flip.delaunay = F, the template was not aligned correctly; the tri.surp function was re-ran with flip.delaunay = T to define the specimen.sampling.template with the correct orientation.
+specimen.sampling.template <- tri.surf(tri.object = unwarped.jpg$target, point.map = perimeter.map, num.passes = 3, corresponding.image = align.test1, flip.delaunay = F)
+specimen.sampling.template <- tri.surf(tri.object = unwarped.jpg$target, point.map = perimeter.map, num.passes = 3, corresponding.image = align.test1, flip.delaunay = T)
 
-The density of sampling points is determined by Colormesh's *tri.surf* function and is an integer defined by the user. The *tri.surf* function identifies the X,Y coordinates of the centroid for each triangle generated by Delaunay triangulation. If more than one round of triangulation is specified by the user, these centroids function as vertices for subsequent rounds of triangulation. At the completion of the user-specified rounds of triangulation, the pixel coordinate for each triangle's centroid is saved as sampling coordinates. The arguments defined in the function include: the array having the coordinates of the consensus shape, the perimeter map, the test image to check the alignment of the sampling template, and a logical argument to address whether to flip the y-coordinates (see below). By default, flip.delaunay = FALSE since imager assumed 0,0 to be in the upper left and most TPS file generators assume 0,0 to be in the lower left. Be sure your specimen.sampling.template is defined with the correct orientation (indicated by whether the triangulation overlay is properly aligned). The alignment check draws a yellow line around the perimeter of your specimen and red circles are plotted at the pixel coordinates that will be sampled (circles are sized to be easily visible and do not represent the number of pixels that will be sampled). 
-
-
-```r
-## In this example, 3 rounds of Delaunay Triangulation will be performed.
-
-## Below shows example code using the consensus shape array that was calculated using the tps.unwarp function (unwarping was done within the Colormesh environment). 
-specimen.sampling.template <- tri.surf(unwarped.jpg$target, point.map = perimeter.map, 3, align.test1, flip.delaunay = F)
-
-## Below shows the example code if you imported the consensus specimen shape from a TPS file and converted it to an array (described above).
-specimen.sampling.template <- tri.surf(consensus.LM.ext, point.map = perimeter.map, 3, align.test1, flip.delaunay = F)
+## Below shows the example code if you imported the consensus specimen shape from a TPS file and converted it to an array (Section 2.3 above).
+specimen.sampling.template <- tri.surf(tri.object = consensus.LM.ext, point.map = perimeter.map, num.passes = 3, corresponding.image = align.test1, flip.delaunay = T)
 ```
 
 The images below show the alignment plot with the two outcomes of the flip.delaunay logical argument.
-When flip.delaunay = FALSE
-![](images/align_wrong.png)
+When flip.delaunay = FALSE and misaligned
+![](images/align1_wrong.jpg)
 
-```r
-## If the sampling template is upside-down, set flip.delaunay = TRUE
 
-## Below shows example code using the consensus shape array that was calculated using the tps.unwarp function (unwarping was done within the Colormesh environment). 
-specimen.sampling.template <- tri.surf(unwarped.jpg$target, point.map = perimeter.map, 3, align.test1, flip.delaunay = T)
-
-## Below shows the example code if you imported the consensus specimen shape from a TPS file and converted it to an array (described above).
-specimen.sampling.template <- tri.surf(consensus.LM.ext, point.map = perimeter.map, 3, align.test1, flip.delaunay = T)
-
-```
-When flip.delaunay = TRUE
-![](images/align_correct.png)
-
+When flip.delaunay = TRUE and aligned correctly
+![](images/align1_correct.jpg)
 
 
 ### Visualizing the sampling template
@@ -210,54 +195,69 @@ Plotting a map of all points (both the perimeter and interior) that will be samp
 ```r
 plot(specimen.sampling.template, style = "points")
 ```
-![](images/plot_points.png)
+![](images/template_points.jpg)
 
 Plotting only the perimeter points
 ```r
 plot(specimen.sampling.template, style = "perimeter")
 ```
-![](images/plot_perimeter_points.png)
+![](images/template_perim.jpg)
 
 Plotting only the interior points
 ```r
 plot(specimen.sampling.template, style = "interior")
 ```
-![](images/plot_interior_points.png)
+![](images/template_inter.jpg)
 
 Plotting the map of the Delaunay trinagulation and the centroids of the triangles
 ```r
 plot(specimen.sampling.template, style = "triangulation", wireframe.color = "black", point.color = "red")
 ```
-![](images/plots_triangulation.png)
+![](images/template_triang.jpg)
 
 
 _Overlay on image_
-The "triangulation" style can be plotted overlaying the test.image (defined above). The following code shows how to make this plot. The default colors for both the "triangulation" and "overlay" styles draw the triangles in black and the sampling points (centroids) in red. However, The user can change the color of the triangles and centroids using the point.color =   and wireframe.color =  arguments.
+The "triangulation" style can be plotted overlaying the *align.test1* image (defined above). The following code shows how to make this plot. The default colors for both the "triangulation" and "overlay" styles draw the triangles in black and the sampling points (centroids) in red. However, The user can change the color of the triangles and centroids using the point.color =   and wireframe.color =  arguments.
 ```r
 plot(specimen.sampling.template, corresponding.image = align.test1, style = "overlay", wireframe.color = "grey", point.color = "yellow" )
+
+## NEED TO UPDATE IMAGE
 ```
 ![](images/specimen_template_overlay.png)
 
 
-## 2. Setting the sampling circle size and measuring RGB
+## 2.4.2 Setting the sampling circle size and measuring RGB
+
+### Checking for overlapping sampling circles
+
+Because sampling circle size is controlled by the user, we offer a diagnostic tool with the function *point.overlap*. The example code below demonstrates the use of this function to determine whether sampling circles of of a given pixel radius (px.radius = ) will overlap. For example, a sampling circle with px.radius = 2 will have a sampling circle diameter of 5 pixels; the radius is 2 pixels out from the centroid pixel defined by the sampling tamplate. If the sampling template (defined in Section 2.4.1) is dense, this may result in the overlap of sampling circles depending on their size. This function checks for overlap of sampling circles and produces a dataframe with the sampling point ID and the distance between the centroid pixels of those that overlap. This function also produces a plot showing sampling circles that overlap in red (Note: the circles of the plot are not drawn to scale).
+
+```r
+## The sampling template (specimen.sampling.template2) shown below is the result of 4 Delaunay triangulations and therefore more dense. A pixel radius of 2 (px.radius = 2) results in some sampling circles that overlap (see diagnostic plot below). The point ID is supplied in a dataframe produced by the function.
+
+overlap = point.overlap(delaunay.map = specimen.sampling.template2, px.radius = 2, style = "points")
+```
+![](images/overlap.jpg)
+
 
 The *rgb.measure* function measures the RGB values of the points sampled from the unwarped specimen images (at the points identified above in the *tri.surf* function). To control the size of the sampling circle, the user provides the radius length (in pixels) out from the centroid, from which to sample the surrounding pixels. In this function, the user first provides the file path to the folder containing the unwarped (to the consensus shape) images that are to be sampled, followed unwarped image names, next is the "specimen.sampling.template" (which provides sampling coordinates), an integer for the user-specified size of the sampling circle **radius** in pixels (px.radius = 0 will only sample the pixel located at the centroid of the triangle), and the logical argument for whether you would like to apply the linear transform (based on international standard IEC 61966-2-1:1999),to convert sRGB values to linearized values. 
 
 ```r
-## The example code below uses the unwarped image names generated by the tps.unwarp function
-uncalib_RGB <- rgb.measure(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/", image.names =  unwarped.jpg$unwarped.names, delaunay.map = specimen.sampling.template, px.radius = 2, linearize.color.space = FALSE)
+## The example code below uses the unwarped image names generated within Colormesh by the tps.unwarp function (Section 2.2.2, above)
+## NOTE: We use the specimen.sampling.template defined by 3 rounds of Delaunay trinagulation below
+uncalib_RGB <- rgb.measure(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/", image.names = unwarped.jpg$unwarped.names, delaunay.map = specimen.sampling.template, px.radius = 2, linearize.color.space = FALSE)
 
 ## If unwarped images were generated externally, the image names will come from the 2nd column of the csv file
 uncalib_RGB <- rgb.measure(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/", image.names = specimen.factors[,2], delaunay.map = specimen.sampling.template, px.radius = 2, linearize.color.space = FALSE)
 
 
-
-linear_uncalib_RGB <- rgb.measure("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/", image.names =  unwarped.jpg$unwarped.names, specimen.sampling.template, px.radius = 2, linearize.color.space = TRUE)
-
-linear_uncalib_RGB <- rgb.measure("C:/Users/jennv/Desktop/Colormesh_Test_2/unwarped_images/", image.names = specimen.factors[,2], specimen.sampling.template, px.radius = 2, linearize.color.space = TRUE)
+## If the color values of the image are in sRGB colorspace, the values can be linearized setting linearie.color.space = TRUE 
+linear_uncalib_RGB <- rgb.measure(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/", image.names = unwarped.jpg$unwarped.names, delaunay.map = specimen.sampling.template, px.radius = 2, linearize.color.space = TRUE)
 ```
 
-## Visualizing the sampled color
+
+
+### Visualizing the sampled color
 
 The example code below will plot the color sampled using the *rgb.measure* function. The "individual = " argument allows you to plot a specific specimen. The default of style = "points" which plots the color values that were sampled from the image (perimeter and interior). Similar to the plotting options above, you have the option of only plotting the perimeter or the interior points.  To compare your plotted sampled color values to the original image the color values were sampled from, set style = "comparison". Note that a plot of sampled values where linearize.color.space = TRUE will be darker than the original image due to the application of the linear transform.
 
@@ -265,164 +265,124 @@ Plotting measured color at all points
 ```r
 plot(uncalib_RGB, individual = 8, style = "points")
 ```
-![](images/uncalib_plotted_points.png)
+![](images/uncalib_points.jpg)
 
 Plotting measured color at only the perimeter points
 ```r
 plot(uncalib_RGB, individual = 8, style = "perimeter")
 ```
-![](images/uncalib_plotted_perimeter.png)
+![](images/uncalib_perim.jpg)
 
 Plotting measured color at only the interior points
 ```r
 plot(uncalib_RGB, individual = 8, style = "interior")
 ```
-![](images/uncalib_plotted_interior.png)
+![](images/uncalib_inter.jpg)
 
 Plotting measured color at all points along with the image the color was sampled from 
 ```r
 plot(uncalib_RGB, individual = 8, style = "comparison")
 ```
-![](images/uncalib_plotted_comparison.png)
+![](images/uncalib_comp.jpg)
 
-The plots hown above can be used to visualize your linearized color data as well.
+The plots shown above can be used to visualize your linearized color data as well. We show the "points" plot below.
 *Note: Plotting the linearized measured color; these will appear darker*
 ```r
 plot(linear_uncalib_RGB, individual = 8, style = "points")
-plot(linear_uncalib_RGB, individual = 8, style = "perimeter")
-plot(linear_uncalib_RGB, individual = 8, style = "interior")
-plot(linear_uncalib_RGB, individual = 8, style = "comparison")
 ```
-![](images/linear_uncalib_plotted_points.png) | ![](images/linear_uncalib_plotted_perimeter.png) | ![](images/linear_uncalib_plotted_interior.png) | ![](images/linear_uncalib_plotted_comparison.png)
+![](images/linear_uncalib_points.jpg)
 
 
-# Color calibration
+## 2.5 Color calibration
 
 Color information across images can be pretty noisy due to inconsistent lighting, different camera settings, movement of the object, etc. We highly recommend adjusting for those differences by including a color standard in each image. Using the differences in color standard values between images to mitigate variation due to noise, landmarks placed on the color standard are used to sample known RGB values and adjust the sampled color of your specimen by the average deviation in each color channel.  
 
-The *rgb.calibrate* function goes through the calibration images and samples the color standards of each image. It then creates an array of these values. The default sampling circle radius is set to px.radius = 2. Once each color of the color standard is sampled, it determines the mean deviation in values of the R,G,B color channels from the known values of each color on the standardfor that image. The overal mean deviation in each color channel is used as a correction to the R,G, and B color values measured at each sampling point within a photo.
+*Colormesh* uses the coordinates of landmarks placed on the standard in each image to sample known color values. Prior to calibration, it is important to check the alignment of the sampling coordinates and the images. Once you have determined whether an alignment correction must be made, the *rgb.calibrate* function can then be used to correct each image's measured RGB values. The function samples the color standards of each image at the coodinates supplied by the calibration array. An image-specific color correction vector is calculated based on the mean deviation of each color channel from the known RGB values of the color standard in that image. The correction vector is then applied to the measured RGB values of each image. 
+
 
 ## Checking the alignment for sampling
 
 Prior to calibrating each image, it is important to check that the sampling locations align with the color standard in the image. The code below plots colored dots at the locations where color will be sampled in the image. The user has the option to change the size and color of the dots that are plotted. This is a simple test to confirm the y-axis coordinates are correct. In the example below, yellow points are plotted over the locations that will be sampled for color calibration.
   
 ```r
-calib.plot(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names = specimen.factors[ ,1], calib.file = calib.LM.ext, individual = 3, col = "yellow", cex = 1)
+## Plot a test image to check that the landmark coordinates are aligned correctly over the standard. We specified the point color and size to make them visible
+calib.plot(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names = specimen.factors[ ,1], calib.file = calib.LM, individual = 3, col = "yellow", cex = 1)
 ```
-![](images/calib_plot_test.png)
+![](images/calib_align.jpg)
 
+## Calibrating the measured RGB values
 
-## Calibrating your measured color
-
-The *rgb.calibrate* function will correct each image's measured RGB values based on the mean deviation of each color channel from the known RGB values of the color standard in that image. First, the user provides the name of the data that is to be calibrated, for example, "uncalib_RGB". Then the user provides the file path to the folder containing the original images (imagedir =). Next, "image.names = " is defined by providing the column containing the calibration image names from the csv containing this information. The coordinates of where to sample the color standard are defined as "calib.file = ". The logical argument for "flip.y.values" is available if the test image that is plotted shows that the y-coordinates need to be corrected (determined in the previous step with the calib.plot function). Finally, "color.standard.values = " is defined as the csv containing the known RGB values for the color standard. By default, the sampling circle that samples each color standard has a default radius = 2 pixels. You can change the size of the sampling circle with an integer when defining "px.radius = " as shown in the example code below.
+For the *rgb.calibrate* function, the user first provides the name of the data that is to be calibrated, for example, "uncalib_RGB". Then the user provides the file path to the folder containing the original images (imagedir =). Next, "image.names = " is defined by providing the column containing the calibration image names from the csv containing this information. The coordinates of where to sample the color standard are defined as "calib.file = ". The logical argument for "flip.y.values" is available if the test image that is plotted shows that the y-coordinates need to be corrected (determined in the previous step with the calib.plot function). Finally, "color.standard.values = " is defined as the csv containing the known RGB values for the color standard. By default, the sampling circle that samples each color standard has a default radius = 2 pixels. You can change the size of the sampling circle with an integer when defining "px.radius = " as shown in the example code below. 
 *Note: If the calib.plot function showed proper alignment, set flip.y.values = F*
+
 ```r
 calib_RGB <- rgb.calibrate(uncalib_RGB, imagedir =  "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names = specimen.factors[ ,1], calib.file = calib.LM.ext, flip.y.values = F, color.standard.values = known.rgb)
 
 ##  By default, the radius of the sampling circle is = 2. The user can change the sampling circle size by providing a different integer. 
 calib_RGB <- rgb.calibrate(uncalib_RGB, imagedir =  "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names = specimen.factors[ ,1], calib.file = calib.LM.ext, flip.y.values = F, color.standard.values = known.rgb, px.radius = 3)
 ```
-To calibrate measured RGB values where linearize.color.space = TRUE, the *rgb.calibrate function* is used in the same manner. The *rgb.calibrate* function detects that this data was linearized. When detected, both the known RGB values and the color measured from the color standard will be linearized prior to calculating the mean deviation from the known RGB values. This lienarized color correction will then be applied to the linearized values collected from the specimen images.
+
+To calibrate measured RGB values where linearize.color.space = TRUE, the *rgb.calibrate function* is used in the same manner. The *rgb.calibrate* function detects that this data was linearized  because the logical in the list produced from the *rgb.measure* function = TRUE. When detected, both the known RGB values and the color measured from the color standard will be linearized prior to calculating the mean deviation from the known RGB values. This linearized color correction will then be applied to the linearized values collected from the specimen images.
 
 ```r
-linear_calib_RGB <- rgb.calibrate(linear_uncalib_RGB, imagedir =  "C:/Users/jennv/Desktop/Colormesh_Test_2/calib_images/", image.names = specimen.factors[ ,1], calib.file = calib.array, flip.y.values = F, color.standard.values = known.rgb)
+linear_calib_RGB <- rgb.calibrate(linear_uncalib_RGB, imagedir =  "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names = specimen.factors[ ,1], calib.file = calib.LM.ext, flip.y.values = F, color.standard.values = known.rgb)
 ```
 
 
 ##Visualizing the calibrated color
 
-To plot your calibrated colors, you have the same options as above. With style = "points" both perimeter and interior points where color has been calibrated will be plotted. To print just the perimeter, style = "perimeter". With style = "interior" only the interior calibrated color values will be plotted. To compare your calibrated points to the uncalibrated points, set style = "comparison". 
+To plot your calibrated colors, you have the same options as above. With style = "points" both perimeter and interior points where color has been calibrated will be plotted. To print just the perimeter, style = "perimeter". With style = "interior" only the interior calibrated color values will be plotted. The __exception__ is with the comparison plot. In the comparison plot, it compares the calibrated points to the uncalibrated points when style = "comparison". 
 
-Plotting calibrated color values with style = "points"
+
 ```r
+## Plotting calibrated color values with style = "points"
 plot(calib_RGB, individual = 5, style = "points")
-```
-![](images/calib_plot.png)
 
-Plotting calibrated color values with style = "perimeter"
-```r
+## Plotting calibrated color values with style = "perimeter"
 plot(calib_RGB, individual = 5, style = "perimeter")
-```
-![](images/calib_perimeter.png)
 
-Plotting calibrated color values with style = "interior"
-```r
+## Plotting calibrated color values with style = "interior"
 plot(calib_RGB, individual = 5, style = "interior")
-```
-![](images/calib_interior.png)
 
-Plotting calibrated color values with style = "comparison"
-```r
+## EXCEPTION: This plot compares uncalibrated and calibrated color values
+##Plotting calibrated color values with style = "comparison"
 plot(calib_RGB, individual = 5, style = "comparison")
 ```
-![](images/calib_uncalib_comparison.png)
-
-
-
+![](images/calib_uncalib_comparison.jpg)
 
 Linearized values can be plotted, as well. 
 *Note: Linearized RGB values will have a darker appearance.* 
 
-Plotting linearized calibrated color values with style = "points"
 ```r
-plot(linear_calib_RGB, individual = 5, style = "points")
+## Plotting linearized calibrated color values with style = "points"
+plot(linear_calib_RGB, individual = 3, style = "points")
+
+## Plotting linearized calibrated color values with style = "perimeter"
+plot(linear_calib_RGB, individual = 3, style = "perimeter")
+
+##Plotting linearized calibrated color values with style = "interior"
+plot(linear_calib_RGB, individual = 3, style = "interior")
+
+##Plotting linearized calibrated color values with style = "comparison"
+plot(linear_calib_RGB, individual = 3, style = "comparison")
 ```
-![](images/linear_calib_plot.png)
-
-Plotting linearized calibrated color values with style = "perimeter"
-```r
-plot(linear_calib_RGB, individual = 5, style = "perimeter")
-```
-![](images/linear_calib_perimeter.png)
-
-Plotting linearized calibrated color values with style = "interior"
-```r
-plot(linear_calib_RGB, individual = 5, style = "interior")
-```
-![](images/linear_calib_interior.png)
-
-Plotting linearized calibrated color values with style = "comparison"
-```r
-plot(linear_calib_RGB, individual = 5, style = "comparison")
-```
-![](images/lienar_calib_linear_uncalib_comparison.png)
 
 
 
 
 
-## Extracting your data
+
+# __3. Extracting your data__
 
 We created a simple function, *make.colormesh.dataset*, to compile your data into a single dataframe. The user specifies which dataset they would like to include, the csv containing the specimen information, and lastly, a logical argument (TRUE/FALSE) as to whether perimeter point data is included. 
 
-This dataframe will give specimens in rows and RGB color values, following by point coordinates in columns. The column names indicate the point ID, whether it is an interior or perimeter point, and the color channel (R,G, or B). Following the columns of color data, the x,y coordinates of each point are also provided. In the guppy example shown here, there were 10 specimens and therefore 10 rows. Sampling points consisted of 62 perimeter points and 780 interior points for 842 total points sampled; each of these points has 3 color channels. The number of columns totals = 4214 (4 columns with specimen identification information, 842 * 3 = 2526 color columns, plus 842 * 2 = 1684 coordinate columns).
+This dataframe will give individual specimens in rows. It will combine the image information csv file to the beginning of the data set. Folloing these columns, the measured values specific to each sampling point will be provided. After these columns, the x,y coordinate of each sampling point will be given. 
 
 ```r
-
 ## Need to update this
-final.df.uncalib.tif <- make.colormesh.dataset(df = uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T)
+final.df.uncalib <- make.colormesh.dataset(df = uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T)
 
-
-
-final.df.uncalibrate <- make.colormesh.dataset(df = uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = F)
-final.df.uncalibrate.perim <- make.colormesh.dataset(df = uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T)
-
-final.df.calibrate <- make.colormesh.dataset(df = calib_RGB, specimen.factors = specimen.factors, use.perimeter.data = F)
-final.df.calibrate.perim <- make.colormesh.dataset(df = calib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T)
-
-
-final.df.uncalibrate.linear <- make.colormesh.dataset(df = linear_uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = F)
-final.df.uncalibrate.linear.perim <- make.colormesh.dataset(df = linear_uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T)
-
-final.df.calibrate.linear <- make.colormesh.dataset(df = linear_calib_RGB, specimen.factors = specimen.factors, use.perimeter.data = F)
-final.df.calibrate.linear.perim <- make.colormesh.dataset(df = linear_calib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T)
-```
-
-If you would like to write this datafram to a .csv file, include the file path where you would like the file to be saved following the write2csv argument. 
-
-```r
-final.df.calibrate.saved <- make.colormesh.dataset(df = calib_RGB, specimen.factors = specimen.factors, use.perimeter.data = F, write2csv = "C:/Users/jennv/Desktop/Colormesh_Test_2/colormesh_data_calib.csv")
-
-final.df.uncalibrate.saved <- make.colormesh.dataset(df = uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = F, write2csv = "C:/Users/jennv/Desktop/Colormesh_Test_2/colormesh_data_uncalib.csv")
+## If you would like to write this datafram to a .csv file, include the file path where you would like the file to be saved following the write2csv argument. 
+final.df.uncalib.saved <- make.colormesh.dataset(df = uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T, write2csv = "C:/Users/jennv/Desktop/Colormesh_test_jpg/colormesh_data_uncalib.csv")
 ```
 
