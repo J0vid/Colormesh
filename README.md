@@ -180,11 +180,13 @@ specimen.sampling.template <- tri.surf(tri.object = consensus.LM.ext, point.map 
 
 The images below show the alignment plot with the two outcomes of the flip.delaunay logical argument.
 When flip.delaunay = FALSE and misaligned
-![](images/align1_wrong.jpg)
+
+![](images/test_image_flip_wrong.jpg)
 
 
 When flip.delaunay = TRUE and aligned correctly
-![](images/align1_correct.jpg)
+
+![](images/test_image_flip_right.jpg)
 
 
 ### Visualizing the sampling template
