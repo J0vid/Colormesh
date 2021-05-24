@@ -309,7 +309,7 @@ Color information across images can be pretty noisy due to inconsistent lighting
 *Colormesh* uses the coordinates of landmarks placed on the standard in each image to sample known color values. Prior to calibration, it is important to check the alignment of the sampling coordinates and the images. Once you have determined whether an alignment correction must be made, the *rgb.calibrate* function can then be used to correct each image's measured RGB values. The function samples the color standards of each image at the coodinates supplied by the calibration array. An image-specific color correction vector is calculated based on the mean deviation of each color channel from the known RGB values of the color standard in that image. The correction vector is then applied to the measured RGB values of each image. 
 
 
-## Checking the alignment for sampling
+### Checking the alignment for sampling
 
 Prior to calibrating each image, it is important to check that the sampling locations align with the color standard in the image. The code below plots colored dots at the locations where color will be sampled in the image. The user has the option to change the size and color of the dots that are plotted. This is a simple test to confirm the y-axis coordinates are correct. In the example below, yellow points are plotted over the locations that will be sampled for color calibration.
   
@@ -319,7 +319,7 @@ calib.plot(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names 
 ```
 ![](images/calib_align.jpg)
 
-## Calibrating the measured RGB values
+### Calibrating the measured RGB values
 
 For the *rgb.calibrate* function, the user first provides the name of the data that is to be calibrated, for example, "uncalib_RGB". Then the user provides the file path to the folder containing the original images (imagedir =). Next, "image.names = " is defined by providing the column containing the calibration image names from the csv containing this information. The coordinates of where to sample the color standard are defined as "calib.file = ". The logical argument for "flip.y.values" is available if the test image that is plotted shows that the y-coordinates need to be corrected (determined in the previous step with the calib.plot function). Finally, "color.standard.values = " is defined as the csv containing the known RGB values for the color standard. By default, the sampling circle that samples each color standard has a default radius = 2 pixels. You can change the size of the sampling circle with an integer when defining "px.radius = " as shown in the example code below. 
 *Note: If the calib.plot function showed proper alignment, set flip.y.values = F*
@@ -338,7 +338,7 @@ linear_calib_RGB <- rgb.calibrate(linear_uncalib_RGB, imagedir =  "C:/Users/jenn
 ```
 
 
-##Visualizing the calibrated color
+### Visualizing the calibrated color
 
 To plot your calibrated colors, you have the same options as above. With style = "points" both perimeter and interior points where color has been calibrated will be plotted. To print just the perimeter, style = "perimeter". With style = "interior" only the interior calibrated color values will be plotted. The __exception__ is with the comparison plot. In the comparison plot, it compares the calibrated points to the uncalibrated points when style = "comparison". 
 
@@ -375,10 +375,6 @@ plot(linear_calib_RGB, individual = 3, style = "interior")
 ##Plotting linearized calibrated color values with style = "comparison"
 plot(linear_calib_RGB, individual = 3, style = "comparison")
 ```
-
-
-
-
 
 
 # __3. Extracting your data__
