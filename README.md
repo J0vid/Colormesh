@@ -95,7 +95,7 @@ perimeter.map <- c(1, 8:17, 2, 18:19, 3, 20:27, 4, 28:42,5,43:52, 6, 53:54, 7, 5
 ## Define sliders (main.lms = identifies which of all 62 landmarks are the traditional landmarks and therefore will NOT slide)
 sliders <- make.sliders(perimeter.map, main.lms = 1:7)
 ```
-![](images/perimeter_line_map.png)
+![](images/perimeter_line_map.jpg)
 
 
 Prior to running the *tps.unwarp* function, you will need to create a file folder as a destination for writing the unwarped images. The information required by the function includes: the directory containing the original specimen images that are to be unwarped to the consensus shape identified by the "imagedir" argument (note: these images must all have the same pixel dimensions). Also provided to the function are the landmark coordinate data array for the landmarks that were placed around each specimen contained in these images. To align the coordinate data with the appropriate images, you must provide the image names from the CSV file (1st column). If you have defined landmarks that are semilandmarks, and therefore allowed to slide, they also need to be identified. And finally, you must provide the directory where Colormesh will write the unwarped images. These unwarped images will be saved as PNG images, which is an uncompressed image format.
