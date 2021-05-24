@@ -232,7 +232,8 @@ plot(specimen.sampling.template, corresponding.image = align.test1, style = "ove
 
 ## NEED TO UPDATE IMAGE
 ```
-![](images/specimen_template_overlay.png)
+
+![](images/specimen_template_overlay.jpg)
 
 
 ## 2.4.2 Setting the sampling circle size and measuring RGB
