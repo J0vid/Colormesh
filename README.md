@@ -116,6 +116,7 @@ The output of the function is a list having two elements. The "$target" element 
 ## 2.3  Image Processing was performed externally - importing the required files  
 
 If the entirety of image processing (Landmark placement and unwarping to a consensus shape) are performed externally, *Colormesh* can import all of the required files for the Color Sampling Pipeline. Below, we identify the required information to prepare for color sampling. This includes: 
+
      * Defining the perimeter map to be used when generating the sampling template (Delaunay triangulation). 
      * The specimen factors CSV: the unique unwarped image names must appear in the 2nd column, original image names appear in the 1st column.
      * The CSV having the known RGB values of the color standard.
