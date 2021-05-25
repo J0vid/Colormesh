@@ -240,7 +240,7 @@ plot(specimen.sampling.template, corresponding.image = align.test1, style = "ove
 
 ### Checking for overlapping sampling circles
 
-Because sampling circle size is controlled by the user, we offer a diagnostic tool with the function *point.overlap*. The example code below demonstrates the use of this function to determine whether sampling circles of of a given pixel radius (px.radius = ) will overlap. For example, a sampling circle with px.radius = 2 will have a sampling circle diameter of 5 pixels; the radius is 2 pixels out from the centroid pixel defined by the sampling tamplate. If the sampling template (defined in Section 2.4.1) is dense, this may result in the overlap of sampling circles depending on their size. This function checks for overlap of sampling circles and produces a dataframe with the sampling point ID and the distance between the centroid pixels of those that overlap. This function also produces a plot showing sampling circles that overlap in red (Note: the circles of the plot are not drawn to scale).
+Because sampling circle size is controlled by the user, we offer a diagnostic tool with the function *point.overlap*. The example code below demonstrates the use of this function to determine whether sampling circles of a given pixel radius (px.radius = ) will overlap. For example, a sampling circle with px.radius = 2 will have a sampling circle diameter of 5 pixels; the radius is 2 pixels out from the centroid pixel defined by the sampling template. If the sampling template (defined in Section 2.4.1) is dense, this may result in the overlap of sampling circles depending on their size. This function checks for overlap of sampling circles and produces a dataframe with the sampling point ID and the distance between the centroid pixels of those that overlap. This function also produces a plot showing sampling circles that overlap in red (Note: the circles of the plot are not drawn to scale).
 
 ```r
 ## The sampling template (specimen.sampling.template2) shown below is the result of 4 Delaunay triangulations and therefore more dense. A pixel radius of 2 (px.radius = 2) results in some sampling circles that overlap (see diagnostic plot below). The point ID is supplied in a dataframe produced by the function.
@@ -249,8 +249,8 @@ overlap = point.overlap(delaunay.map = specimen.sampling.template2, px.radius = 
 ```
 ![](images/overlap.jpg)
 
-
-The *rgb.measure* function measures the RGB values of the points sampled from the unwarped specimen images (at the points identified above in the *tri.surf* function). To control the size of the sampling circle, the user provides the radius length (in pixels) out from the centroid, from which to sample the surrounding pixels. In this function, the user first provides the file path to the folder containing the unwarped (to the consensus shape) images that are to be sampled, followed unwarped image names, next is the "specimen.sampling.template" (which provides sampling coordinates), an integer for the user-specified size of the sampling circle **radius** in pixels (px.radius = 0 will only sample the pixel located at the centroid of the triangle), and the logical argument for whether you would like to apply the linear transform (based on international standard IEC 61966-2-1:1999),to convert sRGB values to linearized values. 
+### Measuring RGB values
+The *rgb.measure* function measures the RGB values of the points sampled from the unwarped specimen images (at the points identified above in the *tri.surf* function). To control the size of the sampling circle, the user provides the radius length (in pixels) out from the centroid, from which to sample the surrounding pixels. In this function, the user first provides the file path to the folder containing the unwarped (to the consensus shape) images that are to be sampled, followed unwarped image names, next is the "specimen.sampling.template" (which provides sampling coordinates), an integer for the user-specified size of the sampling circle **radius** in pixels (px.radius = 0 will only sample the centroid pixel), and the logical argument for whether you would like to apply the linear transform (based on international standard IEC 61966-2-1:1999),to convert sRGB values to linearized values. 
 
 ```r
 ## The example code below uses the unwarped image names generated within Colormesh by the tps.unwarp function (Section 2.2.2, above)
@@ -307,7 +307,7 @@ plot(linear_uncalib_RGB, individual = 8, style = "points")
 
 Color information across images can be pretty noisy due to inconsistent lighting, different camera settings, movement of the object, etc. We highly recommend adjusting for those differences by including a color standard in each image. Using the differences in color standard values between images to mitigate variation due to noise, landmarks placed on the color standard are used to sample known RGB values and adjust the sampled color of your specimen by the average deviation in each color channel.  
 
-*Colormesh* uses the coordinates of landmarks placed on the standard in each image to sample known color values. Prior to calibration, it is important to check the alignment of the sampling coordinates and the images. Once you have determined whether an alignment correction must be made, the *rgb.calibrate* function can then be used to correct each image's measured RGB values. The function samples the color standards of each image at the coodinates supplied by the calibration array. An image-specific color correction vector is calculated based on the mean deviation of each color channel from the known RGB values of the color standard in that image. The correction vector is then applied to the measured RGB values of each image. 
+*Colormesh* uses the coordinates of landmarks placed on the standard in each image to sample known color values. Prior to calibration, it is important to check the alignment of the sampling coordinates and the images. Once you have determined whether an alignment correction must be made, the *rgb.calibrate* function can then be used to correct each image's measured RGB values. The function samples the color standards of each image at the coordinates supplied by the calibration array. An image-specific color correction vector is calculated based on the mean deviation of each color channel from the known RGB values of the color standard in that image. The correction vector is then applied to the measured RGB values of each image. 
 
 
 ### Checking the alignment for sampling
@@ -332,7 +332,7 @@ calib_RGB <- rgb.calibrate(uncalib_RGB, imagedir =  "C:/Users/jennv/Desktop/Colo
 calib_RGB <- rgb.calibrate(uncalib_RGB, imagedir =  "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names = specimen.factors[ ,1], calib.file = calib.LM.ext, flip.y.values = F, color.standard.values = known.rgb, px.radius = 3)
 ```
 
-To calibrate measured RGB values where linearize.color.space = TRUE, the *rgb.calibrate function* is used in the same manner. The *rgb.calibrate* function detects that this data was linearized  because the logical in the list produced from the *rgb.measure* function = TRUE. When detected, both the known RGB values and the color measured from the color standard will be linearized prior to calculating the mean deviation from the known RGB values. This linearized color correction will then be applied to the linearized values collected from the specimen images.
+To calibrate measured RGB values where linearize.color.space = TRUE, the *rgb.calibrate* function is used in the same manner. The *rgb.calibrate* function detects that this data was linearized  because the logical in the list produced from the *rgb.measure* function = TRUE. When detected, both the known RGB values and the color measured from the color standard will be linearized prior to calculating the mean deviation from the known RGB values. This linearized color correction will then be applied to the linearized values collected from the specimen images.
 
 ```r
 linear_calib_RGB <- rgb.calibrate(linear_uncalib_RGB, imagedir =  "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names = specimen.factors[ ,1], calib.file = calib.LM.ext, flip.y.values = F, color.standard.values = known.rgb)
@@ -382,7 +382,7 @@ plot(linear_calib_RGB, individual = 3, style = "comparison")
 
 We created a simple function, *make.colormesh.dataset*, to compile your data into a single dataframe. The user specifies which dataset they would like to include, the csv containing the specimen information, and lastly, a logical argument (TRUE/FALSE) as to whether perimeter point data is included. 
 
-This dataframe will give individual specimens in rows. It will combine the image information csv file to the beginning of the data set. Folloing these columns, the measured values specific to each sampling point will be provided. After these columns, the x,y coordinate of each sampling point will be given. 
+This dataframe will give individual specimens in rows. It will combine the image information csv file to the beginning of the data set. Following these columns, the measured values specific to each sampling point will be provided. After these columns, the x,y coordinate of each sampling point will be given. 
 
 ```r
 ## Need to update this
