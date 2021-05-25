@@ -7,9 +7,8 @@
 #' @param nlandmarks number of landmarks to acquire per image.
 #' @param scale how long is the scale in your images?
 #' @param Multscale Logical value--should the coords be pre-multiplied by scale value?
-#' @param writedir directory to save converted images and the TPS file. If left NULL, data will be saved to a temporary directory.
+#' @param writedir directory to save the TPS file.
 #' @param tps.filename a name for the TPS file. If no name is provided, it will default to "/Colormesh_landmarks.TPS"
-#' @param dump.tmp.images Logical value to keep temporarily created jpegs. By default they will be deleted when landmarking is completed.
 #' @return This function reads in several image formats and converts them to jpeg. The function returns the paths to the images that were converted, as well as the landmarks.
 #' @details This function is a wrapper around geomorph::digitize2d() that a) allows for more general image format reading and b) automatically reads in the landmarks into R after saving the TPS files. Geomorph only supports reading in jpeg files, so this function converts all images to jpeg in a temporary directory, calls digitize2d for landmarking and then removes the temporary jpegs upon completion.
 #' @seealso \code{\link[geomorph]{digitize2d}} (used for landmarking)

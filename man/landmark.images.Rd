@@ -28,8 +28,6 @@ landmark.images(
 \item{writedir}{directory to save the TPS file.}
 
 \item{tps.filename}{a name for the TPS file. If no name is provided, it will default to "/Colormesh_landmarks.TPS"}
-
-\item{dump.tmp.images}{Logical value to keep temporarily created jpegs. By default they will be deleted when landmarking is completed.}
 }
 \value{
 This function reads in several image formats and converts them to jpeg. The function returns the paths to the images that were converted, as well as the landmarks.

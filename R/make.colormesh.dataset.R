@@ -20,7 +20,7 @@ make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F,
 
   if(class(df) == "calibrated.mesh.colors"){
   #interior color data####
-  rgb.interior <- array2row3d(df$calibrated[,,order(dimnames(df$calibrated)[[3]], specimen.factors$V1)])
+  rgb.interior <- array2row3d(df$calibrated[,,order(dimnames(df$calibrated)[[3]], specimen.factors[,1])])
   rgb.names <- df$calibrated[,,1]
   rgb.names[,1] <- paste0("r_interior", 1:nrow(df$calibrated))
   rgb.names[,2] <- paste0("g_interior", 1:nrow(df$calibrated))
@@ -36,7 +36,7 @@ make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F,
 
   if(use.perimeter.data){
     #perimeter color data####
-    rgb.perimeter <- array2row3d(df$calibrated.perimeter[,,order(dimnames(df$calibrated.perimeter)[[3]], specimen.factors$V1)])
+    rgb.perimeter <- array2row3d(df$calibrated.perimeter[,,order(dimnames(df$calibrated.perimeter)[[3]], specimen.factors[,1])])
     rgb.names <- df$calibrated.perimeter[,,1]
     rgb.names[,1] <- paste0("r_perimeter", 1:nrow(df$calibrated.perimeter))
     rgb.names[,2] <- paste0("g_perimeter", 1:nrow(df$calibrated.perimeter))
@@ -58,7 +58,7 @@ make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F,
 
 
   if(class(df) == "mesh.colors"){
-  rgb.interior <- array2row3d(df$sampled.color[,,order(dimnames(df$sampled.color)[[3]], specimen.factors$V1)])
+  rgb.interior <- array2row3d(df$sampled.color[,,order(dimnames(df$sampled.color)[[3]], specimen.factors[,1])])
   rgb.names <- df$sampled.color[,,1]
   rgb.names[,1] <- paste0("r_interior", 1:nrow(df$sampled.color))
   rgb.names[,2] <- paste0("g_interior", 1:nrow(df$sampled.color))
@@ -74,7 +74,7 @@ make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F,
 
   #perimeter option
   if(use.perimeter.data){
-    rgb.perimeter <- array2row3d(df$sampled.perimeter[,,order(dimnames(df$sampled.perimeter)[[3]], specimen.factors$V1)])
+    rgb.perimeter <- array2row3d(df$sampled.perimeter[,,order(dimnames(df$sampled.perimeter)[[3]], specimen.factors[,1])])
     rgb.names <- df$sampled.perimeter[,,1]
     rgb.names[,1] <- paste0("r_perimeter", 1:nrow(df$sampled.perimeter))
     rgb.names[,2] <- paste0("g_perimeter", 1:nrow(df$sampled.perimeter))

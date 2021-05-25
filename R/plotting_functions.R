@@ -39,7 +39,7 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 
   if(style == "overlay"){
     # par(mfrow = c(1,1))
-    plot(corresponding.image)
+    plot(corresponding.image, axes = F)
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
     points(x$centroids[are.you.in == 1,], col = point.color, pch = 19, cex = .25, ...)
