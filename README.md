@@ -181,6 +181,7 @@ specimen.sampling.template <- tri.surf(tri.object = consensus.LM.ext, point.map 
 ```
 
 The images below show the alignment plot with the two outcomes of the flip.delaunay logical argument.
+__Note: Images shown below differ from the previous images in this example - the image size and fish are different. These photos were selected to more clearly show correct/incorrect alignment. 
 
 When flip.delaunay = FALSE and misaligned
 
