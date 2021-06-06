@@ -230,6 +230,8 @@ _Overlay on image_
 
 The "triangulation" style can be plotted overlaying the *align.test1* image (defined above). The following code shows how to make this plot. The default colors for both the "triangulation" and "overlay" styles draw the triangles in black and the sampling points (centroids) in red. However, The user can change the color of the triangles and centroids using the point.color =   and wireframe.color =  arguments.
 
+__Note: The image used to show the "overlay" option differs from those used in the *tps.unwarp* example above. Here we used a cropped image, and different fish, to demonstrate this visualization option. __
+
 ```r
 plot(specimen.sampling.template, corresponding.image = align.test1, style = "overlay", wireframe.color = "grey", point.color = "yellow" )
 
