@@ -76,13 +76,14 @@ calib.LM.ext <-  tps2array("C:/Users/jennv/Desktop/Colormesh_test_jpg/calib_LM_j
 
 ### 2.2.2  Transforming images to a consensus shape within *Colormesh*
 
-Similar to landmark placement, images can be unwarped to a consensus shape either within the Colormesh environment (described below) or in your favorite geometric morphometrics software then imported into Colormesh for sampling (Section 2.3, below). Here, we describe the use of the *tps.unwarp* function to transform images to a consensus shape. This process generates two of the required files needed as input for the Colormesh Sampling Pipeline: the array of landmark coordinates of the consensus shape and the set of images where specimens have been unwarped to a consensus shape.  
+Similar to landmark placement, images can be unwarped to a consensus shape either within the Colormesh environment (described below) or in your favorite geometric morphometrics software then imported into *Colormesh* for sampling (Section 2.3, below). Here, we describe the use of the *tps.unwarp* function to transform images to a consensus shape. This process generates two of the required files needed as input for the Colormesh Sampling Pipeline (Section 2.4): the array of landmark coordinates of the consensus shape and the set of images where specimens have been unwarped to a consensus shape.
 
-Images that are unwarped to a consensus shape within the Colormesh environment must be of the same pixel dimensions (height x width). For example, our images are 4368 pixels x 2912 pixels. Unwarping to a consensus shape within Colormesh is performed by the *tps.unwarp* function. The function first performs a Generalized Procrustes Analysis by employing the utilities of the *geomorph* package. Then, the *imager* package is used to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory specified by the user.  
+Images that are unwarped to a consensus shape within the *Colormesh* environment must be of the same pixel dimensions (height x width). For example, our images are 4368 pixels x 2912 pixels. Unwarping to a consensus shape within *Colormesh* is performed by the *tps.unwarp* function. The function first performs a Generalized Procrustes Analysis by employing the utilities of the *geomorph* package. Then, the *imager* package is used to perform a thin-plate spline (TPS) image transformation. Finally, the resulting unwarped images are saved as PNG image format files in the directory specified by the user. 
+ 
 
-   1. Define perimeter map and sliding landmarks (if any) 
+#### 2.2.2.1  Define perimeter map and sliding landmarks (if any) 
      
-      The first step is to define the perimeter map of the specimen and identifying which landmarks, if any, are sliding landmarks (semilandmarks). This perimeter map tells Colormesh what order to read the landmarks so that a perimeter is drawn around the specimen in a "connect-the-dots" manner. This perimeter map is used in both the unwarping process for sliding landmarks and the Delaunay triangulation (described below) to determine sampling locations. In the guppy example below, the first seven landmarks that were placed around the guppy are the traditional landmarks (placed at locations that are easily identifiable among images); the remaining 55 landmarks are referred to as semilandmarks. Semilandmarks are interspersed between the traditional landmarks and allowed to slide along the tangent of the curve they create when generating a consensus shape. The *make.sliders* function identifies which landmarks are traditional landmarks, and therefore will not slide in the calculation.
+The first step is to define the perimeter map of the specimen and identifying which landmarks, if any, are sliding landmarks (semilandmarks). This perimeter map tells *Colormesh* what order to read the landmarks so that a perimeter is drawn around the specimen in a "connect-the-dots" manner. This perimeter map is used in both the unwarping process for sliding landmarks and the Delaunay triangulation (described below) to determine sampling locations. In the guppy example below, the first seven landmarks that were placed around the guppy are the traditional landmarks (placed at locations that are easily identifiable among images); the remaining 55 landmarks are referred to as semilandmarks. Semilandmarks are interspersed between the traditional landmarks and allowed to slide along the tangent of the curve they create when generating a consensus shape. The *make.sliders* function identifies which landmarks are traditional landmarks, and therefore will not slide in the calculation.
 
 ```r
 ## Define perimeter map (order the points occur around the perimeter)
@@ -94,9 +95,9 @@ sliders <- make.sliders(perimeter.map, main.lms = 1:7)
 ![](images/perimeter_line_map.jpg)
 
 
-   2. Calculating the consensus shape
+#### 2.2.2.2  Calculating the consensus shape
         
-      The second step is to calculate the consensus shape of the specimens. Prior to running the *tps.unwarp* function, you will need to create a file folder as a destination for the function to write the unwarped images. The information required by the function includes: the directory containing the original specimen images that are to be unwarped to the consensus shape identified by the "imagedir" argument (note: these images must all have the same pixel dimensions). Also provided to the function are the landmark coordinate data array for the landmarks that were placed around each specimen contained in these images. To associate the coordinate data with the appropriate images, you must provide the image names from the CSV file (1st column). If you have defined landmarks that are semilandmarks, and therefore allowed to slide, they also need to be identified. And finally, you must provide the directory where Colormesh will write the unwarped images. These unwarped images will be saved as PNG images, which is an uncompressed (lossless) image format.
+The second step is to calculate the consensus shape of the specimens. Prior to running the *tps.unwarp* function, you will need to create a file folder as a destination for the function to write the unwarped images. The information required by the function includes: the directory containing the original specimen images that are to be unwarped to the consensus shape identified by the "imagedir" argument (note: these images must all have the same pixel dimensions). Also provided to the function are the landmark coordinate data array for the landmarks that were placed around each specimen contained in these images. To associate the coordinate data with the appropriate images, you must provide the image names from the CSV file (1st column). If you have defined landmarks that are semilandmarks, and therefore allowed to slide, they also need to be identified. And finally, you must provide the directory where Colormesh will write the unwarped images. These unwarped images will be saved as PNG images, which is an uncompressed (lossless) image format.
 
 ```r
 ## The example code below defines the landmark coordinate array generated in Section 2.2.1: Option 1 (above)
@@ -107,7 +108,7 @@ unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg
 unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM.ext, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
 ```
 
-The output of the function is a list having two elements. The "$target" element of the list is the landmark coordinate data for the consensus shape generated by the function. The names given to the unwarped images appear as the 2nd list element. The resulting unwarped images are written to the directory given by the user; these images are sampled in the Color Sampling Pipeline (below). When image files are opened, specimens will now have the same shape. Note: Some black areas near the edges of the images are expected as they are part of the unwarping process.
+The output of the function is a list having two elements. The "$target" element of the list is the landmark coordinate data for the consensus shape generated by the function. The names given to the unwarped images appear as the 2nd list element. The resulting unwarped images are written to the directory given by the user; these images are sampled in the Color Sampling Pipeline (Section 2.4, below). When image files are opened, specimens will now have the same shape. Note: Some black areas near the edges of the images are expected as they are part of the unwarping process.
      
 ![](images/IMG_7647_unwarped.png)
 ![](images/IMG_7652_unwarped.png)
@@ -115,7 +116,7 @@ The output of the function is a list having two elements. The "$target" element 
 
 ## 2.3  Image Processing was performed externally - importing the required files  
 
-If the entirety of image processing (Landmark placement and unwarping to a consensus shape) are performed externally, *Colormesh* can import all of the required files for the Color Sampling Pipeline. Below, we identify the required information to prepare for color sampling. This includes: 
+If the entirety of image processing (Landmark placement and unwarping to a consensus shape) are performed externally, *Colormesh* can import all of the required files for the Color Sampling Pipeline (Section 2.4). Below, we identify the required information to prepare for color sampling. This includes: 
 
    * Defining the perimeter map to be used when generating the sampling template (Delaunay triangulation). 
    * The specimen factors CSV: the unique unwarped image names must appear in the 2nd column, original image names appear in the 1st column.
@@ -150,16 +151,16 @@ To proceed with color sampling, you should now have available to *Colormesh*:
 
 In the Color Sampling pipeline, there are two main processes: 1) defining the sampling templae (i.e., sampling density) and 2) defining the sampling circle size and measuring RGB values. For each of the processes, we have included seveal checks along the way. These include alignment checks to confirm the orientation of the image during the sampling process and overlapping of sampling circles. In addition, we provide several options for visualizing your plots under each section.   
 
-### 2.4.1. Calculating the sampling template (sampling density)
+### 2.4.1  Calculating the sampling template (sampling density)
 
-Colormesh uses Delaunay triangulation as an unsupervised method of determining locations to sample color from the consensus shaped specimen images. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape as the vertices of the triangles. It reads in the landmark coordinates of this consensus based on the order defined in the *perimeter.map* variable. The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation specified by the user; more rounds provide a greater density of sampling points.
+*Colormesh* uses Delaunay triangulation as an unsupervised method of determining locations to sample color from the consensus shaped specimen images. The first round of Delaunay triangulation uses the landmark coordinates of the consensus shape as the vertices of the triangles. It reads in the landmark coordinates of this consensus based on the order defined in the *perimeter.map* variable. The function that creates this mesh was designed to provide the user with flexibility in sampling density based on the number of rounds of triangulation specified by the user; more rounds provide a greater density of sampling points.
 
 Here's what an example of two, three, and four rounds of triangulation looks like:
 
 ![Triangulation example](images/DT.jpg)
 
 
-### Generating the sampling template and checking alignment
+#### 2.4.1.1  Generating the sampling template and checking alignment
 
 The sampling template is generated by the *tri.surf* function and is an integer defined by the user. The *tri.surf* function calculates the X,Y coordinates of the centroid for each triangle generated by Delaunay triangulation; Colormesh calls on the *tripack*package to perform the Delaunay triangulation. If more than one round of triangulation is specified by the user, these centroids function as vertices for subsequent rounds of triangulation. At the completion of the user-specified rounds of triangulation, the pixel coordinate for each triangle's centroid is saved as sampling coordinates. The arguments defined in the function include: the array having the coordinates of the __consensus shape__, the perimeter map, a test image to check the alignment of the sampling template, and a logical argument to address whether to flip the y-coordinates (see below). By default, flip.delaunay = FALSE. Be sure your specimen.sampling.template is defined with the correct orientation (indicated by whether the triangulation overlay is properly aligned). The alignment check draws a yellow line around the perimeter of your specimen and red circles are plotted at the pixel coordinates that will be sampled (NOTE: circles are sized to be easily visible and do not represent the number of pixels that will be sampled). 
 
@@ -191,7 +192,7 @@ When flip.delaunay = TRUE and aligned correctly
 ![](images/test_image_flip_right.jpg)
 
 
-### Visualizing the sampling template
+#### 2.4.1.2  Visualizing the sampling template
 
 We have included the ability to plot the sampling template generated by the *tri.surf* function. The example code below shows how to plot the template where the specimen will be sampled. You may specify the style = "points" to plot the location of the all the points (perimeter and interior) that will be sampled, style = "perimeter" will print only the perimeter points, style = "interior" will plot only interior points, and style = "triangulation" will plot the triangulation that was generated and the centroids of each triangle. For style = "triangulation" you may change the color of the triangles that were generated (wireframe.color = ), as well as the color of the centroid (point.color = ).
 
@@ -236,9 +237,9 @@ plot(specimen.sampling.template, corresponding.image = align.test1, style = "ove
 ![](images/specimen_template_overlay.jpg)
 
 
-## 2.4.2 Setting the sampling circle size and measuring RGB
+### 2.4.2 Setting the sampling circle size and measuring RGB
 
-### Checking for overlapping sampling circles
+#### 2.4.2.1  Checking for overlapping sampling circles
 
 Because sampling circle size is controlled by the user, we offer a diagnostic tool with the function *point.overlap*. The example code below demonstrates the use of this function to determine whether sampling circles of a given pixel radius (px.radius = ) will overlap. For example, a sampling circle with px.radius = 2 will have a sampling circle diameter of 5 pixels; the radius is 2 pixels out from the centroid pixel defined by the sampling template. If the sampling template (defined in Section 2.4.1) is dense, this may result in the overlap of sampling circles depending on their size. This function checks for overlap of sampling circles and produces a dataframe with the sampling point ID and the distance between the centroid pixels of those that overlap. This function also produces a plot showing sampling circles that overlap in red (Note: the circles of the plot are not drawn to scale).
 
@@ -249,7 +250,7 @@ overlap = point.overlap(delaunay.map = specimen.sampling.template2, px.radius = 
 ```
 ![](images/overlap.jpg)
 
-### Measuring RGB values
+#### 2.4.2.2  Measuring RGB values
 The *rgb.measure* function measures the RGB values of the points sampled from the unwarped specimen images (at the points identified above in the *tri.surf* function). To control the size of the sampling circle, the user provides the radius length (in pixels) out from the centroid, from which to sample the surrounding pixels. In this function, the user first provides the file path to the folder containing the unwarped (to the consensus shape) images that are to be sampled, followed unwarped image names, next is the "specimen.sampling.template" (which provides sampling coordinates), an integer for the user-specified size of the sampling circle **radius** in pixels (px.radius = 0 will only sample the centroid pixel), and the logical argument for whether you would like to apply the linear transform (based on international standard IEC 61966-2-1:1999),to convert sRGB values to linearized values. 
 
 ```r
@@ -265,9 +266,7 @@ uncalib_RGB <- rgb.measure(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg
 linear_uncalib_RGB <- rgb.measure(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/", image.names = unwarped.jpg$unwarped.names, delaunay.map = specimen.sampling.template, px.radius = 2, linearize.color.space = TRUE)
 ```
 
-
-
-### Visualizing the sampled color
+#### 2.4.2.3 Visualizing the sampled color
 
 The example code below will plot the color sampled using the *rgb.measure* function. The "individual = " argument allows you to plot a specific specimen. The default of style = "points" which plots the color values that were sampled from the image (perimeter and interior). Similar to the plotting options above, you have the option of only plotting the perimeter or the interior points.  To compare your plotted sampled color values to the original image the color values were sampled from, set style = "comparison". Note that a plot of sampled values where linearize.color.space = TRUE will be darker than the original image due to the application of the linear transform.
 
@@ -303,14 +302,14 @@ plot(linear_uncalib_RGB, individual = 8, style = "points")
 ![](images/linear_uncalib_points.jpg)
 
 
-## 2.5 Color calibration
+## 2.5  Color calibration
 
 Color information across images can be pretty noisy due to inconsistent lighting, different camera settings, movement of the object, etc. We highly recommend adjusting for those differences by including a color standard in each image. Using the differences in color standard values between images to mitigate variation due to noise, landmarks placed on the color standard are used to sample known RGB values and adjust the sampled color of your specimen by the average deviation in each color channel.  
 
 *Colormesh* uses the coordinates of landmarks placed on the standard in each image to sample known color values. Prior to calibration, it is important to check the alignment of the sampling coordinates and the images. Once you have determined whether an alignment correction must be made, the *rgb.calibrate* function can then be used to correct each image's measured RGB values. The function samples the color standards of each image at the coordinates supplied by the calibration array. An image-specific color correction vector is calculated based on the mean deviation of each color channel from the known RGB values of the color standard in that image. The correction vector is then applied to the measured RGB values of each image. 
 
 
-### Checking the alignment for sampling
+### 2.5.1  Checking the alignment for sampling
 
 Prior to calibrating each image, it is important to check that the sampling locations align with the color standard in the image. The code below plots colored dots at the locations where color will be sampled in the image. The user has the option to change the size and color of the dots that are plotted. This is a simple test to confirm the y-axis coordinates are correct. In the example below, yellow points are plotted over the locations that will be sampled for color calibration.
   
@@ -320,7 +319,7 @@ calib.plot(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", image.names 
 ```
 ![](images/calib_align.jpg)
 
-### Calibrating the measured RGB values
+### 2.5.2  Calibrating the measured RGB values
 
 For the *rgb.calibrate* function, the user first provides the name of the data that is to be calibrated, for example, "uncalib_RGB". Then the user provides the file path to the folder containing the original images (imagedir =). Next, "image.names = " is defined by providing the column containing the calibration image names from the csv containing this information. The coordinates of where to sample the color standard are defined as "calib.file = ". The logical argument for "flip.y.values" is available if the test image that is plotted shows that the y-coordinates need to be corrected (determined in the previous step with the calib.plot function). Finally, "color.standard.values = " is defined as the csv containing the known RGB values for the color standard. By default, the sampling circle that samples each color standard has a default radius = 2 pixels. You can change the size of the sampling circle with an integer when defining "px.radius = " as shown in the example code below. 
 *Note: If the calib.plot function showed proper alignment, set flip.y.values = F*
@@ -339,7 +338,7 @@ linear_calib_RGB <- rgb.calibrate(linear_uncalib_RGB, imagedir =  "C:/Users/jenn
 ```
 
 
-### Visualizing the calibrated color
+### 2.5.3  Visualizing the calibrated color
 
 To plot your calibrated colors, you have the same options as above. With style = "points" both perimeter and interior points where color has been calibrated will be plotted. To print just the perimeter, style = "perimeter". With style = "interior" only the interior calibrated color values will be plotted. The __exception__ is with the comparison plot. In the comparison plot, it compares the calibrated points to the uncalibrated points when style = "comparison". 
 
