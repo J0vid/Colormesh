@@ -39,7 +39,7 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 
   if(style == "overlay"){
     # par(mfrow = c(1,1))
-    plot(corresponding.image)
+    plot(corresponding.image, axes = F)
     tri.object <- rbind(x$perimeter[x$point.map,], x$interior)
     are.you.in <- point.in.polygon(x$centroids[,1], x$centroids[,2], x$perimeter[x$point.map,1], x$perimeter[x$point.map,2]) #index for out of boundary triangles caused by concavities
     points(x$centroids[are.you.in == 1,], col = point.color, pch = 19, cex = .25, ...)
@@ -56,7 +56,7 @@ plot.tri.surf.points <- function(x, style = "points", corresponding.image, wiref
 
 #' plotting individual specimens after color sampling
 #'
-#' @param x an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay
+#' @param mesh.colors.object an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay
 #' @param individual which individual from your landmark dataframe you'd like to plot
 #' @param style plot raw "sampled" color or "calibrated" color? Sampled is the default.
 #' @param ... Additional plotting parameters to be passed to plot.default
@@ -90,7 +90,7 @@ plot.mesh.colors <- function(mesh.colors.object, individual = 1, style = "interi
 
 #' plotting individual specimens before AND after color sampling | select individual or 3 random side by side individuals
 #'
-#' @param x an object of class "calibrated.mesh.colors".
+#' @param mesh.colors.object an object of class "calibrated.mesh.colors".
 #' @param individual which individual from your landmark dataframe you'd like to plot
 #' @param style options include "interior", "perimeter", "points", and "comparison".
 #' @param ... Additional plotting parameters to be passed to plot.default

@@ -3,12 +3,7 @@
 #' @return a matrix of N_landmarks x N_dims
 #' @export
 array.mean <- function (data){
-  mean.matrix = matrix(0, nrow = length(data[, 1, 1]), ncol = length(data[1,, 1]))
-  for (i in 1:length(data[, 1, 1])) {
-    for (j in 1:length(data[1, , 1])) {
-      mean.matrix[i, j] = mean(data[i, j, ])
-    }
-  }
+  mean.matrix <- rowMeans(data, dims = 2)
   return(mean.matrix)
 }
 
@@ -22,7 +17,7 @@ array.mean <- function (data){
 mean.mesh.colors <- function(mesh.colors.object, covariate_data = NULL, group_labels = NULL){
 
   if(is.null(covariate_data)){
-    mean.mesh <- array.mean(mesh.colors.object$sampled.color)
+    mean.mesh <- rowMeans(mesh.colors.object$sampled.color, dims = 2)
   } else{
     if(is.null(group_labels)) stop("Give me some group labels to calculate a mean with!")
     for(i in 1:length(group_labels)){

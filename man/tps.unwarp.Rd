@@ -4,19 +4,30 @@
 \alias{tps.unwarp}
 \title{Non-linear image registration using TPS deformation.}
 \usage{
-tps.unwarp(imagedir, landmarks, image.names, write.dir = NULL)
+tps.unwarp(
+  imagedir,
+  landmarks,
+  image.names,
+  write.dir = NULL,
+  sliders = NULL,
+  target = NULL
+)
 }
 \arguments{
-\item{imagedir}{directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.}
+\item{imagedir}{Directory of images to deform. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.}
 
 \item{landmarks}{A landmark array with dimensions N_landmarks x 2 x N_observations. dimnames(landmarks)[[3]] should have the corresponding image filenames for each observation.}
 
 \item{image.names}{A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.}
 
 \item{write.dir}{Where to save warped images. Images will be named after the original image name (is that a bad idea because of overwriting? We will find out).}
+
+\item{sliders}{An index of sliding semilandmarks for calculating the mean landmark shape.}
+
+\item{target}{Supply a target shape to warp to. The default is the mean shape. The target will be placed in the center of the image for unwarping.}
 }
 \value{
-warped images will be saved to the write.dir directory.
+warped images will be saved to the write.dir directory. We also return the consensus shape of the landmarks. This can be used for delaunay triangulation. Finally, we return the unwarped image names.
 }
 \description{
 Non-linear image registration using TPS deformation.
@@ -26,6 +37,9 @@ Non-linear image registration using TPS deformation.
 guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
 specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 
- #unwarp images
-example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), landmarks = guppy.lms, image.names = specimen.factors[,1], write.dir = tempdir())
+#define sliders for guppy data
+sliders <- make.sliders(c(1,8:17, 2, 18:19, 3, 20:27, 4, 28:42, 5, 43:52, 6, 53:54, 7, 55:62), main.lms = 1:7)
+
+#unwarp images--change writedir if you want to see the images!
+example.sample <- tps.unwarp(imagedir = paste0(path.package("Colormesh"),"/extdata/cropped_images/"), landmarks = guppy.lms, image.names = specimen.factors[,1], sliders = sliders, write.dir = tempdir())
 }

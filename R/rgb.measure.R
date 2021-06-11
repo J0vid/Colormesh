@@ -1,5 +1,5 @@
 #' Color sampling from a set of pre-warped images
-#'
+#' @import imager
 #' @param imagedir directory of images to measure. Only images with landmarks will be processed. The landmark file names are assumed to exactly match the image names.
 #' @param image.names A vector of image names to look for in imagedir. These images should be unwarped or deformed to a common reference shape.
 #' @param delaunay.map delaunay triangulation object
@@ -7,11 +7,10 @@
 #' @param linearize.color.space should the sampled color data be transformed into linear color space
 #' @return The function will return $sampled.color-- an N_points x 3 (RGB) x N_observations array of sampled color values. A tri.surf.points class object will also be returned as $delaunay.
 #' @examples
-#' #load landmarks and covariate data
-#' guppy.lms <- tps2array(system.file("extdata", "original_lms.TPS", package = "Colormesh"))
+#' #covariate data and consensus lms
 #' specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
 #' consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
-#' test.image <- load.image(paste0(path.package("Colormesh"),"/extdata/unwarped_images/GPHP_unw_001.jpg"))
+#' test.image <- image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), "GPLP_unw_001.jpg")
 #' delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
 #'
 #' rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), image.names = specimen.factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
@@ -22,12 +21,10 @@
 #' @export
 rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linearize.color.space = F){
 
-  require(sp)
-  require(tripack)
-  require(imager)
+
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP")
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.nef|*.orf|*.crw")
   if(length(image.files) > 0) print("The provided image format is assumed to be in sRGB colorspace. If you would like to linearize these values and apply the standard linear transform (based on international standard IEC 61966-2-1:1999), set linearize.color.space to T.")
 
   start.time <- as.numeric(Sys.time())
@@ -46,7 +43,8 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
   for(i in 1:length(image.names)){
     #the issue with the old approach is that we need to get the lm names from somewhere and it's no longer from the TPS readin
     #it has to be from coords
-    tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+    # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+    tmp.image <- image_reader(imagedir, image.files[grepl(image.names[i], image.files)])
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
 
@@ -54,6 +52,20 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     #match up delaunay points to image by flipping Y axis on image dimensions
       translated.interior <-  cbind(delaunay.template$interior[,1], delaunay.template$interior[,2])
       translated.perimeter <- cbind(delaunay.template$perimeter[,1], delaunay.template$perimeter[,2])
+
+      #add offset if image was originally RAW format
+      supported.raw.formats <- c("cr2","nef","orf","crw","CR2")
+      tmp.name <- image.files[grepl(image.names[i], image.files)]
+
+      if(substr(tmp.name, nchar(tmp.name) - 2, nchar(tmp.name)) %in% supported.raw.formats){
+      off.y <- min(which(rowMeans(tmp.image) < 1))
+      off.x <- min(which(colMeans(tmp.image) < 1))
+
+      translated.interior <-  cbind(delaunay.template$interior[,1] + off.y, delaunay.template$interior[,2] - off.x)
+      translated.perimeter <- cbind(delaunay.template$perimeter[,1] + off.y, delaunay.template$perimeter[,2] - off.x)
+
+      }
+
       #add buffer to image so we don't ask for pixels that don't exist
       buffered.image = array(0, dim = c(dim(tmp.image)[1]+ 2*px.radius,dim(tmp.image)[2]+ 2*px.radius, 3))
       buffered.image[(px.radius):(dim(tmp.image)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.image)[2]+(px.radius)),] <- tmp.image

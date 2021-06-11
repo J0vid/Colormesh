@@ -18,11 +18,22 @@ make.colormesh.dataset(
 
 \item{use.perimeter.data}{If TRUE, we will return the color values for the perimeter landmarks as well as the interior landmarks.}
 
-\item{write.csv}{A directory is to write a csv to, if desired}
+\item{write2csv}{A directory is to write a csv to, if desired}
 }
 \value{
 The function will return a dataframe of specimen data (inherits the original column names) and landmark x & y values along with calibrated RGB values.
 }
 \description{
 Combine metadata with calibrated colormesh data for analysis
+}
+\examples{
+#covariate data and consensus lms
+specimen.factors <- read.csv(system.file("extdata", "specimen_factors.csv", package = "Colormesh"), header = F)
+consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
+test.image <- image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), "GPLP_unw_001.jpg")
+delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
+
+rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), image.names = specimen.factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
+cm.dataset <- make.colormesh.dataset(rgb.test, specimen.factors)
+
 }
