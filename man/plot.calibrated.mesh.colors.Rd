@@ -7,13 +7,13 @@
 \method{plot}{calibrated.mesh.colors}(mesh.colors.object, individual = 1, style = "interior", ...)
 }
 \arguments{
+\item{mesh.colors.object}{an object of class "calibrated.mesh.colors".}
+
 \item{individual}{which individual from your landmark dataframe you'd like to plot}
 
 \item{style}{options include "interior", "perimeter", "points", and "comparison".}
 
 \item{...}{Additional plotting parameters to be passed to plot.default}
-
-\item{x}{an object of class "calibrated.mesh.colors".}
 }
 \value{
 A plot of calibrated mesh colors

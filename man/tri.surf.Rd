@@ -13,7 +13,7 @@ tri.surf(
 )
 }
 \arguments{
-\item{tri.object}{A 2D matrix of landmarks to initialize delaunay triangulation}
+\item{tri.object}{A 2D matrix of landmarks to initialize delaunay triangulation. This should be the configuration you used for unwarping. If you did your unwarping in Colormesh, the target configuration was returned by the function.}
 
 \item{point.map}{A vector that denotes the correct order of landmarks in tri.object. Landmarks must form a perimeter for delaunay triangulation}
 
@@ -30,6 +30,7 @@ A list of class tri.surf.points. $interior is the position of internal (non-peri
 Fit a delaunay triangulation to an outline of landmarks.
 }
 \examples{
-data(guppies)
-delaunay.map <- tri.surf(raw.gup[,,1], point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
+consensus <- tps2array(system.file("extdata", "consensus_LM_coords.TPS", package = "Colormesh"))
+test.image <- image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), "GPLP_unw_001.jpg")
+delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
 }

@@ -7,13 +7,13 @@
 \method{plot}{mesh.colors}(mesh.colors.object, individual = 1, style = "interior", ...)
 }
 \arguments{
+\item{mesh.colors.object}{an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay}
+
 \item{individual}{which individual from your landmark dataframe you'd like to plot}
 
 \item{style}{plot raw "sampled" color or "calibrated" color? Sampled is the default.}
 
 \item{...}{Additional plotting parameters to be passed to plot.default}
-
-\item{x}{an object of class "tri.surf.points". If using this function after color sampling, it will be object$delaunay}
 }
 \value{
 A list of class tri.surf.points. $interior is the position of internal (non-perimeter) points generated from triangulation. $perimeter is the initial points submitted for triangulation. $centroids is the final set of centroids from the triangulation. $final.mesh is the last round of triangulation. $point.map is the point map used to give the order of perimeter landmarks.
