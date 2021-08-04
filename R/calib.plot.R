@@ -17,13 +17,17 @@
 #' @export
 
 
-calib.plot <- function(imagedir, image.names, calib.file, cex = 2, col = "red", individual = 1){
+calib.plot <- function(imagedir, image.names, calib.file, cex = 2, col = "red", individual = 1, flip.y.values = F){
 
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
   corresponding.image <- load.image(paste0(imagedir, image.files[grepl(image.names[individual], image.files)]))
+  img.dim <- dim(corresponding.image)
 
   plot(corresponding.image)
+  if(flip.y.values) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
   points(calib.file[,,grepl(image.names[individual], dimnames(calib.file)[[3]])][,1], -calib.file[,,grepl(image.names[individual], dimnames(calib.file)[[3]])][,2] + dim(corresponding.image)[2], col = col, pch = 19, cex = cex)
 
-  print("If the landmarks look flipped relative to the image, set flip.y.values to T in rgb.calibrate")
+  if(flip.y.values == F) print("If the landmarks look flipped relative to the image, set flip.y.values to T in rgb.calibrate")
+    else{ print("If the landmarks look flipped relative to the image, set flip.y.values to F in rgb.calibrate")}
 }
+

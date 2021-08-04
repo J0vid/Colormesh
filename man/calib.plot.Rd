@@ -10,7 +10,8 @@ calib.plot(
   calib.file,
   cex = 2,
   col = "red",
-  individual = 1
+  individual = 1,
+  flip.y.values = F
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ calib.plot(
 \item{col}{change point colors}
 
 \item{individual}{which specimen do you want to plot? Defaults to the first specimen}
+
+\item{flip.y.values}{logical value to try flipping the Y values of the coordinates to see if the landmarks will match up with the color standard}
 }
 \value{
 a plot to check if you should flip the y-axis of the color standard landmarks
