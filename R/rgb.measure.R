@@ -21,10 +21,10 @@
 #' @export
 rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linearize.color.space = F){
 
-
-
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.nef|*.orf|*.crw")
+  image.files.san.ext <- tools::file_path_sans_ext(image.files)
+  image.names <- tools::file_path_sans_ext(image.names)
   if(length(image.files) > 0) print("The provided image format is assumed to be in sRGB colorspace. If you would like to linearize these values and apply the standard linear transform (based on international standard IEC 61966-2-1:1999), set linearize.color.space to T.")
 
   start.time <- as.numeric(Sys.time())
@@ -44,7 +44,8 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     #the issue with the old approach is that we need to get the lm names from somewhere and it's no longer from the TPS readin
     #it has to be from coords
     # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
-    tmp.image <- image_reader(imagedir, image.files[grepl(image.names[i], image.files)])
+
+    tmp.image <- image_reader(imagedir, image.files[image.files.san.ext == image.names[i]])
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
 
