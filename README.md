@@ -21,7 +21,7 @@ devtools::install_github("https://github.com/J0vid/Colormesh")
 
 The files listed below are required to proceed with the Color Sampling Pipeline (Section 2.4). Some of the required files are obtained during image processing. Image processing may be completed entirely within the *Colormesh* package. Alternatively, some or all of the image processing steps may be completed externally in your geometric morphometric program of choice given landmark data are contained in a TPS file format. Required files are:
 
-  * A .csv file containing factors such as the specimen image names - these names must be unique and *not* contain symbols (e.g., +, %, -), periods, or spaces. The first column MUST contain the unique image name. This .csv file will be used as a check to ensure measured color and calibration correction (if used) are associated with the appropriate image. If image unwarping (to the consensus shape) was completed externally, include the unique image names of the unwarped images in the second column. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after the image name column(s).
+  * A .csv file containing factors such as the specimen image names - these names must be unique and *not* contain symbols (e.g., +, %, -), puncuation, or spaces. The first column MUST contain the unique image name. This .csv file will be used as a check to ensure measured color and calibration correction (if used) are associated with the appropriate image. If image unwarping (to the consensus shape) was completed externally, include the unique image names of the unwarped images in the second column. Any additional columns containing factors needed for your organization or identification (e.g., population name) can be included after the image name column(s).
   
   * A .csv file containing the known RGB values of the colors on the color standard to be used for calibration. They should be on a scale of 0 to 1. Each row is a color on the standard, each column is a color channel; the know R, G, and B values must appear in columns 1, 2, and 3, respectively. If known RGB values are on a scale of 0-255, simply divide by 255 to convert values to the proper scale.
   
@@ -391,7 +391,7 @@ We created a simple function, *make.colormesh.dataset*, to compile your data int
 This dataframe will give individual specimens in rows. It will combine the image information csv file to the beginning of the data set. Following these columns, the measured values specific to each sampling point will be provided. After these columns, the x,y coordinate of each sampling point will be given. 
 
 ```r
-## Need to update this
+## Saves to your R environment
 final.df.uncalib <- make.colormesh.dataset(df = uncalib_RGB, specimen.factors = specimen.factors, use.perimeter.data = T)
 
 ## If you would like to write this datafram to a .csv file, include the file path where you would like the file to be saved following the write2csv argument. 
