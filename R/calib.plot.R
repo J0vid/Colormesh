@@ -6,6 +6,7 @@
 #' @param cex change the point size on the image
 #' @param col change point colors
 #' @param individual which specimen do you want to plot? Defaults to the first specimen
+#' @param flip.y.values logical value to try flipping the Y values of the coordinates to see if the landmarks will match up with the color standard
 #' @return a plot to check if you should flip the y-axis of the color standard landmarks
 #' @examples
 #' #load covariates and calibration file

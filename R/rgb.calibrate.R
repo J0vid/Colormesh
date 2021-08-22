@@ -32,7 +32,10 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
     if(ncol(color.standard.values) > 3) stop("color.standard.values has more columns than expected. Is the data in N_colors X RGB format?")}
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.nef|*.orf|*.crw")
+  image.files.san.ext <- tools::file_path_sans_ext(image.files)
+  image.names <- tools::file_path_sans_ext(image.names)
+
   calibration.array <- array(NA, dim = c(nrow(calib.file), 3, length(image.names)))
   calibrated.array <- sampled.array$sampled.color
   calibrated.perimeter <- sampled.array$sampled.perimeter
@@ -43,7 +46,8 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
   for(i in 1:length(image.names)){
 
-    tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+    # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
+    tmp.image <- image_reader(imagedir, image.files[image.files.san.ext == image.names[i]])
     img.dim <- dim(tmp.image)
 
     if(i == 1) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
@@ -65,8 +69,10 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
       #select the landmarks for the corresponding image from calib.file
       #tmp.x & y currentlyrely on read.tps info. make sure it works with new tps2array
 
-      tmp.x <- calib.file[,,grepl(image.names[i], dimnames(calib.file)[[3]])][j,1] + circle.coords[,1]
-      tmp.y <- calib.file[,,grepl(image.names[i], dimnames(calib.file)[[3]])][j,2] + circle.coords[,2]
+      calib.file.names <- tools::file_path_sans_ext(dimnames(calib.file)[[3]])
+
+      tmp.x <- calib.file[,, calib.file.names == image.names[i]][j,1] + circle.coords[,1]
+      tmp.y <- calib.file[,,calib.file.names == image.names[i]][j,2] + circle.coords[,2]
 
       calibration.array[j,1,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 1]))
       calibration.array[j,2,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 2]))
