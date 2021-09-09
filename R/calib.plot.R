@@ -2,7 +2,7 @@
 #'
 #' @param imagedir path to calibration images
 #' @param image.names A vector of image names to look for in imagedir.
-#' @param calib.file tps2array object with the sampled color standard
+#' @param calib.file tps2array object with the sampled color standard. Make sure the IMAGE data in the tps file matches the names of the images exactly (eg. get rid of any paths before the name).
 #' @param cex change the point size on the image
 #' @param col change point colors
 #' @param individual which specimen do you want to plot? Defaults to the first specimen
@@ -20,13 +20,17 @@
 
 calib.plot <- function(imagedir, image.names, calib.file, cex = 2, col = "red", individual = 1, flip.y.values = F){
 
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.tif| *.TIF|*.png|*.PNG|*.bmp|*.BMP")
-  corresponding.image <- load.image(paste0(imagedir, image.files[grepl(image.names[individual], image.files)]))
+  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.nef|*.orf|*.crw")
+  image.files.san.ext <- tools::file_path_sans_ext(image.files)
+  image.names <- tools::file_path_sans_ext(image.names)
+  dimnames(calib.file)[[3]] <-  tools::file_path_sans_ext(dimnames(calib.file)[[3]])
+
+  corresponding.image <- image_reader(imagedir, image.files[image.files.san.ext == image.names[individual]])
   img.dim <- dim(corresponding.image)
 
   plot(corresponding.image)
   if(flip.y.values) calib.file[,2,] <- -calib.file[,2,] + img.dim[2]
-  points(calib.file[,,grepl(image.names[individual], dimnames(calib.file)[[3]])][,1], -calib.file[,,grepl(image.names[individual], dimnames(calib.file)[[3]])][,2] + dim(corresponding.image)[2], col = col, pch = 19, cex = cex)
+  points(calib.file[,, dimnames(calib.file)[[3]] == image.names[individual]][,1], -calib.file[,,dimnames(calib.file)[[3]] == image.names[individual]][,2] + dim(corresponding.image)[2], col = col, pch = 19, cex = cex)
 
   if(flip.y.values == F) print("If the landmarks look flipped relative to the image, set flip.y.values to T in rgb.calibrate")
     else{ print("If the landmarks look flipped relative to the image, set flip.y.values to F in rgb.calibrate")}
