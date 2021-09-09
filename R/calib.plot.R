@@ -2,7 +2,7 @@
 #'
 #' @param imagedir path to calibration images
 #' @param image.names A vector of image names to look for in imagedir.
-#' @param calib.file tps2array object with the sampled color standard. Make sure the IMAGE data in the tps file matches the names of the images exactly (eg. get rid of any paths before the name).
+#' @param calib.file tps2array object with the sampled color standard. Make sure the IMAGE data in the tps file matches the names of the images exactly. It's okay if it still has a path attached to the name.
 #' @param cex change the point size on the image
 #' @param col change point colors
 #' @param individual which specimen do you want to plot? Defaults to the first specimen
@@ -23,6 +23,7 @@ calib.plot <- function(imagedir, image.names, calib.file, cex = 2, col = "red", 
   image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.nef|*.orf|*.crw")
   image.files.san.ext <- tools::file_path_sans_ext(image.files)
   image.names <- tools::file_path_sans_ext(image.names)
+  dimnames(calib.file)[[3]] <-  basename(dimnames(calib.file)[[3]])
   dimnames(calib.file)[[3]] <-  tools::file_path_sans_ext(dimnames(calib.file)[[3]])
 
   corresponding.image <- image_reader(imagedir, image.files[image.files.san.ext == image.names[individual]])

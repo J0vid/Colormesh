@@ -19,7 +19,7 @@ calib.plot(
 
 \item{image.names}{A vector of image names to look for in imagedir.}
 
-\item{calib.file}{tps2array object with the sampled color standard. Make sure the IMAGE data in the tps file matches the names of the images exactly (eg. get rid of any paths before the name).}
+\item{calib.file}{tps2array object with the sampled color standard. Make sure the IMAGE data in the tps file matches the names of the images exactly. It's okay if it still has a path attached to the name.}
 
 \item{cex}{change the point size on the image}
 
