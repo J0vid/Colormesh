@@ -73,10 +73,15 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
       tmp.x <- calib.file[,, calib.file.names == image.names[i]][j,1] + circle.coords[,1]
       tmp.y <- calib.file[,,calib.file.names == image.names[i]][j,2] + circle.coords[,2]
-
-      calibration.array[j,1,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 1]))
-      calibration.array[j,2,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 2]))
-      calibration.array[j,3,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 3]))
+      if(px.radius == 0){
+        calibration.array[j,1,i] <-  buffered.image[tmp.x, tmp.y, 1]
+        calibration.array[j,2,i] <-  buffered.image[tmp.x, tmp.y, 2]
+        calibration.array[j,3,i] <-  buffered.image[tmp.x, tmp.y, 3]
+      } else{
+        calibration.array[j,1,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 1]))
+        calibration.array[j,2,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 2]))
+        calibration.array[j,3,i] <-  mean(diag(buffered.image[tmp.x, tmp.y, 3]))
+      }
     }
 
     if(i == 1){
