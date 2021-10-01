@@ -68,7 +68,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
       }
 
       #add buffer to image so we don't ask for pixels that don't exist
-      if(px.radius == 0){
+      if(px.radius < 2){
         buffered.image <- array(0, dim = c(dim(tmp.image)[1]+ 2*1,dim(tmp.image)[2]+ 2*1, 3))
         buffered.image[(px.radius):(dim(tmp.image)[1]+(1-1)),(1+1):(dim(tmp.image)[2]+(1)),] <- tmp.image
 
@@ -102,7 +102,6 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
 
 
       }
-
 
       dimnames(sampled.array)[[3]] <- image.names
       dimnames(sampled.array.perimeter)[[3]] <- image.names
