@@ -49,42 +49,35 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
 
-
     #match up delaunay points to image by flipping Y axis on image dimensions
-      translated.interior <-  cbind(delaunay.template$interior[,1], delaunay.template$interior[,2])
-      translated.perimeter <- cbind(delaunay.template$perimeter[,1], delaunay.template$perimeter[,2])
+    translated.interior <-  cbind(delaunay.template$interior[,1], delaunay.template$interior[,2])
+    translated.perimeter <- cbind(delaunay.template$perimeter[,1], delaunay.template$perimeter[,2])
 
-      #add offset if image was originally RAW format
-      supported.raw.formats <- c("cr2","nef","orf","crw","CR2")
-      tmp.name <- image.files[grepl(image.names[i], image.files)]
+    #add offset if image was originally RAW format
+    supported.raw.formats <- c("cr2","nef","orf","crw","CR2")
+    tmp.name <- image.files[grepl(image.names[i], image.files)]
 
-      if(substr(tmp.name, nchar(tmp.name) - 2, nchar(tmp.name)) %in% supported.raw.formats){
+    if(substr(tmp.name, nchar(tmp.name) - 2, nchar(tmp.name)) %in% supported.raw.formats){
       off.y <- min(which(rowMeans(tmp.image) < 1))
       off.x <- min(which(colMeans(tmp.image) < 1))
 
       translated.interior <-  cbind(delaunay.template$interior[,1] + off.y, delaunay.template$interior[,2] - off.x)
       translated.perimeter <- cbind(delaunay.template$perimeter[,1] + off.y, delaunay.template$perimeter[,2] - off.x)
 
+    }
+
+    #add buffer to image so we don't ask for pixels that don't exist
+    if(px.radius < 2){
+      buffered.image <- array(0, dim = c(dim(tmp.image)[1]+ 2*1,dim(tmp.image)[2]+ 2*1, 3))
+      buffered.image[(px.radius):(dim(tmp.image)[1]+(1-1)),(1+1):(dim(tmp.image)[2]+(1)),] <- tmp.image
+
+      for(j in 1:length(translated.interior[,1])){
+        sampled.array[j,1,i] <-  buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.interior[j,2] + circle.coords[,2])), 1]
+        sampled.array[j,2,i] <-  buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 2]
+        sampled.array[j,3,i] <-  buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 3]
       }
 
-      #add buffer to image so we don't ask for pixels that don't exist
-      if(px.radius < 2){
-        buffered.image <- array(0, dim = c(dim(tmp.image)[1]+ 2*1,dim(tmp.image)[2]+ 2*1, 3))
-        buffered.image[(px.radius):(dim(tmp.image)[1]+(1-1)),(1+1):(dim(tmp.image)[2]+(1)),] <- tmp.image
-
-        for(j in 1:length(translated.interior[,1])){
-          sampled.array[j,1,i] <-  buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.interior[j,2] + circle.coords[,2])), 1]
-          sampled.array[j,2,i] <-  buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 2]
-          sampled.array[j,3,i] <-  buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 3]
-
-          if(j <= nrow(translated.perimeter)){
-            sampled.array.perimeter[j,1,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 1]
-            sampled.array.perimeter[j,2,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 2]
-            sampled.array.perimeter[j,3,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 3]
-          }
-        }
-
-      } else{
+    } else{
         buffered.image <- array(0, dim = c(dim(tmp.image)[1]+ 2*px.radius,dim(tmp.image)[2]+ 2*px.radius, 3))
         buffered.image[(px.radius):(dim(tmp.image)[1]+(px.radius-1)),(px.radius+1):(dim(tmp.image)[2]+(px.radius)),] <- tmp.image
 
@@ -92,16 +85,24 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
           sampled.array[j,1,i] <-  mean(diag(buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.interior[j,2] + circle.coords[,2])), 1]))
           sampled.array[j,2,i] <-  mean(diag(buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 2]))
           sampled.array[j,3,i] <-  mean(diag(buffered.image[(translated.interior[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.interior[j,2] + circle.coords[,2])), 3]))
-
-          if(j <= nrow(translated.perimeter)){
-            sampled.array.perimeter[j,1,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 1]))
-            sampled.array.perimeter[j,2,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 2]))
-            sampled.array.perimeter[j,3,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 3]))
-          }
         }
-
-
       }
+
+    #separate loop for perimeter to fix bug when only one triangulation is done
+    if(px.radius < 2){
+      for(j in 1:length(translated.perimeter[,1])){
+        sampled.array.perimeter[j,1,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 1]
+        sampled.array.perimeter[j,2,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 2]
+        sampled.array.perimeter[j,3,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 3]
+      }
+
+    } else{
+      for(j in 1:length(translated.perimeter[,1])){
+        sampled.array.perimeter[j,1,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 1]))
+        sampled.array.perimeter[j,2,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 2]))
+        sampled.array.perimeter[j,3,i] <-  mean(diag(buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 3]))
+      }
+    }
 
       dimnames(sampled.array)[[3]] <- image.names
       dimnames(sampled.array.perimeter)[[3]] <- image.names

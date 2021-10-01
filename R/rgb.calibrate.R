@@ -127,8 +127,6 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   #adjust to know color standard values instead of image brightness####
   if(is.null(color.standard.values) == F){
     #linearize known color standard values?
-
-
     for(j in 1:dim(calibrated.array)[3]){
       col.change <- calibration.array[,,j] - color.standard.values
       #substract away RGB deviation for each color
@@ -145,7 +143,6 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
       # calibrated.linearized.array[,2,j] <- sampled.array$linearized.color[,2,j] - mean(lcol.change[,2])
       # calibrated.linearized.array[,3,j] <- sampled.array$linearized.color[,3,j] - mean(lcol.change[,3])
     }
-
   }
 
 
