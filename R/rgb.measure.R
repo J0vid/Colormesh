@@ -67,7 +67,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     }
 
     #add buffer to image so we don't ask for pixels that don't exist
-    if(px.radius < 2){
+    if(px.radius == 0){
       buffered.image <- array(0, dim = c(dim(tmp.image)[1]+ 2*1,dim(tmp.image)[2]+ 2*1, 3))
       buffered.image[(px.radius):(dim(tmp.image)[1]+(1-1)),(1+1):(dim(tmp.image)[2]+(1)),] <- tmp.image
 
@@ -89,7 +89,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
       }
 
     #separate loop for perimeter to fix bug when only one triangulation is done
-    if(px.radius < 2){
+    if(px.radius == 0){
       for(j in 1:length(translated.perimeter[,1])){
         sampled.array.perimeter[j,1,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius,(px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 1]
         sampled.array.perimeter[j,2,i] <-  buffered.image[(translated.perimeter[j,1] + circle.coords[,1]) + px.radius, (px.radius + (translated.perimeter[j,2] + circle.coords[,2])), 2]

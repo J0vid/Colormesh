@@ -24,7 +24,7 @@ sampling.circle <- function(px.radius = 2){
     circle.coords[(sum(dimvec[1:i-1])+1):(sum(dimvec[1:(i)])),] =  cbind(x.circle[i]:-x.circle[i], y[i])
   }
 
-  if(px.radius == 1) circle.coords <- t(as.matrix(c(0,0)))
+  #if(px.radius == 1) circle.coords <- t(as.matrix(c(0,0)))
 
   return(circle.coords)
 }
