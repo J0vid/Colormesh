@@ -36,16 +36,21 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
   image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tif|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
+  image.files.san.ext <- tools::file_path_sans_ext(image.files)
+  image.names <- tools::file_path_sans_ext(image.names)
+
   start.time <- as.numeric(Sys.time())
 
   for(i in 1:length(image.files)){
     # tmp.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][i]]))
     # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
 
-    tmp.image <- image_reader(imagedir, image.files[grepl(image.names[i], image.files)])
+    tmp.image <- image_reader(imagedir, image.files[image.files.san.ext == image.names[i]])
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
-    orig.lms <- cbind((landmarks[,1,grepl(image.names[i], dimnames(landmarks)[[3]])]), abs(landmarks[,2,grepl(image.names[i], dimnames(landmarks)[[3]])]- img.dim[2]))
+    # orig.lms <- cbind((landmarks[,1,grepl(image.names[i], dimnames(landmarks)[[3]])]), abs(landmarks[,2,grepl(image.names[i], dimnames(landmarks)[[3]])]- img.dim[2]))
+    dimnames(landmarks)[[3]] <- tools::file_path_sans_ext(dimnames(landmarks)[[3]])
+    orig.lms <- cbind((landmarks[,1,dimnames(landmarks)[[3]] == image.names[i]]), abs(landmarks[,2, dimnames(landmarks)[[3]] == image.names[i]]- img.dim[2]))
 
     if(is.null(target)){
       tar.lms <- cbind(mean.lm[,1] + img.dim[1]/2, mean.lm[,2] + img.dim[2]/2)
