@@ -67,9 +67,10 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
 
     for(j in 1:nrow(calibration.array)){
       #select the landmarks for the corresponding image from calib.file
-      #tmp.x & y currentlyrely on read.tps info. make sure it works with new tps2array
-
+      #tmp.x & y currently rely on read.tps info. make sure it works with new tps2array
       calib.file.names <- tools::file_path_sans_ext(dimnames(calib.file)[[3]])
+      #shakes fist at windows paths
+      calib.file.names <- basename(gsub("\\\\", "/", calib.file.names))
 
       tmp.x <- calib.file[,, calib.file.names == image.names[i]][j,1] + circle.coords[,1]
       tmp.y <- calib.file[,,calib.file.names == image.names[i]][j,2] + circle.coords[,2]
