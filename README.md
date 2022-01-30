@@ -102,11 +102,11 @@ sliders <- make.sliders(perimeter.map, main.lms = 1:7)
 The second step is to calculate the consensus shape of the specimens. Prior to running the *tps.unwarp* function, you will need to create a file folder as a destination for the function to write the unwarped images. The information required by the function includes: the directory containing the original specimen images that are to be unwarped to the consensus shape identified by the "imagedir" argument (note: these images must all have the same pixel dimensions). Also provided to the function are the landmark coordinate data array for the landmarks that were placed around each specimen contained in these images. To associate the coordinate data with the appropriate images, you must provide the image names from the CSV file (1st column). If you have defined landmarks that are semilandmarks, and therefore allowed to slide, they also need to be identified. And finally, you must provide the directory where Colormesh will write the unwarped images. These unwarped images will be saved as PNG images, which is an uncompressed (lossless) image format.
 
 ```r
-## The example code below defines the landmark coordinate array generated in Section 2.2.1: Option 1 (above)
+## The example code below defines the landmark coordinate array generated in Section 2.2.1.1 (above)
 unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
 
 
-## The example code below defines the landmark coordinate array generated in Section 2.2.1: Option 2 (above) (see landmarks = specimen.LM.ext)
+## The example code below defines the landmark coordinate array generated in Section 2.2.1.2 (above) (see landmarks = specimen.LM.ext)
 unwarped.jpg <- tps.unwarp(imagedir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/", landmarks = specimen.LM.ext, image.names = specimen.factors[,1], sliders = sliders , write.dir = "C:/Users/jennv/Desktop/Colormesh_test_jpg/unwarped_images_jpg/")
 ```
 
