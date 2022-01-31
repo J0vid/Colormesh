@@ -17,10 +17,10 @@
 #' cm.dataset <- make.colormesh.dataset(rgb.test, specimen.factors)
 #'
 make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F, write2csv = NULL){
-
+  # row.order <- match(tools::file_path_sans_ext(specimen.factors$Unwarped_name), dimnames(df$sampled.color)[[3]])
   if(class(df) == "calibrated.mesh.colors"){
   #interior color data####
-  rgb.interior <- array2row3d(df$calibrated[,,order(dimnames(df$calibrated)[[3]], specimen.factors[,1])])
+  rgb.interior <- array2row3d(df$calibrated[,,])
   rgb.names <- df$calibrated[,,1]
   rgb.names[,1] <- paste0("r_interior", 1:nrow(df$calibrated))
   rgb.names[,2] <- paste0("g_interior", 1:nrow(df$calibrated))
@@ -36,7 +36,7 @@ make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F,
 
   if(use.perimeter.data){
     #perimeter color data####
-    rgb.perimeter <- array2row3d(df$calibrated.perimeter[,,order(dimnames(df$calibrated.perimeter)[[3]], specimen.factors[,1])])
+    rgb.perimeter <- array2row3d(df$calibrated.perimeter[,,])
     rgb.names <- df$calibrated.perimeter[,,1]
     rgb.names[,1] <- paste0("r_perimeter", 1:nrow(df$calibrated.perimeter))
     rgb.names[,2] <- paste0("g_perimeter", 1:nrow(df$calibrated.perimeter))
@@ -51,14 +51,16 @@ make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F,
     xy.names[,2] <- paste0("y_perimeter", 1:nrow(df$delaunay.map$perimeter))
     colnames(perimeter.lms) <- array2row(xy.names)[1,]
 
+    #ensure that specimen factors is in the same order as the sampled color data
+    ordered.specimen.factors <- specimen.factors
     combined.df <- data.frame(specimen.factors, rgb.interior, rgb.perimeter, interior.lms, perimeter.lms)
   }
 
   }
 
-
   if(class(df) == "mesh.colors"){
-  rgb.interior <- array2row3d(df$sampled.color[,,order(dimnames(df$sampled.color)[[3]], specimen.factors[,1])])
+
+  rgb.interior <- array2row3d(df$sampled.color[,,])
   rgb.names <- df$sampled.color[,,1]
   rgb.names[,1] <- paste0("r_interior", 1:nrow(df$sampled.color))
   rgb.names[,2] <- paste0("g_interior", 1:nrow(df$sampled.color))
@@ -74,7 +76,7 @@ make.colormesh.dataset <- function(df, specimen.factors, use.perimeter.data = F,
 
   #perimeter option
   if(use.perimeter.data){
-    rgb.perimeter <- array2row3d(df$sampled.perimeter[,,order(dimnames(df$sampled.perimeter)[[3]], specimen.factors[,1])])
+    rgb.perimeter <- array2row3d(df$sampled.perimeter[,,])
     rgb.names <- df$sampled.perimeter[,,1]
     rgb.names[,1] <- paste0("r_perimeter", 1:nrow(df$sampled.perimeter))
     rgb.names[,2] <- paste0("g_perimeter", 1:nrow(df$sampled.perimeter))

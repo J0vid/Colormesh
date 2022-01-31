@@ -27,9 +27,6 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
   image.names <- tools::file_path_sans_ext(image.names)
   if(length(image.files) > 0) print("The provided image format is assumed to be in sRGB colorspace. If you would like to linearize these values and apply the standard linear transform (based on international standard IEC 61966-2-1:1999), set linearize.color.space to T.")
 
-  start.time <- as.numeric(Sys.time())
-
-
     #triangulate
     delaunay.template <- delaunay.map #tri.surf(mean.lm, point.map, 4)
     # sampled.r <- sampled.g <- sampled.b <- matrix(0, ncol = nrow(delaunay.template$interior), nrow = dim(landmarks)[3])
@@ -39,8 +36,10 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     # calibrated.array <- sampled.array
     circle.coords <- sampling.circle(px.radius)
 
+    start.time <- as.numeric(Sys.time()) #try to estimate the time it'll take to process
 
   for(i in 1:length(image.names)){
+
     #the issue with the old approach is that we need to get the lm names from somewhere and it's no longer from the TPS readin
     #it has to be from coords
     # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
@@ -122,6 +121,9 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
       sampled.array <- linearize.colors(sampled.array)
       sampled.array.perimeter <- linearize.colors(sampled.array.perimeter)
     }
+
+
+
 
   mesh.colors <- list(sampled.color = sampled.array, delaunay.map = delaunay.map, linearized = if(linearize.color.space){T}else{F}, imagedir = imagedir, image.names = image.names, sampled.perimeter = sampled.array.perimeter)
 
