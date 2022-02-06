@@ -54,7 +54,7 @@ rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, line
     translated.perimeter <- cbind(delaunay.template$perimeter[,1], delaunay.template$perimeter[,2])
 
     #add offset if image was originally RAW format
-    supported.raw.formats <- c("cr2","nef","orf","crw","CR2")
+    supported.raw.formats <- c("cr2","nef","orf","crw","CR2", "NEF", "ORF", "CRW")
     tmp.name <- image.files[grepl(image.names[i], image.files)]
 
     if(substr(tmp.name, nchar(tmp.name) - 2, nchar(tmp.name)) %in% supported.raw.formats){
