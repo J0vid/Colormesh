@@ -4,17 +4,10 @@
 \alias{make.colormesh.dataset}
 \title{Combine metadata with calibrated colormesh data for analysis}
 \usage{
-make.colormesh.dataset(
-  df,
-  specimen.factors,
-  use.perimeter.data = F,
-  write2csv = NULL
-)
+make.colormesh.dataset(df, use.perimeter.data = F, write2csv = NULL)
 }
 \arguments{
 \item{df}{A calibrated.mesh.colors object (generated from rgb.calibrate) or mesh.colors object (generated from rgb.measure)}
-
-\item{specimen.factors}{The covariate data that you want to combine with the calibrated data}
 
 \item{use.perimeter.data}{If TRUE, we will return the color values for the perimeter landmarks as well as the interior landmarks.}
 
@@ -34,6 +27,6 @@ test.image <- image_reader(paste0(path.package("Colormesh"),"/extdata/unwarped_i
 delaunay.map <- tri.surf(consensus, point.map = c(1,8:17,2, 18:19,3,20:27,4, 28:42,5,43:52,6,53:54,7,55:62), 3, test.image)
 
 rgb.test <- rgb.measure(imagedir = paste0(path.package("Colormesh"),"/extdata/unwarped_images/"), image.names = specimen.factors[,2], delaunay.map = delaunay.map, linearize.color.space = F)
-cm.dataset <- make.colormesh.dataset(rgb.test, specimen.factors)
+cm.dataset <- make.colormesh.dataset(rgb.test)
 
 }

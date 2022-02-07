@@ -36,6 +36,16 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   image.files.san.ext <- tools::file_path_sans_ext(image.files)
   image.names <- tools::file_path_sans_ext(image.names)
 
+  #check sampled.array image names against calib image.names supplied. If not the same, warn with 3 example paired names that didn't match
+  if(identical(gsub("_unwarped", "", sampled.array$image.names), image.names) == F){
+    #
+    identical.index <- gsub("_unwarped", "", sampled.array$image.names) == image.names
+
+    warning(paste("Original image name and calibration image name don't exactly match. \n Confirm calibration image is associated with the correct original image: \n",
+            gsub("_unwarped", "", sampled.array$image.names)[!identical.index][1], " -> ",  image.names[!identical.index][1]))
+
+  }
+
   calibration.array <- array(NA, dim = c(nrow(calib.file), 3, length(image.names)))
   calibrated.array <- sampled.array$sampled.color
   calibrated.perimeter <- sampled.array$sampled.perimeter
