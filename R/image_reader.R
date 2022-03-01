@@ -15,7 +15,7 @@ image_reader <- function(imagedir, image.names){
   image.files.san.ext <- tools::file_path_sans_ext(image.files)
   image.names <- tools::file_path_sans_ext(image.names)
 
-  supported.raw.formats <- c("cr2","nef","orf","crw","CR2")
+  supported.raw.formats <- c("cr2","nef","orf","crw","CR2", "TIF", "tif", "TIFF", "tif")
 
   # tmp.name <- image.files[grepl(pattern = image.names, image.files)]
   tmp.name <- image.files[image.files.san.ext == image.names]
