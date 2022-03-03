@@ -38,10 +38,16 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
   image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tif|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
   image.files.san.ext <- tools::file_path_sans_ext(image.files)
   image.names <- tools::file_path_sans_ext(image.names)
+  dimnames(landmarks)[[3]] <- tools::file_path_sans_ext(dimnames(landmarks)[[3]])
+
+  not.in.dir <- NULL
+  not.in.tps <- NULL
 
   start.time <- as.numeric(Sys.time())
 
-  for(i in 1:length(image.files)){
+  for(i in 1:length(image.names)){
+    #check if image.name[i] has a corresponding image in the folder and an entry in the lm file. If not, save a record and skip
+    if(sum(image.files.san.ext == image.names[i]) > 0 & sum(dimnames(landmarks)[[3]] == image.names[i]) > 0){
     # tmp.image <- load.image(paste0(imagedir, image.files[image.files == dimnames(landmarks)[[3]][i]]))
     # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
 
@@ -49,7 +55,6 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
     img.dim <- dim(tmp.image)
     # orig.lms <- cbind(abs(landmarks[,1,i] - img.dim[1]), abs(landmarks[,2,i]- img.dim[2]))
     # orig.lms <- cbind((landmarks[,1,grepl(image.names[i], dimnames(landmarks)[[3]])]), abs(landmarks[,2,grepl(image.names[i], dimnames(landmarks)[[3]])]- img.dim[2]))
-    dimnames(landmarks)[[3]] <- tools::file_path_sans_ext(dimnames(landmarks)[[3]])
     orig.lms <- cbind((landmarks[,1,dimnames(landmarks)[[3]] == image.names[i]]), abs(landmarks[,2, dimnames(landmarks)[[3]] == image.names[i]]- img.dim[2]))
 
     if(is.null(target)){
@@ -82,14 +87,26 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
     #needs to save as the format it read in as
     imager::save.image(tmp.warp, file = paste0(write.dir, "/", image.names[i],"_unwarped.png"))
 
+    } else {
+      if(sum(image.files.san.ext == image.names[i]) == 0){
+        print(paste0("Couldn't find ", image.names[i], " in provided folder. Skipping."))
+        not.in.dir <- c(not.in.dir, image.names[i])
+      }
+
+      if(sum(dimnames(landmarks)[[3]] == image.names[i]) == 0){
+        print(paste0("Couldn't find landmarks for ", image.names[i], ". Skipping."))
+        not.in.tps <- c(not.in.tps, image.names[i])
+      }
+    }
+
     if(i == 1){
       end.time <- as.numeric(Sys.time())
       iteration.time <- abs(start.time - end.time)
       estimated.time <- (iteration.time * length(image.files)) / 60
     }
 
-    cat(paste0("Processed ", image.names[i], ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), " minutes \n"))
+    cat(paste0("Processed ", image.names[i], ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), " minutes \n")) #readout % is bugged in cases of missing lms
 
   } #end i
-return(list(target = tar.lms, unwarped.names = paste0(image.names,"_unwarped.png")))
+return(list(target = tar.lms, unwarped.names = paste0(image.names,"_unwarped.png"), not.in.dir = not.in.dir, not.in.tps = not.in.tps)) #Use %in% to give back correct unwarped image name list
 }
