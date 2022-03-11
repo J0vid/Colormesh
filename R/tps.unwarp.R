@@ -108,5 +108,9 @@ tps.unwarp <- function(imagedir, landmarks, image.names, write.dir = NULL, slide
     cat(paste0("Processed ", image.names[i], ": ", round((i/dim(landmarks)[3]) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), " minutes \n")) #readout % is bugged in cases of missing lms
 
   } #end i
-return(list(target = tar.lms, unwarped.names = paste0(image.names,"_unwarped.png"), not.in.dir = not.in.dir, not.in.tps = not.in.tps)) #Use %in% to give back correct unwarped image name list
+
+  final.unw.image.names = image.names[image.names %in% not.in.dir==FALSE]
+
+
+return(list(target = tar.lms, unwarped.names = paste0(final.unw.image.names,"_unwarped.png"), not.in.dir = not.in.dir, not.in.tps = not.in.tps)) #Use %in% to give back correct unwarped image name list
 }
