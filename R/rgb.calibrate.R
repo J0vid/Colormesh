@@ -55,7 +55,8 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
   circle.coords <- sampling.circle(px.radius)
 
   for(i in 1:length(image.names)){
-
+    #check if image.name[i] has a corresponding image in the folder and an entry in the lm file. If not, save a record and skip
+    if(sum(image.files.san.ext == image.names[i]) > 0){
     # tmp.image <- load.image(paste0(imagedir, image.files[grepl(image.names[i], image.files)]))
     tmp.image <- image_reader(imagedir, image.files[image.files.san.ext == image.names[i]])
     img.dim <- dim(tmp.image)
@@ -100,7 +101,7 @@ rgb.calibrate <- function(sampled.array, imagedir, image.names, calib.file, colo
       iteration.time <- abs(start.time - end.time)
       estimated.time <- (iteration.time * length(image.files)) / 60
     }
-
+} #close if statement
     cat(paste0("Processed ", image.names[i], ": ", round((i/length(image.names)) * 100, digits = 2), "% done. \n Estimated time remaining: ", round(abs((iteration.time * i)/60 - estimated.time), digits = 1), " minutes \n"))
 
 
