@@ -11,7 +11,7 @@
 #' @export
 image_reader <- function(imagedir, image.names){
 
-  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tif|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
+  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.JPEG|*\\.jpeg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tiff|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
   image.files.san.ext <- tools::file_path_sans_ext(image.files)
   image.names <- tools::file_path_sans_ext(image.names)
 

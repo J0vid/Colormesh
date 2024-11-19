@@ -16,7 +16,8 @@
 flip.lms <- function(landmarks, imagedir, side_data, side_code = "right"){
   #this function requires that the images are the same dimensions they were when you did the landmarking, otherwise it won't flip the image correctly
   #assumes constant image dimensions
-  tmp.img <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.CR2|*.nef|*.orf|*.crw")[1]
+  tmp.img <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.JPEG|*\\.jpeg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tiff|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")[1]
+
   flip.ref = dim(image_reader(imagedir = imagedir, image.names = tmp.img))[1]
 
   for(i in which(side_code == side_data)) landmarks[,1,i] <- abs(landmarks[,1,i] - flip.ref)
