@@ -20,7 +20,7 @@
 
 calib.plot <- function(imagedir, image.names, calib.file, cex = 2, col = "red", individual = 1, flip.y.values = F){
 
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.nef|*.orf|*.crw")
+  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.JPEG|*\\.jpeg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tiff|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
   image.files.san.ext <- tools::file_path_sans_ext(image.files)
   image.names <- tools::file_path_sans_ext(image.names)
   dimnames(calib.file)[[3]] <-  basename(dimnames(calib.file)[[3]])

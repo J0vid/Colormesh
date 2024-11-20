@@ -19,7 +19,7 @@
 #' @export
 landmark.images <- function(imagedir, image.names, nlandmarks, scale = NULL, Multscale = F, writedir = NULL, tps.filename = NULL){
 
-  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tif|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
+  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.JPEG|*\\.jpeg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tiff|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
   if(is.null(writedir)) stop("Please provide a directory to save the TPS file to.")
 
     tmpimgdir <- tempdir()

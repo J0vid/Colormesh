@@ -22,7 +22,7 @@
 rgb.measure <- function(imagedir, image.names, delaunay.map, px.radius = 2, linearize.color.space = F){
 
   # imagedir <- "Guppies/EVERYTHING/righties/"
-  image.files <- list.files(imagedir, pattern = "*.JPG|*.jpg|*.TIF|*.tif|*.png|*.PNG|*.bmp|*.BMP|*.cr2|*.CR2|*.nef|*.NEF|*.orf|*.ORF|*.crw|*.CRW")
+  image.files <- list.files(imagedir, pattern = "*\\.JPG|*\\.jpg|*\\.JPEG|*\\.jpeg|*\\.TIF|*\\.tif|*\\.TIFF|*\\.tiff|*\\.png|*\\.PNG|*\\.bmp|*\\.BMP|*\\.cr2|*\\.CR2|*\\.nef|*\\.orf|*\\.crw")
   image.files.san.ext <- tools::file_path_sans_ext(image.files)
   image.names <- tools::file_path_sans_ext(image.names)
   if(length(image.files) > 0) print("The provided image format is assumed to be in sRGB colorspace. If you would like to linearize these values and apply the standard linear transform (based on international standard IEC 61966-2-1:1999), set linearize.color.space to T.")

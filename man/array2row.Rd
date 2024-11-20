@@ -9,9 +9,6 @@ array2row(data)
 \arguments{
 \item{data}{an array of N_landmarks x 2 x N_specimens}
 }
-\value{
-
-}
 \description{
 Converts arrays to row formats for 2D data
 }
